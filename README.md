@@ -1,0 +1,77 @@
+# salesforce-ui-prototype
+
+Build a **single, self-contained, offline HTML file** that looks and behaves like a real
+Salesforce **Lightning Experience** app — for demos, mockups, and click-through
+prototypes. No Salesforce org, no server, no build step. Opens with a double-click.
+
+Built on genuine **SLDS 2 ("Cosmos")** CSS + real `slds-*` blueprints + genuine SLDS
+logo/icon assets (never freehand).
+
+## Install as a Claude Code skill
+
+```bash
+git clone https://github.com/schmiechen/salesforce-ui-prototype.git \
+  ~/.claude/skills/salesforce-ui-prototype
+```
+Then just ask Claude Code to "prototype a Salesforce screen" (or invoke `/salesforce-ui-prototype`).
+You can also use the scripts standalone (see below) without Claude Code.
+
+## Quick start
+
+```bash
+SKILL=~/.claude/skills/salesforce-ui-prototype
+
+# 1. Scaffold into your project
+cp "$SKILL/assets/shell-template.html" ./index.html
+
+# 2. Edit index.html:
+#    - CONFIG block: APP_NAME, ORG_CTX, AVATAR
+#    - TABS array (one entry per top tab)
+#    - write one view*() function per tab (use setRail/setMain/setRight)
+
+# 3. Inline the SLDS 2 stylesheet -> offline single file
+bash "$SKILL/scripts/bundle.sh" index.html index.html
+
+# 4. Verify (classes exist, tag balance, offline, no freehand icons)
+bash "$SKILL/scripts/verify.sh" index.html
+
+# 5. open index.html   (macOS)
+```
+
+## Contents
+
+| Path | Purpose |
+|------|---------|
+| `SKILL.md` | The method + golden rules (read this first). |
+| `assets/shell-template.html` | Ready-to-copy starter: genuine header/nav, view engine, inlined icons, 2 example views. Has the `/*__SLDS2_COSMOS_CSS__*/` marker for bundling. |
+| `scripts/bundle.sh` | Downloads the SLDS 2 Cosmos CSS and inlines it at the marker. |
+| `scripts/verify.sh` | Checks used `slds-*` classes exist + tag balance + offline + no freehand icons. |
+| `references/icons.md` | Genuine SLDS logo + utility icon catalog and how to fetch more. |
+
+## Rules (non-negotiable)
+
+1. Real SLDS 2 blueprints — not a hand-rolled lookalike.
+2. Logo and icons are **asset-based, never freehand** (see `references/icons.md`).
+3. Single file, fully offline (everything inline; no CDN links, no external images).
+4. Custom CSS uses a `my-*` prefix + `var(--slds-g-*, fallback)` hooks; never override `.slds-*`.
+5. Global header exact spec: 50px, centered ~600px search, 32×32 icon buttons /
+   20×20 glyphs / 4px gaps, 24px avatar 16px from edge. Defaults to a **white**
+   background with gray glyphs; flip to the classic **navy** `#16325C` (white glyphs)
+   via the comment in the template's header CSS.
+6. Illustrative only — include the footer disclaimer; keep fixture data internally consistent.
+7. Copy case: section/card/tab titles and button labels use **Title Case** (minor words like
+   a/the/of/on/by/to lowercase unless first); descriptive subtext and body copy use sentence case.
+
+Requires network access **once** (to download the SLDS CSS during `bundle.sh`); the
+resulting file is fully offline. For blueprint/hook/icon lookups, use the companion skill
+`design-systems-slds-apply`. This produces a **prototype**, not deployable Salesforce
+metadata.
+
+## License & attribution
+
+- This skill's code and docs are released under the **MIT License** (see `LICENSE`).
+- Prototypes bundle the **Salesforce Lightning Design System** (`@salesforce-ux/design-system-2`
+  / `@salesforce-ux/design-system`), and the recipes include small SLDS icon/logo path
+  snippets. Those assets are © Salesforce and licensed under **Apache-2.0**; SLDS and
+  Salesforce names/logos are trademarks of Salesforce, Inc. This project is not affiliated
+  with or endorsed by Salesforce. Prototypes are illustrative mockups, not Salesforce products.

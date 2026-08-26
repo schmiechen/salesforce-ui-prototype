@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Salesforce Prototype</title>
+<style>
+/* ==========================================================================
+   Salesforce Lightning Design System 2 (Cosmos) — inlined by scripts/bundle.sh.
+   Leave the marker line below intact until you run bundle.sh.
+   ========================================================================== */
+/*__SLDS2_COSMOS_CSS__*/
+/* ==========================================================================
+   App-specific layout + reusable helpers (my-* namespace; SLDS hooks w/ fallbacks)
+   ========================================================================== */
+:root{ --my-red:#ba0517; --my-amber:#dd7a01; --my-green:#2e844a; --my-purple:#5867e8; }
+html,body{height:100%;margin:0;}
+.my-shell{display:flex;flex-direction:column;height:100vh;overflow:hidden;
+  background:var(--slds-g-color-surface-container-1,#f3f3f3);}
+.my-ghead,.my-navbar,.my-footer{flex:none;}
+.app-body{display:flex;flex:1 1 auto;min-height:0;}
+.app-rail{width:240px;flex:none;overflow:auto;background:var(--slds-g-color-surface-1,#fff);
+  border-right:1px solid var(--slds-g-color-border-1,#e5e5e5);}
+.app-main{flex:1 1 auto;min-width:0;overflow:auto;padding:var(--slds-g-spacing-4,16px);}
+.my-main-inner{max-width:1100px;}
+.app-right{width:340px;flex:none;overflow:auto;background:var(--slds-g-color-surface-1,#fff);
+  border-left:1px solid var(--slds-g-color-border-1,#e5e5e5);padding:var(--slds-g-spacing-4,16px);}
+
+/* ----- Global header — 50px, WHITE (Lightning console look).
+   For the classic NAVY header instead: on .my-ghead set background:#16325C and drop the
+   border-bottom; set .my-hicons/.my-hbtn/.my-star color:#fff with rgba(255,255,255,.4)
+   borders and rgba(255,255,255,.16) hover; give .my-search input a white border. ----- */
+.my-ghead{display:flex;align-items:center;height:50px;background:#fff;
+  border-bottom:1px solid var(--slds-g-color-border-1,#e5e5e5);
+  gap:var(--slds-g-spacing-4,16px);padding-inline:var(--slds-g-spacing-4,16px);}
+.my-logo{display:flex;align-items:center;flex:none;}
+.my-logo svg{height:24px;width:auto;display:block;}
+.my-search-wrap{flex:1 1 auto;display:flex;justify-content:center;}
+.my-search{position:relative;width:100%;max-width:600px;}
+.my-search .ico{position:absolute;left:var(--slds-g-spacing-2,8px);top:50%;transform:translateY(-50%);
+  width:16px;height:16px;color:#747474;pointer-events:none;}
+.my-search input{width:100%;height:32px;font:inherit;font-size:.82rem;color:#181818;background:#fff;
+  border:1px solid var(--slds-g-color-border-2,#c9c9c9);border-radius:var(--slds-g-radius-border-2,4px);outline:none;
+  padding-block:0;padding-inline:28px var(--slds-g-spacing-3,12px);}
+.my-search input::placeholder{color:#747474;}
+.my-search input:focus{border-color:#0176d3;box-shadow:0 0 3px #0176d3;}
+.my-hicons{display:flex;align-items:center;flex:none;color:#5c5c5c;gap:var(--slds-g-spacing-1,4px);}
+.my-hbtn{width:32px;height:32px;border-radius:50%;border:0;background:transparent;cursor:pointer;
+  display:grid;place-items:center;color:#5c5c5c;}
+.my-hbtn svg{width:20px;height:20px;display:block;}
+.my-hbtn:hover{background:var(--slds-g-color-surface-container-2,#eef1f6);color:#0176d3;}
+.my-star{display:flex;align-items:center;gap:2px;height:32px;color:#5c5c5c;background:transparent;cursor:pointer;
+  padding-inline:var(--slds-g-spacing-1,4px);border:1px solid var(--slds-g-color-border-2,#c9c9c9);border-radius:16px;}
+.my-star:hover{background:var(--slds-g-color-surface-container-2,#eef1f6);color:#0176d3;}
+.my-star svg{display:block;}
+.my-ghead .my-avatar{width:24px;height:24px;font-size:.55rem;margin-left:var(--slds-g-spacing-1,4px);}
+
+/* ----- Nav row (white): waffle + app name + tabs + org context ----- */
+.my-navbar{display:flex;align-items:stretch;height:2.75rem;background:#fff;padding:0 .5rem;
+  border-bottom:1px solid var(--slds-g-color-border-1,#e5e5e5);box-shadow:0 1px 2px rgba(0,0,0,.05);}
+.my-waffle{display:grid;place-items:center;width:2.75rem;flex:none;background:transparent;border:0;
+  cursor:pointer;color:#747474;}
+.my-waffle svg{width:20px;height:20px;display:block;}
+.my-waffle:hover{color:#0176d3;}
+.my-appname{display:flex;align-items:center;flex:none;white-space:nowrap;font-weight:700;font-size:.95rem;
+  color:#080707;padding:0 1rem 0 .35rem;}
+.my-tabs{display:flex;align-items:stretch;overflow-x:auto;}
+.my-tab{display:flex;align-items:center;gap:.35rem;height:100%;padding:0 .9rem;border:0;background:transparent;
+  font:inherit;font-size:.8rem;color:#514f4d;white-space:nowrap;cursor:pointer;border-bottom:3px solid transparent;}
+.my-tab:hover{color:#0176d3;background:var(--slds-g-color-surface-container-1,#f3f3f3);}
+.my-tab.is-active{color:#0176d3;border-bottom-color:#0176d3;font-weight:600;}
+.my-fut{font-size:.55rem;font-weight:700;letter-spacing:.03em;padding:.05rem .3rem;border-radius:.5rem;
+  background:#eef0fe;color:#5867e8;}
+.my-orgctx{margin-left:auto;display:flex;align-items:center;flex:none;white-space:nowrap;padding:0 .75rem;
+  font-size:.72rem;color:#747474;}
+.my-orgctx b{color:#080707;font-weight:600;}
+@media(max-width:1120px){.my-orgctx{display:none;}}
+
+/* ----- reusable content helpers ----- */
+.my-obj-icon{display:inline-grid;place-items:center;width:2rem;height:2rem;color:#fff;flex:none;
+  border-radius:var(--slds-g-radius-border-2,4px);}
+.my-obj-icon svg{width:1rem;height:1rem;fill:currentColor;}
+.my-obj-icon_s{width:1.5rem;height:1.5rem;}
+.my-avatar{display:inline-grid;place-items:center;width:2rem;height:2rem;border-radius:50%;flex:none;
+  background:#5867e8;color:#fff;font-size:.75rem;font-weight:700;}
+.my-af-orb{width:2rem;height:2rem;border-radius:.5rem;flex:none;display:grid;place-items:center;color:#fff;
+  background:linear-gradient(135deg,#0176d3,#5867e8,#9050e9);}
+.my-af-orb svg{width:1.1rem;height:1.1rem;fill:currentColor;}
+.my-af-label{font-size:.625rem;letter-spacing:.06em;text-transform:uppercase;font-weight:700;color:var(--my-purple);}
+.my-af-card{background:linear-gradient(180deg,#fbfaff,#f2f0fe);border:1px solid #e4e1f7;
+  border-radius:var(--slds-g-radius-border-3,8px);padding:1rem;margin-bottom:1rem;}
+.my-af-card ul{margin:.5rem 0 0;padding-left:1.1rem;} .my-af-card li{margin-bottom:.45rem;}
+.my-person{display:flex;align-items:center;gap:.6rem;padding:.5rem 0;
+  border-bottom:1px solid var(--slds-g-color-border-1,#eee);}
+.my-tiles{display:grid;grid-template-columns:1fr 1fr;gap:.6rem;}
+.my-tile{background:var(--slds-g-color-surface-1,#fff);border:1px solid var(--slds-g-color-border-1,#e5e5e5);
+  border-radius:var(--slds-g-radius-border-2,4px);padding:.75rem;box-shadow:var(--slds-g-shadow-1,0 1px 2px rgba(0,0,0,.08));}
+.my-bars{display:flex;flex-direction:column;gap:.75rem;}
+.my-bar-row{display:grid;grid-template-columns:130px 1fr 40px;gap:.6rem;align-items:center;}
+.my-track{position:relative;height:1.25rem;border-radius:4px;overflow:hidden;
+  background:var(--slds-g-color-surface-container-2,#ececec);}
+.my-fill{height:100%;border-radius:4px;display:flex;align-items:center;justify-content:flex-end;
+  padding-right:.35rem;color:#fff;font-size:.65rem;font-weight:700;transition:width .8s cubic-bezier(.2,.7,.2,1);}
+.my-badge-purple{background:#eef0fe;color:var(--my-purple);}
+tr.my-click{cursor:pointer;} tr.my-click:hover{background:var(--slds-g-color-surface-container-1,#f7fbff);}
+.my-fade{animation:myfade .35s ease;}
+@keyframes myfade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+@media(prefers-reduced-motion:reduce){.my-fade,.my-fill{animation:none;transition:none}}
+.my-footer{background:var(--slds-g-color-surface-1,#fff);border-top:1px solid var(--slds-g-color-border-1,#e5e5e5);
+  padding:.35rem 1rem;font-size:.7rem;text-align:center;color:var(--slds-g-color-on-surface-2,#747474);}
+.my-overlay{position:fixed;inset:0;background:rgba(0,0,0,.28);display:none;z-index:9000;}
+.my-overlay.is-open{display:block;}
+.my-launcher{position:absolute;top:5.9rem;left:.5rem;width:340px;padding:1rem;z-index:9001;display:none;
+  background:var(--slds-g-color-surface-1,#fff);border-radius:var(--slds-g-radius-border-3,8px);
+  box-shadow:var(--slds-g-shadow-3,0 4px 12px rgba(0,0,0,.2));}
+.my-launcher.is-open{display:block;}
+.my-lgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:.25rem;}
+.my-lapp{padding:.75rem .4rem;text-align:center;border-radius:.375rem;cursor:pointer;}
+.my-lapp:hover{background:var(--slds-g-color-surface-container-1,#f3f3f3);}
+.my-lai{width:2.25rem;height:2.25rem;border-radius:.5rem;margin:0 auto .35rem;display:grid;place-items:center;color:#fff;}
+.my-lai svg{width:1.25rem;height:1.25rem;fill:currentColor;}
+@media(max-width:1120px){.app-right{width:290px;}}
+@media(max-width:920px){.app-rail{display:none;}}
+</style>
+</head>
+<body>
+<div class="slds-scope my-shell">
+
+  <!-- ===================== GLOBAL HEADER (genuine SLDS assets) ===================== -->
+  <header class="my-ghead">
+    <a class="my-logo" href="javascript:void(0)" aria-label="Salesforce" title="Salesforce">
+      <svg viewBox="0 0 4000 2800" preserveAspectRatio="xMinYMid" role="img" aria-label="Salesforce"><path fill="#00a1e0" d="m1666 307a700 700 0 011123 148 866 866 0 011211 795c1 480-385 870-861 870a857 857 0 01-170-18 630 630 0 01-825 260 719 719 0 01-1337-33 671 671 0 01-805-659c0-250 134-468 333-584a776 776 0 011330-780"/></svg>
+    </a>
+    <div class="my-search-wrap"><div class="my-search" role="search">
+      <svg class="ico" viewBox="0 0 520 520" fill="currentColor" aria-hidden="true"><path d="M496 453 362 320a189 189 0 1 0-340-92 190 190 0 0 0 298 135l133 133a14 14 0 0 0 21 0l21-21a17 17 0 0 0 1-22M210 338a129 129 0 1 1 130-130 129 129 0 0 1-130 130"/></svg>
+      <input type="search" placeholder="Search..." aria-label="Search Salesforce" />
+    </div></div>
+    <div class="my-hicons">
+      <button class="my-hbtn" title="Agentforce" aria-label="Agentforce"><svg viewBox="0 0 520 520" fill="currentColor" aria-hidden="true"><path d="M314.9 276.2h.2a100 100 0 0 0-21.8 4.1s-9.2 2.9-23.3 4.9c-3.3.5-7.5.5-9.8.5h-1.7c-2.3 0-6.6-.2-9.8-.7a149.5 149.5 0 0 1-23.2-5.5 113 113 0 0 0-21.8-4.4c-44.9-4.6-64.3 12.5-65.4 15.7s3.8 44.8 7.4 51.4a28 28 0 0 0 13.8 12.4c5 2.1 46.1 6.2 59.8 4.3s15.8-6.5 19.5-13.5c2.6-5 9.3-27.6 13-40.9.9-2.6 1-7.8 7.3-8.2 6.3.5 6.4 5.8 7.2 8.4l12.4 41.1c3.5 7.1 5.6 11.7 19.3 13.9 13.6 2.1 54.8-1.2 59.8-3.2s10.4-5.7 14-12.2 9.2-48 8.2-51.2c-1-3.3-20.1-20.7-65.1-16.9"/><path d="M455.2 145.5h.1a226.5 226.5 0 0 0-43.7-42.1 36.2 36.2 0 0 0 29.9-35.6 36.3 36.3 0 1 0-70.6 11.4 258.5 258.5 0 0 0-83.5-23.3 260 260 0 0 0-138.2 23 36.3 36.3 0 1 0-70.7-11.1 36.2 36.2 0 0 0 29.6 35.6C61.5 137.8 29 187.9 21.6 246a201.5 201.5 0 0 0 43.2 151.5c39.4 49.8 100.6 82.5 167.8 89.6q14.1 1.5 27.9 1.5c119.9 0 223.7-81.4 237.9-191.6a201.5 201.5 0 0 0-43.2-151.5m-195 281.1h-.1c-90.2-.1-163.6-60.3-163.6-134.3 0-22.3 6.8-43.7 19.1-62.7a60.6 60.6 0 0 0 5.3 17.1 17 17 0 0 0 22.8 7.8c8.5-4.1 12-14.3 8.1-22.8-2.1-4.5-7.5-19.4 5.6-30.8 12.7 11.5 30.9 25 51.4 31.6 38.2 12.1 67.1 5 68.3 4.7a17.1 17.1 0 0 0 12.1-11.5 17 17 0 0 0-3.4-16.3 185.5 185.5 0 0 1-32.5-48.2c78.2 10.6 93.2 72.9 93.8 75.7a17 17 0 0 0 20.2 13.1c9.3-1.9 15.2-11 13.3-20.3a119 119 0 0 0-19.9-43c38.3 24.6 63.1 62.8 63.1 105.7 0 74-73.4 134.2-163.6 134.2"/></svg></button>
+      <button class="my-star" title="Favorites" aria-label="Favorites"><svg viewBox="0 0 520 520" width="16" height="16" fill="currentColor" aria-hidden="true"><path d="m274 31 46 150c2 6 8 9 14 9h150c15 0 21 20 9 29l-122 90c-5 4-7 11-5 17l58 154c4 14-11 26-23 17l-131-98c-5-4-12-4-18 0l-132 98c-12 9-28-3-23-17l56-154c2-6 0-13-5-17L26 219c-12-9-5-29 9-29h150c7 0 12-2 14-9l47-151c4-14 24-13 28 1"/></svg><svg viewBox="0 0 520 520" width="12" height="12" fill="currentColor" aria-hidden="true"><path d="M476 178 271 385c-6 6-16 6-22 0L44 178c-6-6-6-16 0-22l22-22c6-6 16-6 22 0l161 163c6 6 16 6 22 0l161-162c6-6 16-6 22 0l22 22c5 6 5 15 0 21"/></svg></button>
+      <button class="my-hbtn" title="New / Global Actions" aria-label="Global Actions"><svg viewBox="0 0 520 520" fill="currentColor" aria-hidden="true"><path d="M300 290h165c8 0 15-7 15-15v-30c0-8-7-15-15-15H300c-6 0-10-4-10-10V55c0-8-7-15-15-15h-30c-8 0-15 7-15 15v165c0 6-4 10-10 10H55c-8 0-15 7-15 15v30c0 8 7 15 15 15h165c6 0 10 4 10 10v165c0 8 7 15 15 15h30c8 0 15-7 15-15V300c0-6 4-10 10-10"/></svg></button>
+      <button class="my-hbtn" title="Help" aria-label="Help"><svg viewBox="0 0 520 520" fill="currentColor" aria-hidden="true"><path d="M284 380h-50c-8 0-14-6-14-14v-15c0-42 27-80 67-94a80 80 0 0 0-24-155c-22-1-43 7-59 22a70.4 70.4 0 0 0-23 44c-1 6-7 11-15 11h-50c-9 0-16-7-15-16 4-38 21-72 48-99 32-30 73-46 117-45 83 3 151 71 154 154 3 70-40 133-105 157-9 4-15 11-15 20v15c0 9-8 15-16 15m16 105c0 8-7 15-15 15h-50c-8 0-15-7-15-15v-50c0-8 7-15 15-15h50c8 0 15 7 15 15z"/></svg></button>
+      <button class="my-hbtn" title="Setup" aria-label="Setup"><svg viewBox="0 0 520 520" fill="currentColor" aria-hidden="true"><path d="m468 324-37-31a195 195 0 0 0 0-68l37-31c12-10 16-28 8-42l-16-29a34 34 0 0 0-40-14l-45 17a173 173 0 0 0-58-34l-8-47c-3-16-17-25-33-25h-32c-16 0-30 9-33 25l-8 46c-22 7-41 19-59 34l-44-17-11-2c-12 0-23 6-29 16l-16 28c-8 14-5 32 8 42l37 31a195 195 0 0 0 0 68l-37 31a34 34 0 0 0-8 42l16 30a34 34 0 0 0 40 14l45-17c18 16 38 27 58 34l8 48a33 33 0 0 0 33 27h32c16 0 30-12 33-28l8-48c23-8 43-20 61-37l42 17 12 2c12 0 23-6 29-16l15-26c8-12 4-30-8-40m-207 47a110 110 0 0 1-109-110 109 109 0 1 1 218 0 110 110 0 0 1-109 110m29-191h-46c-7 0-13 4-15 10l-28 72c-2 5 2 11 8 11h47l-17 60c-2 6 5 9 9 5l71-83c5-5 1-13-6-13h-35l31-49c3-5-1-12-7-12h-12z"/></svg></button>
+      <button class="my-hbtn" title="Notifications" aria-label="Notifications"><svg viewBox="0 0 520 520" fill="currentColor" aria-hidden="true"><path d="M460 330h-5a35 35 0 0 1-35-35V180A160 160 0 0 0 252 20c-86 4-152 78-152 165v111c0 19-16 34-35 34h-5c-22 0-40 19-40 41v15c0 7 7 14 15 14h450c8 0 15-7 15-15v-15a40 40 0 0 0-40-40M309 440h-98a10 10 0 0 0-10 12c5 28 30 48 59 48s54-21 59-48a10 10 0 0 0-10-12"/></svg></button>
+      <span class="my-avatar" style="background:#e8734a" title="User" role="img" aria-label="User" id="hdrAvatar">AB</span>
+    </div>
+  </header>
+
+  <!-- ===================== NAV ROW (waffle + app name + tabs) ===================== -->
+  <div class="my-navbar">
+    <button class="my-waffle" id="waffle" title="App Launcher" aria-label="Open App Launcher"><svg viewBox="0 0 52 52" fill="currentColor" aria-hidden="true"><path d="M13 4H7a3 3 0 0 0-3 3v6a3 3 0 0 0 3 3h6a3 3 0 0 0 3-3V7a3 3 0 0 0-3-3m0 32H7a3 3 0 0 0-3 3v6a3 3 0 0 0 3 3h6a3 3 0 0 0 3-3v-6a3 3 0 0 0-3-3m0-16H7a3 3 0 0 0-3 3v6a3 3 0 0 0 3 3h6a3 3 0 0 0 3-3v-6a3 3 0 0 0-3-3M29 4h-6a3 3 0 0 0-3 3v6a3 3 0 0 0 3 3h6a3 3 0 0 0 3-3V7a3 3 0 0 0-3-3m0 32h-6a3 3 0 0 0-3 3v6a3 3 0 0 0 3 3h6a3 3 0 0 0 3-3v-6a3 3 0 0 0-3-3m0-16h-6a3 3 0 0 0-3 3v6a3 3 0 0 0 3 3h6a3 3 0 0 0 3-3v-6a3 3 0 0 0-3-3M45 4h-6a3 3 0 0 0-3 3v6a3 3 0 0 0 3 3h6a3 3 0 0 0 3-3V7a3 3 0 0 0-3-3m0 32h-6a3 3 0 0 0-3 3v6a3 3 0 0 0 3 3h6a3 3 0 0 0 3-3v-6a3 3 0 0 0-3-3m0-16h-6a3 3 0 0 0-3 3v6a3 3 0 0 0 3 3h6a3 3 0 0 0 3-3v-6a3 3 0 0 0-3-3"/></svg></button>
+    <div class="my-appname" id="appName">App Name</div>
+    <nav class="my-tabs" id="tabList" role="tablist" aria-label="Navigation"></nav>
+    <div class="my-orgctx" id="orgCtx"></div>
+  </div>
+
+  <div class="app-body">
+    <aside class="app-rail" id="rail"></aside>
+    <main class="app-main"><div class="my-main-inner" id="main"></div></main>
+    <aside class="app-right" id="rightp"></aside>
+  </div>
+
+  <footer class="my-footer" id="footer">Illustrative demo — not a live system. Data shown is fictitious.</footer>
+</div>
+
+<div class="my-overlay" id="overlay"></div>
+<div class="my-launcher" id="launcher">
+  <p class="slds-text-title_caps slds-text-color_weak slds-p-around_x-small">App Launcher</p>
+  <div class="my-lgrid" id="lgrid"></div>
+</div>
+
+<script>
+/* =========================================================================
+   CONFIG — EDIT THESE
+   ========================================================================= */
+const APP_NAME = "Acme Service Console";
+const ORG_CTX  = "<b>Acme Corp</b>&nbsp;·&nbsp;Sandbox";
+const AVATAR   = "AB";
+
+const TABS = [
+  { id:"record", short:"Record",    label:"Record Page" },
+  { id:"list",   short:"List View", label:"List View" },
+  // { id:"future", short:"Future", label:"Future state", future:true },
+];
+
+/* Genuine SLDS utility icons (name -> {vb, d, c}). Add more from
+   assets/icons/utility/<name>.svg  (see references/icons.md). */
+const ICONS = {
+  case:    {c:"#F2CF5B", vb:"0 0 520 520", d:"M172 113h29c4 0 7-3 7-7V84h103v22c0 4 3 7 7 7h29c4 0 7-3 7-7V84c0-24-20-44-44-44H209c-24 0-44 20-44 44v22c0 4 2 7 7 7m264 44H84c-24 0-44 20-44 44v235c0 24 20 44 44 44h352c24 0 44-20 44-44V201c0-24-20-44-44-44"},
+  people:  {c:"#5867E8", vb:"0 0 520 520", d:"M420 223c-28-11-32-22-32-33s8-22 18-30a74 74 0 0 0 26-58c0-44-29-82-80-82a76 76 0 0 0-79 71c0 4 2 7 5 9 38 24 61 66 61 117 0 38-15 72-42 96-2 2-2 6 0 8 7 5 23 12 33 17l8 2h121c23 0 41-19 41-40v-6c0-35-38-54-80-71M286 362c-34-14-39-26-39-39s10-26 21-36c20-17 31-41 31-69 0-52-34-97-96-97-61 0-96 45-96 97 0 28 11 52 31 69 11 10 21 23 21 36s-5 26-40 39c-50 20-99 43-99 85v13a40 40 0 0 0 41 40h277c23 0 42-18 42-40v-14c0-41-44-64-94-84"},
+  metrics: {c:"#5867E8", vb:"0 0 520 520", d:"M449 20H71a51 51 0 0 0-51 51v377c0 29 23 52 51 52h377c28 0 51-23 51-51V71a50 50 0 0 0-50-51M157 397c0 9-8 17-17 17h-17c-9 0-17-8-17-17v-94c0-9 8-17 17-17h17c9 0 17 8 17 17zm86 0c0 9-8 17-17 17h-17c-9 0-17-8-17-17V174c0-9 8-17 17-17h17c9 0 17 8 17 17zm86 0c0 9-8 17-17 17h-17c-9 0-17-8-17-17V123c0-9 8-17 17-17h17c9 0 17 8 17 17zm85 0c0 9-8 17-17 17h-17c-9 0-17-8-17-17V234c0-9 8-17 17-17h17c9 0 17 8 17 17z"},
+  database:{c:"#0176D3", vb:"0 0 520 520", d:"M454 90c0-38-87-69-194-69S66 52 66 90v24c0 38 87 69 194 69s194-31 194-69zM66 170c0 30 87 54 194 54s194-24 194-54v49c0 38-87 69-194 69S66 257 66 219zm0 105c0 30 87 54 194 54s194-24 194-54v49c0 38-87 69-194 69S66 363 66 325zm0 106c0 30 87 54 194 54s194-24 194-54v49c0 38-87 69-194 69S66 468 66 430z"},
+  moneybag:{c:"#2E844A", vb:"0 0 520 520", d:"M205 91c2 6 8 9 14 9h81c6 0 12-3 14-9l32-59c2-6-2-12-8-12H182c-6 0-10 6-7 11zm102 56h-94c-79 0-143 65-143 145v160c0 26 21 48 48 48h284c26 0 48-22 48-48V292c0-80-65-145-143-145"},
+  shield:  {c:"#BA0517", vb:"0 0 520 520", d:"M48 140h424c10 0 18-10 15-20-10-33-24-63-43-90-6-8-17-9-23-2a108 108 0 0 1-74 28c-30 0-57-12-77-32-6-6-16-6-22 0-20 20-47 32-77 32-28 0-54-10-74-28-7-6-18-5-23 2-19 26-34 57-43 90-1 10 7 20 17 20m452 64c0-9-7-14-16-14H36c-9 0-16 5-16 14v3c0 150 104 274 240 293 136-19 240-143 240-292z"},
+  alert:   {c:"#DD7A01", vb:"0 0 520 520", d:"m347 310-4 1a30 30 0 0 1-37-17l-33-88a131 131 0 0 0-174-75 133 133 0 0 0-70 169l31 85c5 15-3 31-17 36l-4 1c-17 6-25 26-19 43l4 11c2 5 9 9 15 6l344-127c6-2 9-10 7-16l-4-11c-3-16-22-25-39-18m-84 126-75 28c-5 2-7 8-4 12a50 50 0 0 0 59 20 50 50 0 0 0 32-53c-2-5-8-8-12-7"},
+  home:    {c:"#747474", vb:"0 0 520 520", d:"M490 270h-50v220c0 6-4 10-10 10H330c-6 0-10-4-10-10V320H200v170c0 6-4 10-10 10H90c-6 0-10-4-10-10V270H30c-4 0-8-2-9-6-2-4-1-8 2-11L253 23c4-4 11-4 14 0l230 230c3 3 3 7 2 11s-5 6-9 6"},
+  dayview: {c:"#0176D3", vb:"0 0 520 520", d:"M440 70h-50V50a30 30 0 1 0-60 0v20H190V50a30 30 0 1 0-60 0v20H80a40 40 0 0 0-40 40v25c0 8 7 15 15 15h410c8 0 15-7 15-15v-25a40 40 0 0 0-40-40m25 130H55c-8 0-15 7-15 15v245a40 40 0 0 0 40 40h360a40 40 0 0 0 40-40V215c0-8-7-15-15-15"},
+  email:   {c:"#0176D3", vb:"0 0 520 520", d:"M249 301c6 6 15 6 21 0L496 91c4-8 3-21-13-21L36 71c-12 0-22 11-13 21zm251-128c0-10-12-16-20-9L303 327c-12 11-27 17-43 17s-31-6-43-16L41 164c-8-7-20-2-20 9-1-3-1 227-1 227a40 40 0 0 0 40 40h400a40 40 0 0 0 40-40z"},
+  list:    {c:"#747474", vb:"0 0 520 520", d:"M80 105c0-8-7-15-15-15H35c-8 0-15 7-15 15v30c0 8 7 15 15 15h30c8 0 15-7 15-15zm420 0c0-8-7-15-15-15H135c-8 0-15 7-15 15v30c0 8 7 15 15 15h350c8 0 15-7 15-15zM80 245c0-8-7-15-15-15H35c-8 0-15 7-15 15v30c0 8 7 15 15 15h30c8 0 15-7 15-15zm380 0c0-8-7-15-15-15H135c-8 0-15 7-15 15v30c0 8 7 15 15 15h310c8 0 15-7 15-15zM80 385c0-8-7-15-15-15H35c-8 0-15 7-15 15v30c0 8 7 15 15 15h30c8 0 15-7 15-15zm420 0c0-8-7-15-15-15H135c-8 0-15 7-15 15v30c0 8 7 15 15 15h350c8 0 15-7 15-15z"},
+  ai:      {c:"#9050E9", vb:"0 0 520 520", d:"M314.9 276.2h.2a100 100 0 0 0-21.8 4.1s-9.2 2.9-23.3 4.9c-3.3.5-7.5.5-9.8.5h-1.7c-2.3 0-6.6-.2-9.8-.7a149.5 149.5 0 0 1-23.2-5.5 113 113 0 0 0-21.8-4.4c-44.9-4.6-64.3 12.5-65.4 15.7s3.8 44.8 7.4 51.4a28 28 0 0 0 13.8 12.4c5 2.1 46.1 6.2 59.8 4.3s15.8-6.5 19.5-13.5c2.6-5 9.3-27.6 13-40.9.9-2.6 1-7.8 7.3-8.2 6.3.5 6.4 5.8 7.2 8.4l12.4 41.1c3.5 7.1 5.6 11.7 19.3 13.9 13.6 2.1 54.8-1.2 59.8-3.2s10.4-5.7 14-12.2 9.2-48 8.2-51.2c-1-3.3-20.1-20.7-65.1-16.9"},
+};
+function svg(name,size){ const i=ICONS[name]||ICONS.case; size=size||18; return `<svg width="${size}" height="${size}" viewBox="${i.vb}" fill="currentColor" aria-hidden="true"><path d="${i.d}"/></svg>`; }
+function objIcon(name,small){ const i=ICONS[name]||ICONS.case; return `<span class="my-obj-icon${small?' my-obj-icon_s':''}" style="background:${i.c}">${svg(name,small?14:16)}</span>`; }
+
+const THEME = { red:"slds-theme_error", amber:"slds-theme_warning", green:"slds-theme_success", info:"slds-theme_info" };
+function badge(text,type){ if(type==="purple") return `<span class="slds-badge my-badge-purple">${text}</span>`; return `<span class="slds-badge ${THEME[type]||""}">${text}</span>`; }
+
+function card(iconName,title,sub,body,right){
+  return `<article class="slds-card slds-m-bottom_medium">
+    <div class="slds-card__header slds-grid">
+      <header class="slds-media slds-media_center slds-has-flexi-truncate">
+        <div class="slds-media__figure">${objIcon(iconName)}</div>
+        <div class="slds-media__body"><h2 class="slds-card__header-title">${title}</h2>
+          ${sub?`<p class="slds-text-body_small slds-text-color_weak">${sub}</p>`:""}</div>
+      </header>${right?`<div class="slds-no-flex">${right}</div>`:""}
+    </div>
+    <div class="slds-card__body slds-card__body_inner">${body}</div></article>`;
+}
+function pageHeader(iconName,meta,title,right){
+  return `<div class="slds-page-header slds-m-bottom_medium"><div class="slds-page-header__row slds-grid_align-spread">
+    <div class="slds-media slds-media_center slds-has-flexi-truncate"><div class="slds-media__figure">${objIcon(iconName)}</div>
+      <div class="slds-media__body"><p class="slds-text-body_small slds-text-color_weak">${meta}</p>
+      <h1 class="slds-page-header__title slds-truncate" title="${title}">${title}</h1></div></div>
+    ${right?`<div class="slds-no-flex">${right}</div>`:""}</div></div>`;
+}
+function afPanel(heading,bulletsHtml,people){
+  return `<div class="slds-media slds-media_center slds-m-bottom_medium">
+    <div class="slds-media__figure"><span class="my-af-orb">${svg("ai",18)}</span></div>
+    <div class="slds-media__body"><div class="my-af-label">Agentforce</div><div class="slds-text-heading_small">${heading}</div></div></div>
+    <div class="my-af-card"><ul>${bulletsHtml}</ul></div>
+    ${people?`<p class="slds-text-title_caps slds-text-color_weak slds-m-bottom_x-small">People</p>${people}`:""}`;
+}
+
+function navItem(ico,label,sub,o){ o=o||{};
+  return `<li class="slds-nav-vertical__item ${o.active?"slds-is-active":""}">
+    <a href="javascript:void(0)" class="slds-nav-vertical__action" ${o.active?'aria-current="page"':""}>
+      <span class="slds-grid slds-grid_vertical-align-center" style="gap:.5rem">${svg(ico,15)}
+      <span class="slds-truncate">${label}${sub?`<span class="slds-text-body_small slds-text-color_weak" style="display:block">${sub}</span>`:""}</span></span>
+      ${o.badge?`<span class="slds-badge slds-badge_inverse slds-col_bump-left">${o.badge}</span>`:""}</a></li>`;
+}
+function navSection(title,items){ return `<div class="slds-nav-vertical__section"><h3 class="slds-nav-vertical__title">${title}</h3><ul>${items.join("")}</ul></div>`; }
+function rail(sections){ return `<nav class="slds-nav-vertical slds-p-vertical_small" aria-label="Navigation">${sections.join("")}</nav>`; }
+
+/* =========================================================================
+   SHELL / VIEW ENGINE  (usually no need to edit below)
+   ========================================================================= */
+let active = TABS[0].id;
+function renderTabs(){
+  document.getElementById("appName").textContent = APP_NAME;
+  document.getElementById("orgCtx").innerHTML = ORG_CTX;
+  document.getElementById("hdrAvatar").textContent = AVATAR;
+  document.getElementById("tabList").innerHTML = TABS.map(t=>`
+    <button class="my-tab ${t.id===active?"is-active":""}" data-tab="${t.id}" role="tab" aria-selected="${t.id===active}" title="${t.label}">
+      <span>${t.short}</span>${t.future?'<span class="my-fut">FUTURE</span>':""}</button>`).join("");
+  document.querySelectorAll("#tabList .my-tab").forEach(b=>b.onclick=()=>switchTab(b.dataset.tab));
+}
+function switchTab(id){ active=id; renderTabs(); (VIEWS[id]||function(){})(); }
+function setRail(h){ document.getElementById("rail").innerHTML=h; }
+function setMain(h){ const el=document.getElementById("main"); el.className="my-main-inner my-fade"; el.innerHTML=h; void el.offsetWidth; }
+function setRight(h){ document.getElementById("rightp").innerHTML=h; }
+
+/* =========================================================================
+   VIEWS — one function per tab. Replace with your screens.
+   ========================================================================= */
+function viewRecord(){
+  setRail(rail([
+    navSection("Navigation",[ navItem("home","Home"), navItem("case","Cases","",{active:true}), navItem("people","Contacts") ]),
+    navSection("Recent",[ navItem("case","00012345","Acme — priority",{active:true}), navItem("case","00012301","Globex") ]),
+  ]));
+  setMain(
+    pageHeader("case","Case • Open","00012345", badge("Escalated","red"))
+    + card("case","Details","Example record fields",
+        `<dl class="slds-grid slds-wrap"><dt class="slds-size_1-of-2 slds-text-title_caps slds-text-color_weak">Subject</dt><dd class="slds-size_1-of-2">Widget not working</dd>
+         <dt class="slds-size_1-of-2 slds-text-title_caps slds-text-color_weak slds-m-top_x-small">Priority</dt><dd class="slds-size_1-of-2 slds-m-top_x-small">High</dd>
+         <dt class="slds-size_1-of-2 slds-text-title_caps slds-text-color_weak slds-m-top_x-small">Contact</dt><dd class="slds-size_1-of-2 slds-m-top_x-small">Jordan Lee</dd></dl>`)
+    + card("email","Related — Emails","Related list example",
+        `<table class="slds-table slds-table_bordered slds-table_cell-buffer">
+           <thead><tr class="slds-line-height_reset"><th scope="col"><div class="slds-truncate slds-text-title_caps">Subject</div></th><th scope="col"><div class="slds-truncate slds-text-title_caps">Date</div></th></tr></thead>
+           <tbody><tr class="slds-hint-parent"><td>Re: Widget issue</td><td>Today</td></tr><tr class="slds-hint-parent"><td>Case opened</td><td>Yesterday</td></tr></tbody></table>`));
+  setRight(afPanel("Catch me up",
+    `<li>Case opened yesterday; one reply pending.</li><li>Customer is a high-value account.</li>`,
+    `<div class="my-person"><span class="my-avatar">JL</span><span><strong>Jordan Lee</strong><br><span class="slds-text-body_small slds-text-color_weak">Contact</span></span></div>`));
+}
+function viewList(){
+  setRail(rail([ navSection("Navigation",[ navItem("home","Home"), navItem("list","All Cases","",{active:true}), navItem("metrics","Reports") ]) ]));
+  const rows = [["00012345","Widget not working","High","Open"],["00012301","Login help","Medium","Open"],["00012299","Refund request","Low","Closed"]];
+  setMain(
+    pageHeader("list","Cases • List View","All Open Cases", `<button class="slds-button slds-button_brand">New</button>`)
+    + card("case","Cases","3 items",
+      `<table class="slds-table slds-table_bordered slds-table_cell-buffer">
+        <thead><tr class="slds-line-height_reset">
+          <th scope="col"><div class="slds-truncate slds-text-title_caps">Case #</div></th>
+          <th scope="col"><div class="slds-truncate slds-text-title_caps">Subject</div></th>
+          <th scope="col"><div class="slds-truncate slds-text-title_caps">Priority</div></th>
+          <th scope="col"><div class="slds-truncate slds-text-title_caps">Status</div></th></tr></thead>
+        <tbody>${rows.map(r=>`<tr class="slds-hint-parent my-click"><td>${r[0]}</td><td>${r[1]}</td><td>${badge(r[2], r[2]==="High"?"red":r[2]==="Medium"?"amber":"info")}</td><td>${r[3]}</td></tr>`).join("")}</tbody></table>`));
+  setRight(`<p class="slds-text-title_caps slds-text-color_weak slds-m-bottom_x-small">Summary</p>
+    <div class="my-tiles"><div class="my-tile"><div class="slds-text-title_caps slds-text-color_weak">Open</div><div class="slds-text-heading_large">2</div></div>
+    <div class="my-tile"><div class="slds-text-title_caps slds-text-color_weak">Closed</div><div class="slds-text-heading_large">1</div></div></div>`);
+}
+
+const VIEWS = { record:viewRecord, list:viewList /*, future:viewFuture */ };
+
+/* ----- app launcher ----- */
+const LAUNCH=[["case","Cases"],["people","Contacts"],["metrics","Reports"],["dayview","Calendar"],["email","Email"],["list","Lists"]];
+function initLauncher(){
+  document.getElementById("lgrid").innerHTML = LAUNCH.map(a=>`<div class="my-lapp"><div class="my-lai" style="background:${ICONS[a[0]].c}">${svg(a[0],20)}</div><div class="slds-text-body_small" style="font-weight:600">${a[1]}</div></div>`).join("");
+  const ov=document.getElementById("overlay"), lc=document.getElementById("launcher");
+  document.getElementById("waffle").onclick=()=>{ ov.classList.add("is-open"); lc.classList.add("is-open"); };
+  ov.onclick=()=>{ ov.classList.remove("is-open"); lc.classList.remove("is-open"); };
+}
+
+renderTabs(); initLauncher(); (VIEWS[active]||function(){})();
+</script>
+</body>
+</html>
