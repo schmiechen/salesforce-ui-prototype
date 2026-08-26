@@ -7,6 +7,24 @@ prototypes. No Salesforce org, no server, no build step. Opens with a double-cli
 Built on genuine **SLDS 2 ("Cosmos")** CSS + real `slds-*` blueprints + genuine SLDS
 logo/icon assets (never freehand).
 
+## What you can build
+A multi-tab Lightning app in one file, with a persistent shell (global header + app-nav
+tabs + left rail + right panel) and a small JS view engine that swaps the workspace per
+tab. Recipes are included for the common pieces:
+
+- **Record consoles** — page-header highlights, LDS cards, data tables, badges, buttons.
+- **Identity resolution → golden record** — merge/animate disparate source records into
+  one unified record (the pattern behind the reference demo).
+- **Relationship graphs (ARC-style)** in **SLDS modals** — households, provider rings,
+  hierarchies. (`references/modals-and-graphs.md`)
+- **Agentforce** — the AF panel + a Generate → stream → Edit → Save-to-record flow.
+  (`references/agentforce.md`)
+- **Activity Timeline** — tasks/activities with expand + complete.
+  (`references/activity-timeline.md`)
+- **Dashboards** — dependency-free CSS bar charts / heatmaps that re-render on action.
+- Plus a **talk-track template** to script the click-through demo.
+  (`references/talk-track-template.md`)
+
 ## Install as a Claude Code skill
 
 ```bash
@@ -45,8 +63,12 @@ bash "$SKILL/scripts/verify.sh" index.html
 | `SKILL.md` | The method + golden rules (read this first). |
 | `assets/shell-template.html` | Ready-to-copy starter: genuine header/nav, view engine, inlined icons, 2 example views. Has the `/*__SLDS2_COSMOS_CSS__*/` marker for bundling. |
 | `scripts/bundle.sh` | Downloads the SLDS 2 Cosmos CSS and inlines it at the marker. |
-| `scripts/verify.sh` | Checks used `slds-*` classes exist + tag balance + offline + no freehand icons. |
+| `scripts/verify.sh` | Checks used `slds-*` classes exist + tag balance + offline + no freehand icons + no banned copy ("Copilot"/"Future") + blue-on-blue risk + a data-sanity reminder. |
 | `references/icons.md` | Genuine SLDS logo + utility icon catalog and how to fetch more. |
+| `references/activity-timeline.md` | Recipe: Salesforce Activity Timeline (tasks/activities) — type-colored connector, expand + complete, the no-double-line gotcha. |
+| `references/modals-and-graphs.md` | Recipe: SLDS modals + ARC-style relationship graphs (root → grouped cards + Show-Fields toggle + zoom). |
+| `references/agentforce.md` | Recipe: the Agentforce panel + the Generate → stream → Edit → Save-to-record agent flow. |
+| `references/talk-track-template.md` | Do/Say click-path talk-track template to hand a presenter after building. |
 
 ## Rules (non-negotiable)
 
@@ -58,9 +80,13 @@ bash "$SKILL/scripts/verify.sh" index.html
    20×20 glyphs / 4px gaps, 24px avatar 16px from edge. Defaults to a **white**
    background with gray glyphs; flip to the classic **navy** `#16325C` (white glyphs)
    via the comment in the template's header CSS.
-6. Illustrative only — include the footer disclaimer; keep fixture data internally consistent.
+6. Illustrative only — include the footer disclaimer; keep fixture data internally consistent
+   (ages match activities, totals add up; identity resolution = same person across systems,
+   siblings/parents are relationships — not identity sources).
 7. Copy case: section/card/tab titles and button labels use **Title Case** (minor words like
    a/the/of/on/by/to lowercase unless first); descriptive subtext and body copy use sentence case.
+8. **Never say "Copilot"** (a Microsoft term) — use "Agentforce" / "agent" for AI features.
+9. **Present as "now"** — avoid "Future" / "future state" labels unless explicitly asked.
 
 Requires network access **once** (to download the SLDS CSS during `bundle.sh`); the
 resulting file is fully offline. For blueprint/hook/icon lookups, use the companion skill
