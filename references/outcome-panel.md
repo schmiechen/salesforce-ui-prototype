@@ -41,11 +41,21 @@ Render it with a single `outcomeRail(outcome)` helper (see the template). `OUTCO
 defaults to `"agentforce"` (purple orb + eyebrow); `"neutral"` drops the AI branding to a
 plain "Outcome" card.
 
-## Placement mechanics
-- **Top-level screens:** wrap the view in a 2-column layout — main content + a fixed
-  ~20rem **outcome rail** on the right.
-- **Record pages:** prepend the outcome panel to the existing right sidebar, above the
-  Activity/Chatter tab set.
+## Placement mechanics — a docked agent panel on the right
+The panel should read as *"someone opened an Agentforce agent"*: **all** main content
+(page header, list, record highlights/details) pushes **left**; the agent panel is a fixed
+right column with a **left-border separator** (`.my-rail`), **top-aligned** (`align-items:start`).
+
+- **Top-level screens (list/home/dashboard):** wrap the whole view in `.my-with-rail`
+  (`grid-template-columns:1fr 21rem`). Put the **page header *inside* the left column** — not
+  full-width above the grid — so the agent panel top-aligns with the header, not the table.
+  Right column = `<div class="my-rail">${outcomeRail(SPEC.outcome)}</div>`.
+- **Record pages:** highlights + path stay full-width; below them a `1fr 22rem` grid. The
+  right column is the agent panel — outcome on top, Activity/Chatter below it.
+  **Gotcha:** the right column must be a **single wrapper `<div>`**. If outcome and the
+  Activity/Chatter `my-side` are two sibling divs, the grid wraps the second one to a new
+  row and it drops to full width under the details ("pushed down"). Wrap both in one
+  `<div class="my-rail">…</div>`.
 
 ## Execution (how outcomes get written)
 During **Scope**, after the tab list is set: **draft** an outcome for each screen from the

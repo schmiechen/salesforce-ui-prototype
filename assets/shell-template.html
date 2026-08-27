@@ -63,8 +63,10 @@ html,body{height:100%;margin:0;}
 .my-rec.layout-3{grid-template-columns:16rem 1fr 22rem;}
 @media(max-width:1100px){.my-rec,.my-rec.layout-3{grid-template-columns:1fr;}}
 .my-side{background:#fff;border:1px solid var(--my-line);border-radius:4px;}
-/* outcome rail (Agentforce "why it matters") */
-.my-with-rail{display:grid;grid-template-columns:1fr 20rem;gap:1rem;align-items:start;} @media(max-width:1100px){.my-with-rail{grid-template-columns:1fr;}}
+/* outcome rail (Agentforce "why it matters") — main content left, docked agent panel right */
+.my-with-rail{display:grid;grid-template-columns:1fr 21rem;gap:1rem;align-items:start;} @media(max-width:1100px){.my-with-rail{grid-template-columns:1fr;}}
+/* docked agent panel: a scrollbar-style separator on the left, like an opened Agentforce agent */
+.my-rail{border-left:1px solid var(--my-line);padding-left:1rem;align-self:stretch;} @media(max-width:1100px){.my-rail{border-left:0;padding-left:0;}}
 .my-af-head{display:flex;align-items:center;gap:.6rem;margin-bottom:.6rem;}
 .my-af-orb{width:2rem;height:2rem;border-radius:.5rem;flex:none;display:grid;place-items:center;color:#fff;background:linear-gradient(135deg,#0176d3,#5867e8,#9050e9);} .my-af-orb svg{width:1.1rem;height:1.1rem;fill:#fff;}
 .my-af-label{font-size:.625rem;letter-spacing:.06em;text-transform:uppercase;font-weight:700;color:#5867e8;}
@@ -408,8 +410,8 @@ function renderList(){
       ${SPEC.columns.map(c=>{ const v = c.key==="priority" ? prBadge(r[c.key]) : c.link ? `<a class="my-lv-link" onclick="openRecordById('${r.id}')">${esc(r[c.key])}</a>` : esc(r[c.key]); return `<td><div class="slds-truncate" title="${esc(r[c.key])}">${v}</div></td>`; }).join("")}
       <td class="slds-cell-shrink"><button class="slds-button slds-button_icon slds-button_icon-border-filled" title="Show actions">${svg("chevrondown",12)}</button></td>
     </tr>`).join("");
-  document.getElementById("work").innerHTML=head+`
-    <div class="my-with-rail"><div><div class="slds-card"><div class="my-tablewrap"><table class="slds-table slds-table_bordered slds-table_col-bordered slds-table_cell-buffer">
+  document.getElementById("work").innerHTML=`
+    <div class="my-with-rail"><div>${head}<div class="slds-card"><div class="my-tablewrap"><table class="slds-table slds-table_bordered slds-table_col-bordered slds-table_cell-buffer">
       <thead><tr class="slds-line-height_reset">
         <th class="slds-cell-shrink" scope="col"><input type="checkbox" onclick="toggleSelAll(this.checked)" aria-label="Select all"/></th>
         ${ths}<th class="slds-cell-shrink" scope="col"></th>
@@ -417,7 +419,7 @@ function renderList(){
       <tbody>${trs}</tbody>
     </table></div>
     <div class="my-lv-foot">${rows.length} items${SELECTED.size?` · ${SELECTED.size} selected`:""} · sorted by ${SORT.col?colLabel(SORT.col):"Case Number"}</div></div></div>
-    <div>${outcomeRail(SPEC.outcome)}</div></div>`;
+    <div class="my-rail">${outcomeRail(SPEC.outcome)}</div></div>`;
 }
 function colLabel(k){ return (SPEC.columns.find(c=>c.key===k)||{}).label||k; }
 function sortBy(k){ if(SORT.col===k) SORT.dir*=-1; else {SORT.col=k;SORT.dir=1;} renderList(); }
@@ -449,11 +451,14 @@ function renderRecord(row){
     {label:"Details", html:renderDetails(rec)},
     {label:"Related", html:renderRelated(rec)},
   ]);
-  const side=(rec.outcome?`<div class="slds-m-bottom_medium">${outcomeRail(rec.outcome)}</div>`:"")
+  // Single right-column cell: Agentforce agent on top, Activity/Chatter below (must be ONE
+  // wrapper div, or the grid wraps the second element to a new row).
+  const side=`<div class="my-rail">`
+    +(rec.outcome?`<div class="slds-m-bottom_medium">${outcomeRail(rec.outcome)}</div>`:"")
     +`<div class="my-side">`+tabset("side",[
     {label:"Activity", html:renderActivity(rec)},
     {label:"Chatter",  html:renderChatter(rec)},
-  ],true)+`</div>`;
+  ],true)+`</div></div>`;
   const cls=RECORD_LAYOUT==="3-region"?"my-rec layout-3":"my-rec";
   const left=RECORD_LAYOUT==="3-region"?`<div>${rec.related.map(rl=>relatedCard(rl,true)).join("")}</div>`:"";
   // Highlights + path span the full record width; the columns sit below them.
