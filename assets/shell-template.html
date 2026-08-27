@@ -11,306 +11,560 @@
    ========================================================================== */
 /*__SLDS2_COSMOS_CSS__*/
 /* ==========================================================================
-   App-specific layout + reusable helpers (my-* namespace; SLDS hooks w/ fallbacks)
+   App layout + thin helpers (my-* namespace; SLDS hooks with fallbacks).
+   The STRUCTURE uses standard SLDS blueprints (page-header, tabs, table,
+   form-element, card, path). my-* only adds shell/console/feed glue.
    ========================================================================== */
-:root{ --my-red:#ba0517; --my-amber:#dd7a01; --my-green:#2e844a; --my-purple:#5867e8; }
+:root{ --my-navy:#16325C; --my-line:var(--slds-g-color-border-1,#e5e5e5); }
 html,body{height:100%;margin:0;}
-.my-shell{display:flex;flex-direction:column;height:100vh;overflow:hidden;
+.my-app{display:flex;flex-direction:column;height:100vh;overflow:hidden;
   background:var(--slds-g-color-surface-container-1,#f3f3f3);}
-.my-ghead,.my-navbar,.my-footer{flex:none;}
-.app-body{display:flex;flex:1 1 auto;min-height:0;}
-.app-rail{width:240px;flex:none;overflow:auto;background:var(--slds-g-color-surface-1,#fff);
-  border-right:1px solid var(--slds-g-color-border-1,#e5e5e5);}
-.app-main{flex:1 1 auto;min-width:0;overflow:auto;padding:var(--slds-g-spacing-4,16px);}
-.my-main-inner{max-width:1100px;}
-.app-right{width:340px;flex:none;overflow:auto;background:var(--slds-g-color-surface-1,#fff);
-  border-left:1px solid var(--slds-g-color-border-1,#e5e5e5);padding:var(--slds-g-spacing-4,16px);}
+.my-ghead,.my-appbar,.my-ws,.my-utilbar{flex:none;}
 
-/* ----- Global header — 50px, WHITE (Lightning console look).
-   For the classic NAVY header instead: on .my-ghead set background:#16325C and drop the
-   border-bottom; set .my-hicons/.my-hbtn/.my-star color:#fff with rgba(255,255,255,.4)
-   borders and rgba(255,255,255,.16) hover; give .my-search input a white border. ----- */
-.my-ghead{display:flex;align-items:center;height:50px;background:#fff;
-  border-bottom:1px solid var(--slds-g-color-border-1,#e5e5e5);
-  gap:var(--slds-g-spacing-4,16px);padding-inline:var(--slds-g-spacing-4,16px);}
-.my-logo{display:flex;align-items:center;flex:none;}
+/* ----- global header (white; genuine logo + SLDS utility icons) ----- */
+.my-ghead{display:flex;align-items:center;height:50px;background:#fff;gap:var(--slds-g-spacing-4,16px);
+  padding-inline:var(--slds-g-spacing-4,16px);border-bottom:1px solid var(--my-line);}
 .my-logo svg{height:24px;width:auto;display:block;}
 .my-search-wrap{flex:1 1 auto;display:flex;justify-content:center;}
 .my-search{position:relative;width:100%;max-width:600px;}
-.my-search .ico{position:absolute;left:var(--slds-g-spacing-2,8px);top:50%;transform:translateY(-50%);
-  width:16px;height:16px;color:#747474;pointer-events:none;}
-.my-search input{width:100%;height:32px;font:inherit;font-size:.82rem;color:#181818;background:#fff;
-  border:1px solid var(--slds-g-color-border-2,#c9c9c9);border-radius:var(--slds-g-radius-border-2,4px);outline:none;
-  padding-block:0;padding-inline:28px var(--slds-g-spacing-3,12px);}
-.my-search input::placeholder{color:#747474;}
+.my-search .ico{position:absolute;left:8px;top:50%;transform:translateY(-50%);width:16px;height:16px;color:#747474;pointer-events:none;}
+.my-search input{width:100%;height:32px;font:inherit;font-size:.82rem;color:#181818;background:#fff;border:1px solid var(--slds-g-color-border-2,#c9c9c9);
+  border-radius:4px;outline:none;padding:0 12px 0 28px;}
 .my-search input:focus{border-color:#0176d3;box-shadow:0 0 3px #0176d3;}
-.my-hicons{display:flex;align-items:center;flex:none;color:#5c5c5c;gap:var(--slds-g-spacing-1,4px);}
-.my-hbtn{width:32px;height:32px;border-radius:50%;border:0;background:transparent;cursor:pointer;
-  display:grid;place-items:center;color:#5c5c5c;}
-.my-hbtn svg{width:20px;height:20px;display:block;}
+.my-hicons{display:flex;align-items:center;gap:4px;flex:none;color:#5c5c5c;}
+.my-hbtn{width:32px;height:32px;border-radius:50%;border:0;background:transparent;cursor:pointer;display:grid;place-items:center;color:#5c5c5c;}
+.my-hbtn svg{width:20px;height:20px;display:block;fill:currentColor;}
 .my-hbtn:hover{background:var(--slds-g-color-surface-container-2,#eef1f6);color:#0176d3;}
-.my-star{display:flex;align-items:center;gap:2px;height:32px;color:#5c5c5c;background:transparent;cursor:pointer;
-  padding-inline:var(--slds-g-spacing-1,4px);border:1px solid var(--slds-g-color-border-2,#c9c9c9);border-radius:16px;}
-.my-star:hover{background:var(--slds-g-color-surface-container-2,#eef1f6);color:#0176d3;}
-.my-star svg{display:block;}
-.my-ghead .my-avatar{width:24px;height:24px;font-size:.55rem;margin-left:var(--slds-g-spacing-1,4px);}
+.my-avatar{display:inline-grid;place-items:center;width:24px;height:24px;border-radius:50%;background:#e8734a;color:#fff;font-size:.55rem;font-weight:700;flex:none;}
 
-/* ----- Nav row (white): waffle + app name + tabs + org context ----- */
-.my-navbar{display:flex;align-items:stretch;height:2.75rem;background:#fff;padding:0 .5rem;
-  border-bottom:1px solid var(--slds-g-color-border-1,#e5e5e5);box-shadow:0 1px 2px rgba(0,0,0,.05);}
-.my-waffle{display:grid;place-items:center;width:2.75rem;flex:none;background:transparent;border:0;
-  cursor:pointer;color:#747474;}
-.my-waffle svg{width:20px;height:20px;display:block;}
-.my-waffle:hover{color:#0176d3;}
-.my-appname{display:flex;align-items:center;flex:none;white-space:nowrap;font-weight:700;font-size:.95rem;
-  color:#080707;padding:0 1rem 0 .35rem;}
-.my-tabs{display:flex;align-items:stretch;overflow-x:auto;}
-.my-tab{display:flex;align-items:center;gap:.35rem;height:100%;padding:0 .9rem;border:0;background:transparent;
-  font:inherit;font-size:.8rem;color:#514f4d;white-space:nowrap;cursor:pointer;border-bottom:3px solid transparent;}
-.my-tab:hover{color:#0176d3;background:var(--slds-g-color-surface-container-1,#f3f3f3);}
-.my-tab.is-active{color:#0176d3;border-bottom-color:#0176d3;font-weight:600;}
-.my-fut{font-size:.55rem;font-weight:700;letter-spacing:.03em;padding:.05rem .3rem;border-radius:.5rem;
-  background:#eef0fe;color:#5867e8;}
-.my-orgctx{margin-left:auto;display:flex;align-items:center;flex:none;white-space:nowrap;padding:0 .75rem;
-  font-size:.72rem;color:#747474;}
-.my-orgctx b{color:#080707;font-weight:600;}
-@media(max-width:1120px){.my-orgctx{display:none;}}
+/* ----- app context bar (navy) : waffle + app name + nav ----- */
+.my-appbar{display:flex;align-items:stretch;height:2.5rem;background:var(--my-navy);color:#fff;padding:0 .25rem;}
+.my-waffle{display:grid;place-items:center;width:2.5rem;flex:none;background:transparent;border:0;cursor:pointer;color:#cfe0f2;}
+.my-waffle svg{width:18px;height:18px;fill:currentColor;}
+.my-appname{display:flex;align-items:center;font-weight:700;font-size:.9rem;padding:0 .75rem 0 .25rem;white-space:nowrap;flex:none;}
+.my-appnav{display:flex;align-items:stretch;}
+.my-navitem{display:flex;align-items:center;padding:0 .9rem;color:#cfe0f2;font-size:.8rem;cursor:pointer;border-bottom:3px solid transparent;background:transparent;border-top:0;border-left:0;border-right:0;font:inherit;}
+.my-navitem:hover{background:rgba(255,255,255,.1);color:#fff;}
+.my-navitem.is-active{color:#fff;border-bottom-color:#fff;font-weight:600;}
 
-/* ----- reusable content helpers ----- */
-.my-obj-icon{display:inline-grid;place-items:center;width:2rem;height:2rem;color:#fff;flex:none;
-  border-radius:var(--slds-g-radius-border-2,4px);}
+/* ----- console workspace tabs ----- */
+.my-ws{display:flex;align-items:stretch;height:2.25rem;background:#fff;border-bottom:1px solid var(--my-line);padding:0 .25rem;overflow-x:auto;}
+.my-wstab{display:flex;align-items:center;gap:.4rem;padding:0 .6rem;border:0;border-right:1px solid var(--my-line);background:transparent;font:inherit;font-size:.78rem;color:#514f4d;cursor:pointer;white-space:nowrap;border-bottom:3px solid transparent;}
+.my-wstab.is-active{color:#0176d3;border-bottom-color:#0176d3;font-weight:600;background:var(--slds-g-color-surface-container-1,#f7f9fb);}
+.my-wstab .ico{width:14px;height:14px;display:grid;place-items:center;}
+.my-wstab .x{width:16px;height:16px;border-radius:50%;display:grid;place-items:center;color:#747474;}
+.my-wstab .x:hover{background:#e5e5e5;color:#000;}
+.my-wstab .x svg{width:9px;height:9px;fill:currentColor;}
+
+/* ----- work area + record layout ----- */
+.my-work{flex:1 1 auto;min-height:0;overflow:auto;padding:var(--slds-g-spacing-4,16px);}
+.my-rec{display:grid;grid-template-columns:1fr 22rem;gap:var(--slds-g-spacing-4,16px);align-items:start;}
+.my-rec.layout-3{grid-template-columns:16rem 1fr 22rem;}
+@media(max-width:1100px){.my-rec,.my-rec.layout-3{grid-template-columns:1fr;}}
+.my-side{background:#fff;border:1px solid var(--my-line);border-radius:4px;}
+
+/* ----- object/utility icon square ----- */
+.my-obj-icon{display:inline-grid;place-items:center;width:2rem;height:2rem;color:#fff;flex:none;border-radius:4px;}
 .my-obj-icon svg{width:1rem;height:1rem;fill:currentColor;}
 .my-obj-icon_s{width:1.5rem;height:1.5rem;}
-.my-avatar{display:inline-grid;place-items:center;width:2rem;height:2rem;border-radius:50%;flex:none;
-  background:#5867e8;color:#fff;font-size:.75rem;font-weight:700;}
-.my-af-orb{width:2rem;height:2rem;border-radius:.5rem;flex:none;display:grid;place-items:center;color:#fff;
-  background:linear-gradient(135deg,#0176d3,#5867e8,#9050e9);}
-.my-af-orb svg{width:1.1rem;height:1.1rem;fill:currentColor;}
-.my-af-label{font-size:.625rem;letter-spacing:.06em;text-transform:uppercase;font-weight:700;color:var(--my-purple);}
-.my-af-card{background:linear-gradient(180deg,#fbfaff,#f2f0fe);border:1px solid #e4e1f7;
-  border-radius:var(--slds-g-radius-border-3,8px);padding:1rem;margin-bottom:1rem;}
-.my-af-card ul{margin:.5rem 0 0;padding-left:1.1rem;} .my-af-card li{margin-bottom:.45rem;}
-.my-person{display:flex;align-items:center;gap:.6rem;padding:.5rem 0;
-  border-bottom:1px solid var(--slds-g-color-border-1,#eee);}
-.my-tiles{display:grid;grid-template-columns:1fr 1fr;gap:.6rem;}
-.my-tile{background:var(--slds-g-color-surface-1,#fff);border:1px solid var(--slds-g-color-border-1,#e5e5e5);
-  border-radius:var(--slds-g-radius-border-2,4px);padding:.75rem;box-shadow:var(--slds-g-shadow-1,0 1px 2px rgba(0,0,0,.08));}
-.my-bars{display:flex;flex-direction:column;gap:.75rem;}
-.my-bar-row{display:grid;grid-template-columns:130px 1fr 40px;gap:.6rem;align-items:center;}
-.my-track{position:relative;height:1.25rem;border-radius:4px;overflow:hidden;
-  background:var(--slds-g-color-surface-container-2,#ececec);}
-.my-fill{height:100%;border-radius:4px;display:flex;align-items:center;justify-content:flex-end;
-  padding-right:.35rem;color:#fff;font-size:.65rem;font-weight:700;transition:width .8s cubic-bezier(.2,.7,.2,1);}
-.my-badge-purple{background:#eef0fe;color:var(--my-purple);}
-tr.my-click{cursor:pointer;} tr.my-click:hover{background:var(--slds-g-color-surface-container-1,#f7fbff);}
-.my-fade{animation:myfade .35s ease;}
-@keyframes myfade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
-@media(prefers-reduced-motion:reduce){.my-fade,.my-fill{animation:none;transition:none}}
-.my-footer{background:var(--slds-g-color-surface-1,#fff);border-top:1px solid var(--slds-g-color-border-1,#e5e5e5);
-  padding:.35rem 1rem;font-size:.7rem;text-align:center;color:var(--slds-g-color-on-surface-2,#747474);}
-.my-overlay{position:fixed;inset:0;background:rgba(0,0,0,.28);display:none;z-index:9000;}
-.my-overlay.is-open{display:block;}
-.my-launcher{position:absolute;top:5.9rem;left:.5rem;width:340px;padding:1rem;z-index:9001;display:none;
-  background:var(--slds-g-color-surface-1,#fff);border-radius:var(--slds-g-radius-border-3,8px);
-  box-shadow:var(--slds-g-shadow-3,0 4px 12px rgba(0,0,0,.2));}
-.my-launcher.is-open{display:block;}
+
+/* ----- list view controls ----- */
+.my-lv-controls{display:flex;align-items:center;gap:.25rem;}
+.my-icbtn{width:32px;height:32px;border:1px solid var(--slds-g-color-border-2,#c9c9c9);background:#fff;border-radius:4px;cursor:pointer;display:grid;place-items:center;color:#5c5c5c;}
+.my-icbtn svg{width:16px;height:16px;fill:currentColor;}
+.my-icbtn:hover{background:#f3f3f3;color:#0176d3;}
+.my-lv-search{position:relative;}
+.my-lv-search svg{position:absolute;left:8px;top:50%;transform:translateY(-50%);width:14px;height:14px;fill:#747474;}
+.my-lv-search input{height:32px;border:1px solid var(--slds-g-color-border-2,#c9c9c9);border-radius:4px;padding:0 10px 0 26px;font:inherit;font-size:.8rem;outline:none;}
+.my-lv-switch{display:inline-flex;align-items:center;gap:.35rem;background:transparent;border:0;font:inherit;cursor:pointer;color:#080707;}
+.my-lv-switch svg{width:14px;height:14px;fill:#747474;}
+table.slds-table th.is-clickable{cursor:pointer;} table.slds-table th .my-sortarrow{color:#747474;font-size:.7rem;margin-left:.25rem;}
+tr.my-rowlink td:nth-child(2){color:var(--slds-g-color-accent-1,#0176d3);font-weight:600;cursor:pointer;}
+tr.my-rowlink:hover{background:var(--slds-g-color-surface-container-1,#f7fbff);}
+.my-lv-foot{padding:.5rem .75rem;font-size:.72rem;color:var(--slds-g-color-on-surface-2,#747474);border-top:1px solid var(--my-line);}
+
+/* ----- details (form read view) ----- */
+.my-detail-sec{padding:1rem 0;border-bottom:1px solid var(--slds-g-color-border-1,#eee);}
+.my-detail-grid{display:grid;grid-template-columns:1fr 1fr;gap:.75rem 2rem;}
+@media(max-width:700px){.my-detail-grid{grid-template-columns:1fr;}}
+.my-field .slds-form-element__label{color:var(--slds-g-color-on-surface-2,#747474);}
+.my-field .slds-form-element__static{border-bottom:1px dotted transparent;padding:2px 0;}
+
+/* ----- path ----- */
+.my-path{margin-bottom:var(--slds-g-spacing-3,12px);}
+
+/* ----- activity timeline (type-colored) ----- */
+.my-tl{list-style:none;margin:0;padding:0;}
+.my-tl-item{position:relative;padding:0 0 .9rem 0;}
+.my-tl-item .slds-media{align-items:flex-start;}
+.my-tl-icon{width:1.5rem;height:1.5rem;border-radius:4px;display:grid;place-items:center;color:#fff;flex:none;position:relative;z-index:1;margin-right:.6rem;}
+.my-tl-icon svg{width:.85rem;height:.85rem;fill:currentColor;}
+.my-tl-conn{position:absolute;left:.68rem;top:1.6rem;bottom:.1rem;width:2px;background:var(--my-line);}
+.my-tl-item:last-child .my-tl-conn{display:none;}
+.my-tl-caret{transition:transform .2s;flex:none;} .my-tl-item.slds-is-open .my-tl-caret{transform:rotate(90deg);}
+.my-tl-item.is-done .my-tl-title{text-decoration:line-through;color:var(--slds-g-color-on-surface-2,#747474);}
+
+/* ----- chatter feed ----- */
+.my-pub{border:1px solid var(--slds-g-color-border-2,#c9c9c9);border-radius:6px;padding:.5rem;margin-bottom:1rem;}
+.my-pub textarea{width:100%;border:0;outline:0;resize:vertical;font:inherit;min-height:2.5rem;}
+.my-pub-actions{display:flex;align-items:center;gap:.35rem;margin-top:.35rem;}
+.my-pub-actions .sp{flex:1;}
+.my-post{padding:.7rem 0;border-bottom:1px solid var(--slds-g-color-border-1,#eee);}
+.my-post-h{display:flex;align-items:flex-start;gap:.5rem;}
+.my-post-acts{display:flex;gap:1rem;margin:.4rem 0 0 2.5rem;}
+.my-post-act{display:inline-flex;align-items:center;gap:.3rem;background:0;border:0;font:inherit;font-size:.78rem;color:var(--slds-g-color-on-surface-2,#747474);cursor:pointer;}
+.my-post-act.is-on{color:var(--slds-g-color-accent-1,#0176d3);font-weight:600;}
+.my-post-act svg{width:13px;height:13px;fill:currentColor;}
+.my-comment{display:flex;gap:.5rem;margin:.5rem 0 0 2.5rem;}
+.my-cbox{display:flex;gap:.5rem;margin:.5rem 0 0 2.5rem;}
+.my-cbox input{flex:1;height:30px;border:1px solid var(--slds-g-color-border-2,#c9c9c9);border-radius:15px;padding:0 12px;font:inherit;font-size:.8rem;outline:none;}
+.my-avatar-sm{display:inline-grid;place-items:center;width:2rem;height:2rem;border-radius:50%;color:#fff;font-size:.7rem;font-weight:700;flex:none;}
+
+/* ----- utility bar (custom; SLDS has no docked-utility-bar in this bundle) ----- */
+.my-utilbar{display:flex;align-items:center;height:2rem;background:var(--my-navy);color:#cfe0f2;padding:0 .5rem;gap:.25rem;}
+.my-util-disc{margin-left:auto;font-size:.65rem;color:#9fc3e8;padding-right:.5rem;}
+.my-utilbtn{display:inline-flex;align-items:center;gap:.35rem;height:1.6rem;padding:0 .6rem;background:transparent;border:0;color:#cfe0f2;font:inherit;font-size:.72rem;cursor:pointer;border-radius:3px;}
+.my-utilbtn:hover,.my-utilbtn.is-open{background:rgba(255,255,255,.14);color:#fff;}
+.my-utilbtn svg{width:14px;height:14px;fill:currentColor;}
+.my-utilpanel{position:fixed;bottom:2rem;width:340px;background:#fff;border:1px solid var(--my-line);border-radius:6px 6px 0 0;box-shadow:0 -2px 12px rgba(0,0,0,.18);display:none;z-index:60;}
+.my-utilpanel.is-open{display:block;}
+.my-utilpanel h3{margin:0;padding:.6rem .8rem;border-bottom:1px solid var(--my-line);font-size:.85rem;background:var(--slds-g-color-surface-container-1,#f3f3f3);}
+.my-utilpanel .bd{padding:.8rem;font-size:.85rem;color:var(--slds-g-color-on-surface-2,#565656);}
+
+/* ----- app launcher popover ----- */
+.my-overlay{position:fixed;inset:0;background:rgba(0,0,0,.28);display:none;z-index:70;} .my-overlay.is-open{display:block;}
+.my-launcher{position:absolute;top:3.25rem;left:.5rem;width:340px;padding:1rem;z-index:71;display:none;background:#fff;border-radius:8px;box-shadow:0 4px 12px rgba(0,0,0,.2);} .my-launcher.is-open{display:block;}
 .my-lgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:.25rem;}
-.my-lapp{padding:.75rem .4rem;text-align:center;border-radius:.375rem;cursor:pointer;}
-.my-lapp:hover{background:var(--slds-g-color-surface-container-1,#f3f3f3);}
-.my-lai{width:2.25rem;height:2.25rem;border-radius:.5rem;margin:0 auto .35rem;display:grid;place-items:center;color:#fff;}
-.my-lai svg{width:1.25rem;height:1.25rem;fill:currentColor;}
-@media(max-width:1120px){.app-right{width:290px;}}
-@media(max-width:920px){.app-rail{display:none;}}
+.my-lapp{padding:.75rem .4rem;text-align:center;border-radius:.375rem;cursor:pointer;} .my-lapp:hover{background:var(--slds-g-color-surface-container-1,#f3f3f3);}
+.my-lai{width:2.25rem;height:2.25rem;border-radius:.5rem;margin:0 auto .35rem;display:grid;place-items:center;color:#fff;} .my-lai svg{width:1.25rem;height:1.25rem;fill:currentColor;}
+
+.my-fade{animation:myfade .3s ease;} @keyframes myfade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+@media(prefers-reduced-motion:reduce){.my-fade,.my-tl-caret{animation:none;transition:none;}}
 </style>
 </head>
 <body>
-<div class="slds-scope my-shell">
-
-  <!-- ===================== GLOBAL HEADER (genuine SLDS assets) ===================== -->
+<div class="my-app">
+  <!-- GLOBAL HEADER (genuine SLDS assets) -->
   <header class="my-ghead">
-    <a class="my-logo" href="javascript:void(0)" aria-label="Salesforce" title="Salesforce">
-      <svg viewBox="0 0 4000 2800" preserveAspectRatio="xMinYMid" role="img" aria-label="Salesforce"><path fill="#00a1e0" d="m1666 307a700 700 0 011123 148 866 866 0 011211 795c1 480-385 870-861 870a857 857 0 01-170-18 630 630 0 01-825 260 719 719 0 01-1337-33 671 671 0 01-805-659c0-250 134-468 333-584a776 776 0 011330-780"/></svg>
-    </a>
+    <a class="my-logo" href="javascript:void(0)" aria-label="Salesforce" title="Salesforce"><svg viewBox="0 0 4000 2800" preserveAspectRatio="xMinYMid" role="img" aria-label="Salesforce"><path fill="#00a1e0" d="m1666 307a700 700 0 011123 148 866 866 0 011211 795c1 480-385 870-861 870a857 857 0 01-170-18 630 630 0 01-825 260 719 719 0 01-1337-33 671 671 0 01-805-659c0-250 134-468 333-584a776 776 0 011330-780"/></svg></a>
     <div class="my-search-wrap"><div class="my-search" role="search">
       <svg class="ico" viewBox="0 0 520 520" fill="currentColor" aria-hidden="true"><path d="M496 453 362 320a189 189 0 1 0-340-92 190 190 0 0 0 298 135l133 133a14 14 0 0 0 21 0l21-21a17 17 0 0 0 1-22M210 338a129 129 0 1 1 130-130 129 129 0 0 1-130 130"/></svg>
       <input type="search" placeholder="Search..." aria-label="Search Salesforce" />
     </div></div>
     <div class="my-hicons">
-      <button class="my-hbtn" title="Agentforce" aria-label="Agentforce"><svg viewBox="0 0 520 520" fill="currentColor" aria-hidden="true"><path d="M314.9 276.2h.2a100 100 0 0 0-21.8 4.1s-9.2 2.9-23.3 4.9c-3.3.5-7.5.5-9.8.5h-1.7c-2.3 0-6.6-.2-9.8-.7a149.5 149.5 0 0 1-23.2-5.5 113 113 0 0 0-21.8-4.4c-44.9-4.6-64.3 12.5-65.4 15.7s3.8 44.8 7.4 51.4a28 28 0 0 0 13.8 12.4c5 2.1 46.1 6.2 59.8 4.3s15.8-6.5 19.5-13.5c2.6-5 9.3-27.6 13-40.9.9-2.6 1-7.8 7.3-8.2 6.3.5 6.4 5.8 7.2 8.4l12.4 41.1c3.5 7.1 5.6 11.7 19.3 13.9 13.6 2.1 54.8-1.2 59.8-3.2s10.4-5.7 14-12.2 9.2-48 8.2-51.2c-1-3.3-20.1-20.7-65.1-16.9"/><path d="M455.2 145.5h.1a226.5 226.5 0 0 0-43.7-42.1 36.2 36.2 0 0 0 29.9-35.6 36.3 36.3 0 1 0-70.6 11.4 258.5 258.5 0 0 0-83.5-23.3 260 260 0 0 0-138.2 23 36.3 36.3 0 1 0-70.7-11.1 36.2 36.2 0 0 0 29.6 35.6C61.5 137.8 29 187.9 21.6 246a201.5 201.5 0 0 0 43.2 151.5c39.4 49.8 100.6 82.5 167.8 89.6q14.1 1.5 27.9 1.5c119.9 0 223.7-81.4 237.9-191.6a201.5 201.5 0 0 0-43.2-151.5m-195 281.1h-.1c-90.2-.1-163.6-60.3-163.6-134.3 0-22.3 6.8-43.7 19.1-62.7a60.6 60.6 0 0 0 5.3 17.1 17 17 0 0 0 22.8 7.8c8.5-4.1 12-14.3 8.1-22.8-2.1-4.5-7.5-19.4 5.6-30.8 12.7 11.5 30.9 25 51.4 31.6 38.2 12.1 67.1 5 68.3 4.7a17.1 17.1 0 0 0 12.1-11.5 17 17 0 0 0-3.4-16.3 185.5 185.5 0 0 1-32.5-48.2c78.2 10.6 93.2 72.9 93.8 75.7a17 17 0 0 0 20.2 13.1c9.3-1.9 15.2-11 13.3-20.3a119 119 0 0 0-19.9-43c38.3 24.6 63.1 62.8 63.1 105.7 0 74-73.4 134.2-163.6 134.2"/></svg></button>
-      <button class="my-star" title="Favorites" aria-label="Favorites"><svg viewBox="0 0 520 520" width="16" height="16" fill="currentColor" aria-hidden="true"><path d="m274 31 46 150c2 6 8 9 14 9h150c15 0 21 20 9 29l-122 90c-5 4-7 11-5 17l58 154c4 14-11 26-23 17l-131-98c-5-4-12-4-18 0l-132 98c-12 9-28-3-23-17l56-154c2-6 0-13-5-17L26 219c-12-9-5-29 9-29h150c7 0 12-2 14-9l47-151c4-14 24-13 28 1"/></svg><svg viewBox="0 0 520 520" width="12" height="12" fill="currentColor" aria-hidden="true"><path d="M476 178 271 385c-6 6-16 6-22 0L44 178c-6-6-6-16 0-22l22-22c6-6 16-6 22 0l161 163c6 6 16 6 22 0l161-162c6-6 16-6 22 0l22 22c5 6 5 15 0 21"/></svg></button>
-      <button class="my-hbtn" title="New / Global Actions" aria-label="Global Actions"><svg viewBox="0 0 520 520" fill="currentColor" aria-hidden="true"><path d="M300 290h165c8 0 15-7 15-15v-30c0-8-7-15-15-15H300c-6 0-10-4-10-10V55c0-8-7-15-15-15h-30c-8 0-15 7-15 15v165c0 6-4 10-10 10H55c-8 0-15 7-15 15v30c0 8 7 15 15 15h165c6 0 10 4 10 10v165c0 8 7 15 15 15h30c8 0 15-7 15-15V300c0-6 4-10 10-10"/></svg></button>
-      <button class="my-hbtn" title="Help" aria-label="Help"><svg viewBox="0 0 520 520" fill="currentColor" aria-hidden="true"><path d="M284 380h-50c-8 0-14-6-14-14v-15c0-42 27-80 67-94a80 80 0 0 0-24-155c-22-1-43 7-59 22a70.4 70.4 0 0 0-23 44c-1 6-7 11-15 11h-50c-9 0-16-7-15-16 4-38 21-72 48-99 32-30 73-46 117-45 83 3 151 71 154 154 3 70-40 133-105 157-9 4-15 11-15 20v15c0 9-8 15-16 15m16 105c0 8-7 15-15 15h-50c-8 0-15-7-15-15v-50c0-8 7-15 15-15h50c8 0 15 7 15 15z"/></svg></button>
-      <button class="my-hbtn" title="Setup" aria-label="Setup"><svg viewBox="0 0 520 520" fill="currentColor" aria-hidden="true"><path d="m468 324-37-31a195 195 0 0 0 0-68l37-31c12-10 16-28 8-42l-16-29a34 34 0 0 0-40-14l-45 17a173 173 0 0 0-58-34l-8-47c-3-16-17-25-33-25h-32c-16 0-30 9-33 25l-8 46c-22 7-41 19-59 34l-44-17-11-2c-12 0-23 6-29 16l-16 28c-8 14-5 32 8 42l37 31a195 195 0 0 0 0 68l-37 31a34 34 0 0 0-8 42l16 30a34 34 0 0 0 40 14l45-17c18 16 38 27 58 34l8 48a33 33 0 0 0 33 27h32c16 0 30-12 33-28l8-48c23-8 43-20 61-37l42 17 12 2c12 0 23-6 29-16l15-26c8-12 4-30-8-40m-207 47a110 110 0 0 1-109-110 109 109 0 1 1 218 0 110 110 0 0 1-109 110m29-191h-46c-7 0-13 4-15 10l-28 72c-2 5 2 11 8 11h47l-17 60c-2 6 5 9 9 5l71-83c5-5 1-13-6-13h-35l31-49c3-5-1-12-7-12h-12z"/></svg></button>
-      <button class="my-hbtn" title="Notifications" aria-label="Notifications"><svg viewBox="0 0 520 520" fill="currentColor" aria-hidden="true"><path d="M460 330h-5a35 35 0 0 1-35-35V180A160 160 0 0 0 252 20c-86 4-152 78-152 165v111c0 19-16 34-35 34h-5c-22 0-40 19-40 41v15c0 7 7 14 15 14h450c8 0 15-7 15-15v-15a40 40 0 0 0-40-40M309 440h-98a10 10 0 0 0-10 12c5 28 30 48 59 48s54-21 59-48a10 10 0 0 0-10-12"/></svg></button>
-      <span class="my-avatar" style="background:#e8734a" title="User" role="img" aria-label="User" id="hdrAvatar">AB</span>
+      <button class="my-hbtn" id="waffleTop" title="App Launcher" aria-label="App Launcher"><svg viewBox="0 0 52 52"><path d="M13 4H7a3 3 0 0 0-3 3v6a3 3 0 0 0 3 3h6a3 3 0 0 0 3-3V7a3 3 0 0 0-3-3m0 32H7a3 3 0 0 0-3 3v6a3 3 0 0 0 3 3h6a3 3 0 0 0 3-3v-6a3 3 0 0 0-3-3m0-16H7a3 3 0 0 0-3 3v6a3 3 0 0 0 3 3h6a3 3 0 0 0 3-3v-6a3 3 0 0 0-3-3M29 4h-6a3 3 0 0 0-3 3v6a3 3 0 0 0 3 3h6a3 3 0 0 0 3-3V7a3 3 0 0 0-3-3m0 32h-6a3 3 0 0 0-3 3v6a3 3 0 0 0 3 3h6a3 3 0 0 0 3-3v-6a3 3 0 0 0-3-3m0-16h-6a3 3 0 0 0-3 3v6a3 3 0 0 0 3 3h6a3 3 0 0 0 3-3v-6a3 3 0 0 0-3-3M45 4h-6a3 3 0 0 0-3 3v6a3 3 0 0 0 3 3h6a3 3 0 0 0 3-3V7a3 3 0 0 0-3-3m0 32h-6a3 3 0 0 0-3 3v6a3 3 0 0 0 3 3h6a3 3 0 0 0 3-3v-6a3 3 0 0 0-3-3m0-16h-6a3 3 0 0 0-3 3v6a3 3 0 0 0 3 3h6a3 3 0 0 0 3-3v-6a3 3 0 0 0-3-3"/></svg></button>
+      <span class="my-avatar" id="hdrAvatar" title="User" role="img" aria-label="User">AB</span>
     </div>
   </header>
 
-  <!-- ===================== NAV ROW (waffle + app name + tabs) ===================== -->
-  <div class="my-navbar">
-    <button class="my-waffle" id="waffle" title="App Launcher" aria-label="Open App Launcher"><svg viewBox="0 0 52 52" fill="currentColor" aria-hidden="true"><path d="M13 4H7a3 3 0 0 0-3 3v6a3 3 0 0 0 3 3h6a3 3 0 0 0 3-3V7a3 3 0 0 0-3-3m0 32H7a3 3 0 0 0-3 3v6a3 3 0 0 0 3 3h6a3 3 0 0 0 3-3v-6a3 3 0 0 0-3-3m0-16H7a3 3 0 0 0-3 3v6a3 3 0 0 0 3 3h6a3 3 0 0 0 3-3v-6a3 3 0 0 0-3-3M29 4h-6a3 3 0 0 0-3 3v6a3 3 0 0 0 3 3h6a3 3 0 0 0 3-3V7a3 3 0 0 0-3-3m0 32h-6a3 3 0 0 0-3 3v6a3 3 0 0 0 3 3h6a3 3 0 0 0 3-3v-6a3 3 0 0 0-3-3m0-16h-6a3 3 0 0 0-3 3v6a3 3 0 0 0 3 3h6a3 3 0 0 0 3-3v-6a3 3 0 0 0-3-3M45 4h-6a3 3 0 0 0-3 3v6a3 3 0 0 0 3 3h6a3 3 0 0 0 3-3V7a3 3 0 0 0-3-3m0 32h-6a3 3 0 0 0-3 3v6a3 3 0 0 0 3 3h6a3 3 0 0 0 3-3v-6a3 3 0 0 0-3-3m0-16h-6a3 3 0 0 0-3 3v6a3 3 0 0 0 3 3h6a3 3 0 0 0 3-3v-6a3 3 0 0 0-3-3"/></svg></button>
-    <div class="my-appname" id="appName">App Name</div>
-    <nav class="my-tabs" id="tabList" role="tablist" aria-label="Navigation"></nav>
-    <div class="my-orgctx" id="orgCtx"></div>
+  <!-- APP CONTEXT BAR -->
+  <div class="my-appbar">
+    <button class="my-waffle" id="waffle" title="App Launcher" aria-label="App Launcher"><svg viewBox="0 0 52 52"><path d="M13 4H7a3 3 0 0 0-3 3v6a3 3 0 0 0 3 3h6a3 3 0 0 0 3-3V7a3 3 0 0 0-3-3m0 32H7a3 3 0 0 0-3 3v6a3 3 0 0 0 3 3h6a3 3 0 0 0 3-3v-6a3 3 0 0 0-3-3m0-16H7a3 3 0 0 0-3 3v6a3 3 0 0 0 3 3h6a3 3 0 0 0 3-3v-6a3 3 0 0 0-3-3M29 4h-6a3 3 0 0 0-3 3v6a3 3 0 0 0 3 3h6a3 3 0 0 0 3-3V7a3 3 0 0 0-3-3m0 32h-6a3 3 0 0 0-3 3v6a3 3 0 0 0 3 3h6a3 3 0 0 0 3-3v-6a3 3 0 0 0-3-3m0-16h-6a3 3 0 0 0-3 3v6a3 3 0 0 0 3 3h6a3 3 0 0 0 3-3v-6a3 3 0 0 0-3-3M45 4h-6a3 3 0 0 0-3 3v6a3 3 0 0 0 3 3h6a3 3 0 0 0 3-3V7a3 3 0 0 0-3-3m0 32h-6a3 3 0 0 0-3 3v6a3 3 0 0 0 3 3h6a3 3 0 0 0 3-3v-6a3 3 0 0 0-3-3m0-16h-6a3 3 0 0 0-3 3v6a3 3 0 0 0 3 3h6a3 3 0 0 0 3-3v-6a3 3 0 0 0-3-3"/></svg></button>
+    <div class="my-appname" id="appName">App</div>
+    <nav class="my-appnav" id="appNav"></nav>
   </div>
 
-  <div class="app-body">
-    <aside class="app-rail" id="rail"></aside>
-    <main class="app-main"><div class="my-main-inner" id="main"></div></main>
-    <aside class="app-right" id="rightp"></aside>
-  </div>
+  <!-- WORKSPACE TABS (console only) -->
+  <div class="my-ws" id="wsTabs"></div>
 
-  <footer class="my-footer" id="footer">Illustrative demo — not a live system. Data shown is fictitious.</footer>
+  <!-- WORK AREA -->
+  <main class="my-work" id="work"></main>
+
+  <!-- UTILITY BAR -->
+  <div class="my-utilbar" id="utilbar"></div>
 </div>
 
+<div class="my-utilpanel" id="utilpanel"></div>
 <div class="my-overlay" id="overlay"></div>
-<div class="my-launcher" id="launcher">
-  <p class="slds-text-title_caps slds-text-color_weak slds-p-around_x-small">App Launcher</p>
-  <div class="my-lgrid" id="lgrid"></div>
-</div>
+<div class="my-launcher" id="launcher"><p class="slds-text-title_caps slds-text-color_weak slds-p-around_x-small">App Launcher</p><div class="my-lgrid" id="lgrid"></div></div>
 
 <script>
 /* =========================================================================
-   CONFIG — EDIT THESE
+   CONFIG — edit these. NAV_MODE defaults to "console".
    ========================================================================= */
-const APP_NAME = "Acme Service Console";
-const ORG_CTX  = "<b>Acme Corp</b>&nbsp;·&nbsp;Sandbox";
-const AVATAR   = "AB";
-
-const TABS = [
-  { id:"record", short:"Record",    label:"Record Page" },
-  { id:"list",   short:"List View", label:"List View" },
-  // { id:"future", short:"Future", label:"Future state", future:true },
+const NAV_MODE = "console";        // "console" | "standard"
+const RECORD_LAYOUT = "2-region";  // "2-region" | "3-region"
+const APP = { name:"Service Console", org:"Acme Corp · Sandbox", avatar:"AB" };
+const UTILITIES = [
+  { id:"omni",    label:"Omni-Channel", icon:"omni_channel", body:"Status: <b>Available</b> · 0 work items assigned. Capacity 5." },
+  { id:"phone",   label:"Phone",        icon:"call",         body:"Softphone ready. Enter a number to dial, or answer inbound calls here." },
+  { id:"history", label:"History",      icon:"clock",        body:"Recently viewed: this session's records appear here." },
 ];
 
-/* Genuine SLDS utility icons (name -> {vb, d, c}). Add more from
-   assets/icons/utility/<name>.svg  (see references/icons.md). */
-const ICONS = {
-  case:    {c:"#F2CF5B", vb:"0 0 520 520", d:"M172 113h29c4 0 7-3 7-7V84h103v22c0 4 3 7 7 7h29c4 0 7-3 7-7V84c0-24-20-44-44-44H209c-24 0-44 20-44 44v22c0 4 2 7 7 7m264 44H84c-24 0-44 20-44 44v235c0 24 20 44 44 44h352c24 0 44-20 44-44V201c0-24-20-44-44-44"},
-  people:  {c:"#5867E8", vb:"0 0 520 520", d:"M420 223c-28-11-32-22-32-33s8-22 18-30a74 74 0 0 0 26-58c0-44-29-82-80-82a76 76 0 0 0-79 71c0 4 2 7 5 9 38 24 61 66 61 117 0 38-15 72-42 96-2 2-2 6 0 8 7 5 23 12 33 17l8 2h121c23 0 41-19 41-40v-6c0-35-38-54-80-71M286 362c-34-14-39-26-39-39s10-26 21-36c20-17 31-41 31-69 0-52-34-97-96-97-61 0-96 45-96 97 0 28 11 52 31 69 11 10 21 23 21 36s-5 26-40 39c-50 20-99 43-99 85v13a40 40 0 0 0 41 40h277c23 0 42-18 42-40v-14c0-41-44-64-94-84"},
-  metrics: {c:"#5867E8", vb:"0 0 520 520", d:"M449 20H71a51 51 0 0 0-51 51v377c0 29 23 52 51 52h377c28 0 51-23 51-51V71a50 50 0 0 0-50-51M157 397c0 9-8 17-17 17h-17c-9 0-17-8-17-17v-94c0-9 8-17 17-17h17c9 0 17 8 17 17zm86 0c0 9-8 17-17 17h-17c-9 0-17-8-17-17V174c0-9 8-17 17-17h17c9 0 17 8 17 17zm86 0c0 9-8 17-17 17h-17c-9 0-17-8-17-17V123c0-9 8-17 17-17h17c9 0 17 8 17 17zm85 0c0 9-8 17-17 17h-17c-9 0-17-8-17-17V234c0-9 8-17 17-17h17c9 0 17 8 17 17z"},
-  database:{c:"#0176D3", vb:"0 0 520 520", d:"M454 90c0-38-87-69-194-69S66 52 66 90v24c0 38 87 69 194 69s194-31 194-69zM66 170c0 30 87 54 194 54s194-24 194-54v49c0 38-87 69-194 69S66 257 66 219zm0 105c0 30 87 54 194 54s194-24 194-54v49c0 38-87 69-194 69S66 363 66 325zm0 106c0 30 87 54 194 54s194-24 194-54v49c0 38-87 69-194 69S66 468 66 430z"},
-  moneybag:{c:"#2E844A", vb:"0 0 520 520", d:"M205 91c2 6 8 9 14 9h81c6 0 12-3 14-9l32-59c2-6-2-12-8-12H182c-6 0-10 6-7 11zm102 56h-94c-79 0-143 65-143 145v160c0 26 21 48 48 48h284c26 0 48-22 48-48V292c0-80-65-145-143-145"},
-  shield:  {c:"#BA0517", vb:"0 0 520 520", d:"M48 140h424c10 0 18-10 15-20-10-33-24-63-43-90-6-8-17-9-23-2a108 108 0 0 1-74 28c-30 0-57-12-77-32-6-6-16-6-22 0-20 20-47 32-77 32-28 0-54-10-74-28-7-6-18-5-23 2-19 26-34 57-43 90-1 10 7 20 17 20m452 64c0-9-7-14-16-14H36c-9 0-16 5-16 14v3c0 150 104 274 240 293 136-19 240-143 240-292z"},
-  alert:   {c:"#DD7A01", vb:"0 0 520 520", d:"m347 310-4 1a30 30 0 0 1-37-17l-33-88a131 131 0 0 0-174-75 133 133 0 0 0-70 169l31 85c5 15-3 31-17 36l-4 1c-17 6-25 26-19 43l4 11c2 5 9 9 15 6l344-127c6-2 9-10 7-16l-4-11c-3-16-22-25-39-18m-84 126-75 28c-5 2-7 8-4 12a50 50 0 0 0 59 20 50 50 0 0 0 32-53c-2-5-8-8-12-7"},
-  home:    {c:"#747474", vb:"0 0 520 520", d:"M490 270h-50v220c0 6-4 10-10 10H330c-6 0-10-4-10-10V320H200v170c0 6-4 10-10 10H90c-6 0-10-4-10-10V270H30c-4 0-8-2-9-6-2-4-1-8 2-11L253 23c4-4 11-4 14 0l230 230c3 3 3 7 2 11s-5 6-9 6"},
-  dayview: {c:"#0176D3", vb:"0 0 520 520", d:"M440 70h-50V50a30 30 0 1 0-60 0v20H190V50a30 30 0 1 0-60 0v20H80a40 40 0 0 0-40 40v25c0 8 7 15 15 15h410c8 0 15-7 15-15v-25a40 40 0 0 0-40-40m25 130H55c-8 0-15 7-15 15v245a40 40 0 0 0 40 40h360a40 40 0 0 0 40-40V215c0-8-7-15-15-15"},
-  email:   {c:"#0176D3", vb:"0 0 520 520", d:"M249 301c6 6 15 6 21 0L496 91c4-8 3-21-13-21L36 71c-12 0-22 11-13 21zm251-128c0-10-12-16-20-9L303 327c-12 11-27 17-43 17s-31-6-43-16L41 164c-8-7-20-2-20 9-1-3-1 227-1 227a40 40 0 0 0 40 40h400a40 40 0 0 0 40-40z"},
-  list:    {c:"#747474", vb:"0 0 520 520", d:"M80 105c0-8-7-15-15-15H35c-8 0-15 7-15 15v30c0 8 7 15 15 15h30c8 0 15-7 15-15zm420 0c0-8-7-15-15-15H135c-8 0-15 7-15 15v30c0 8 7 15 15 15h350c8 0 15-7 15-15zM80 245c0-8-7-15-15-15H35c-8 0-15 7-15 15v30c0 8 7 15 15 15h30c8 0 15-7 15-15zm380 0c0-8-7-15-15-15H135c-8 0-15 7-15 15v30c0 8 7 15 15 15h310c8 0 15-7 15-15zM80 385c0-8-7-15-15-15H35c-8 0-15 7-15 15v30c0 8 7 15 15 15h30c8 0 15-7 15-15zm420 0c0-8-7-15-15-15H135c-8 0-15 7-15 15v30c0 8 7 15 15 15h350c8 0 15-7 15-15z"},
-  ai:      {c:"#9050E9", vb:"0 0 520 520", d:"M314.9 276.2h.2a100 100 0 0 0-21.8 4.1s-9.2 2.9-23.3 4.9c-3.3.5-7.5.5-9.8.5h-1.7c-2.3 0-6.6-.2-9.8-.7a149.5 149.5 0 0 1-23.2-5.5 113 113 0 0 0-21.8-4.4c-44.9-4.6-64.3 12.5-65.4 15.7s3.8 44.8 7.4 51.4a28 28 0 0 0 13.8 12.4c5 2.1 46.1 6.2 59.8 4.3s15.8-6.5 19.5-13.5c2.6-5 9.3-27.6 13-40.9.9-2.6 1-7.8 7.3-8.2 6.3.5 6.4 5.8 7.2 8.4l12.4 41.1c3.5 7.1 5.6 11.7 19.3 13.9 13.6 2.1 54.8-1.2 59.8-3.2s10.4-5.7 14-12.2 9.2-48 8.2-51.2c-1-3.3-20.1-20.7-65.1-16.9"},
+/* =========================================================================
+   SAMPLE SPEC — REPLACE with the object, fields, columns, related lists,
+   activities, and feed from YOUR project spec. This sample is a Case console.
+   ========================================================================= */
+const SPEC = {
+  object:{ name:"Case", plural:"Cases", icon:"case" },
+  listViews:[ "All Open Cases", "My Cases", "Recently Viewed" ],
+  columns:[
+    { key:"number",  label:"Case Number",     sortable:true },
+    { key:"subject", label:"Subject",         sortable:true },
+    { key:"account", label:"Account Name",    sortable:true },
+    { key:"priority",label:"Priority",        sortable:true },
+    { key:"status",  label:"Status",          sortable:true },
+    { key:"opened",  label:"Date/Time Opened",sortable:true },
+  ],
+  rows:[
+    { id:"1045", number:"00001045", subject:"Widget won't power on after update", account:"Acme Corp",     priority:"High",   status:"New",       opened:"Today 9:14 AM",  contact:"Jordan Lee" },
+    { id:"1044", number:"00001044", subject:"Billing discrepancy on invoice",     account:"Globex",        priority:"Medium", status:"Working",   opened:"Today 8:02 AM",  contact:"Sam Ford" },
+    { id:"1039", number:"00001039", subject:"Login help for new admin",           account:"Initech",       priority:"Low",    status:"Working",   opened:"Yesterday",      contact:"Dana Cole" },
+    { id:"1031", number:"00001031", subject:"Refund request — order #8842",        account:"Umbrella Co",   priority:"Medium", status:"Escalated", opened:"2 days ago",     contact:"Rae Kim" },
+    { id:"1022", number:"00001022", subject:"Feature question: bulk export",       account:"Soylent LLC",   priority:"Low",    status:"Closed",    opened:"3 days ago",     contact:"Lee Park" },
+  ],
 };
-function svg(name,size){ const i=ICONS[name]||ICONS.case; size=size||18; return `<svg width="${size}" height="${size}" viewBox="${i.vb}" fill="currentColor" aria-hidden="true"><path d="${i.d}"/></svg>`; }
-function objIcon(name,small){ const i=ICONS[name]||ICONS.case; return `<span class="my-obj-icon${small?' my-obj-icon_s':''}" style="background:${i.c}">${svg(name,small?14:16)}</span>`; }
+// Build a record's detail from a list row (map your real fields here).
+function recordFor(row){ return {
+  name: row.number+" — "+row.subject, meta:"Case",
+  highlights:[["Status",row.status],["Priority",row.priority],["Account",row.account],["Contact",row.contact],["Owner","Alex Bailey"]],
+  path:["New","Working","Escalated","Closed"], pathCurrent:row.status,
+  actions:["Edit","Change Owner","Close Case"],
+  detailSections:[
+    { title:"Case Information",       fields:[["Case Owner","Alex Bailey"],["Priority",row.priority],["Status",row.status],["Case Number",row.number],["Contact Name",row.contact],["Account Name",row.account]] },
+    { title:"Description Information", fields:[["Subject",row.subject],["Description","Customer reports the issue began after the latest update. Repro confirmed by support."]] },
+  ],
+  related:[
+    { title:"Contacts", icon:"people", columns:["Name","Title","Email"], rows:[[row.contact,"IT Manager",row.contact.split(" ")[0].toLowerCase()+"@acme.com"],["Sam Ford","Buyer","sford@acme.com"]] },
+    { title:"Emails",   icon:"email",  columns:["Subject","From","Date"], rows:[["Re: "+row.subject,"support@acme.com","Today"],["Case opened","system@acme.com","Yesterday"]] },
+  ],
+  activities:[
+    { type:"task",  title:"Call customer to confirm fix", when:"Due today",       who:"Alex Bailey", details:"Confirm the workaround resolved the issue before closing." },
+    { type:"event", title:"Repair appointment",           when:"Tomorrow 2:00 PM",who:"Field tech",  details:"On-site visit scheduled with the customer." },
+    { type:"call",  title:"Logged: inbound call (6 min)", when:"Yesterday",       who:"Alex Bailey", details:"Customer described the symptoms; created this case." },
+  ],
+  feed:[
+    { author:"Alex Bailey", init:"AB", color:"#2e844a", when:"2h ago", text:"Reproduced the issue and applied the workaround. Escalating to tier 2 — cc @Sam Ford", likes:1, liked:false, comments:[{author:"Sam Ford",init:"SF",color:"#0176d3",text:"Thanks — I'll prep the RMA if needed."}] },
+    { author:"Jordan Lee",  init:"JL", color:"#dd7a01", when:"Yesterday", text:"Customer is waiting on an update — please prioritize.", likes:0, liked:false, comments:[] },
+  ],
+};}
 
-const THEME = { red:"slds-theme_error", amber:"slds-theme_warning", green:"slds-theme_success", info:"slds-theme_info" };
-function badge(text,type){ if(type==="purple") return `<span class="slds-badge my-badge-purple">${text}</span>`; return `<span class="slds-badge ${THEME[type]||""}">${text}</span>`; }
+/* Type → color for the activity timeline connector/icon (standard SLDS type colors). */
+const ACT_COLOR = { task:"#4bc076", call:"#48c3cc", email:"#939393", event:"#cb65ff" };
 
-function card(iconName,title,sub,body,right){
+/* =========================================================================
+   ICONS — genuine SLDS SVGs (utility set, viewBox 0 0 520 520 / 52 52).
+   ========================================================================= */
+const ICONS = {
+  case:{c:"#f2cf5b",vb:"0 0 520 520",d:"M172 113h29c4 0 7-3 7-7V84h103v22c0 4 3 7 7 7h29c4 0 7-3 7-7V84c0-24-20-44-44-44H209c-24 0-44 20-44 44v22c0 4 2 7 7 7m264 44H84c-24 0-44 20-44 44v235c0 24 20 44 44 44h352c24 0 44-20 44-44V201c0-24-20-44-44-44"},
+  people:{c:"#5867e8",vb:"0 0 520 520",d:"M420 223c-28-11-32-22-32-33s8-22 18-30a74 74 0 0 0 26-58c0-44-29-82-80-82a76 76 0 0 0-79 71c0 4 2 7 5 9 38 24 61 66 61 117 0 38-15 72-42 96-2 2-2 6 0 8 7 5 23 12 33 17l8 2h121c23 0 41-19 41-40v-6c0-35-38-54-80-71M286 362c-34-14-39-26-39-39s10-26 21-36c20-17 31-41 31-69 0-52-34-97-96-97-61 0-96 45-96 97 0 28 11 52 31 69 11 10 21 23 21 36s-5 26-40 39c-50 20-99 43-99 85v13a40 40 0 0 0 41 40h277c23 0 42-18 42-40v-14c0-41-44-64-94-84"},
+  email:{c:"#0176d3",vb:"0 0 520 520",d:"M249 301c6 6 15 6 21 0L496 91c4-8 3-21-13-21L36 71c-12 0-22 11-13 21zm251-128c0-10-12-16-20-9L303 327c-12 11-27 17-43 17s-31-6-43-16L41 164c-8-7-20-2-20 9-1-3-1 227-1 227a40 40 0 0 0 40 40h400a40 40 0 0 0 40-40z"},
+  metrics:{c:"#5867e8",vb:"0 0 520 520",d:"M449 20H71a51 51 0 0 0-51 51v377c0 29 23 52 51 52h377c28 0 51-23 51-51V71a50 50 0 0 0-50-51M157 397c0 9-8 17-17 17h-17c-9 0-17-8-17-17v-94c0-9 8-17 17-17h17c9 0 17 8 17 17zm86 0c0 9-8 17-17 17h-17c-9 0-17-8-17-17V174c0-9 8-17 17-17h17c9 0 17 8 17 17zm86 0c0 9-8 17-17 17h-17c-9 0-17-8-17-17V123c0-9 8-17 17-17h17c9 0 17 8 17 17zm85 0c0 9-8 17-17 17h-17c-9 0-17-8-17-17V234c0-9 8-17 17-17h17c9 0 17 8 17 17z"},
+  home:{c:"#747474",vb:"0 0 520 520",d:"M490 270h-50v220c0 6-4 10-10 10H330c-6 0-10-4-10-10V320H200v170c0 6-4 10-10 10H90c-6 0-10-4-10-10V270H30c-4 0-8-2-9-6-2-4-1-8 2-11L253 23c4-4 11-4 14 0l230 230c3 3 3 7 2 11s-5 6-9 6"},
+  ai:{c:"#9050e9",vb:"0 0 520 520",d:"M314.9 276.2h.2a100 100 0 0 0-21.8 4.1s-9.2 2.9-23.3 4.9c-3.3.5-7.5.5-9.8.5h-1.7c-2.3 0-6.6-.2-9.8-.7a149.5 149.5 0 0 1-23.2-5.5 113 113 0 0 0-21.8-4.4c-44.9-4.6-64.3 12.5-65.4 15.7s3.8 44.8 7.4 51.4a28 28 0 0 0 13.8 12.4c5 2.1 46.1 6.2 59.8 4.3s15.8-6.5 19.5-13.5c2.6-5 9.3-27.6 13-40.9.9-2.6 1-7.8 7.3-8.2 6.3.5 6.4 5.8 7.2 8.4l12.4 41.1c3.5 7.1 5.6 11.7 19.3 13.9 13.6 2.1 54.8-1.2 59.8-3.2s10.4-5.7 14-12.2 9.2-48 8.2-51.2c-1-3.3-20.1-20.7-65.1-16.9"},
+  search:{c:"#747474",vb:"0 0 520 520",d:"M496 453 362 320a189 189 0 1 0-340-92 190 190 0 0 0 298 135l133 133a14 14 0 0 0 21 0l21-21a17 17 0 0 0 1-22M210 338a129 129 0 1 1 130-130 129 129 0 0 1-130 130"},
+  refresh:{c:"#747474",vb:"0 0 520 520",d:"M465 40h-30c-8 0-15 7-15 15v70c0 9-5 13-12 7l-10-10a210 210 0 1 0-12 309c7-6 7-16 1-22l-21-21c-5-5-14-6-20-1a152 152 0 0 1-172 14 152 152 0 0 1 77-281 150 150 0 0 1 118 58c3 8-4 12-13 12h-70c-8 0-15 7-15 15v31c0 8 6 14 14 14h183c7 0 13-6 13-13V55c-1-8-8-15-16-15"},
+  filterList:{c:"#747474",vb:"0 0 520 520",d:"M483 40H39c-15 0-22 17-13 28l194 227c6 7 9 17 9 26v144c0 8 8 15 16 15h30c8 0 14-7 14-15V321c0-10 4-19 11-26L496 68c9-11 2-28-13-28"},
+  settings:{c:"#747474",vb:"0 0 520 520",d:"M261 191c-39 0-70 31-70 70s31 70 70 70 70-31 70-70-31-70-70-70m210 133-37-31a195 195 0 0 0 0-68l37-31c12-10 16-28 8-42l-16-28a34 34 0 0 0-40-14l-46 17a168 168 0 0 0-59-34l-8-47c-3-16-17-25-33-25h-32c-16 0-30 9-33 25l-8 46a180 180 0 0 0-60 34l-46-17-11-2c-12 0-23 6-29 16l-16 28c-8 14-5 32 8 42l37 31a195 195 0 0 0 0 68l-37 31a34 34 0 0 0-8 42l16 28a34 34 0 0 0 40 14l46-17c18 16 38 27 59 34l8 48a33 33 0 0 0 33 27h32c16 0 30-12 33-28l8-48a170 170 0 0 0 62-37l43 17 12 2c12 0 23-6 29-16l15-26c9-11 5-29-7-39m-210 47c-61 0-110-49-110-110s49-110 110-110 110 49 110 110-49 110-110 110"},
+  chevrondown:{c:"#747474",vb:"0 0 520 520",d:"M476 178 271 385c-6 6-16 6-22 0L44 178c-6-6-6-16 0-22l22-22c6-6 16-6 22 0l161 163c6 6 16 6 22 0l161-162c6-6 16-6 22 0l22 22c5 6 5 15 0 21"},
+  chevronright:{c:"#747474",vb:"0 0 520 520",d:"m179 44 207 205c6 6 6 16 0 22L179 476c-6 6-16 6-22 0l-22-22c-6-6-6-16 0-22l163-161c6-6 6-16 0-22L136 88c-6-6-6-16 0-22l22-22c6-5 15-5 21 0"},
+  call:{c:"#747474",vb:"0 0 520 520",d:"m485 379-61-49a40 40 0 0 0-48-1l-52 38c-6 5-15 4-21-2l-78-70-70-78c-6-6-6-14-2-21l38-52a40 40 0 0 0-1-48l-49-61a40 40 0 0 0-59-3L30 84c-8 8-12 19-12 30 5 102 51 199 119 267s165 114 267 119c11 1 22-4 30-12l52-52a36 36 0 0 0-1-57"},
+  clock:{c:"#747474",vb:"0 0 520 520",d:"M260 20C128 20 20 128 20 260s108 240 240 240 240-108 240-240S392 20 260 20m0 420c-99 0-180-81-180-180S161 80 260 80s180 81 180 180-81 180-180 180m34-178c-3-3-4-7-4-11v-96c0-8-7-15-15-15h-30c-8 0-15 7-15 15v121c0 4 2 8 4 11l74 74c6 6 15 6 21 0l21-21c6-6 6-15 0-21z"},
+  omni_channel:{c:"#747474",vb:"0 0 520 520",d:"M472 27H346c-8 0-11 7-4 14l40 40 5 5-75 74c-6 6-6 16-1 22 0 0 51 52 46 111 0 84-61 151-145 151-62 6-111-51-111-51-6-6-15-6-21 0l-37 37c-6 6-6 15 0 21l12 12c6 6 15 6 21 0l14-13c34 27 77 42 123 42 110 0 199-89 199-199 0-46-16-89-42-123l51-51 7 7 40 40c6 7 14 4 14-4V36c-1-5-5-9-10-9"},
+  task:{c:"#747474",vb:"0 0 520 520",d:"m240 70-17-17c-5-5-12-5-17 0L100 158l-43-42c-5-5-12-5-17 0l-17 17c-5 5-5 12 0 17l59 59c5 5 11 7 17 7s12-2 17-7L240 87c4-4 4-12 0-17m244 114H275c-9 0-16-7-16-16v-32c0-9 7-16 16-16h209c9 0 16 7 16 16v32c0 9-7 16-16 16m0 143H227c-9 0-16-7-16-16v-32c0-9 7-16 16-16h257c9 0 16 7 16 16v32c0 9-7 16-16 16m-354 0H98c-9 0-16-7-16-16v-32c0-9 7-16 16-16h32c9 0 16 7 16 16v32c1 9-7 16-16 16m0 143H98c-9 0-16-7-16-16v-32c0-9 7-16 16-16h32c9 0 16 7 16 16v32c1 9-7 16-16 16m354 0H227c-9 0-16-7-16-16v-32c0-9 7-16 16-16h257c9 0 16 7 16 16v32c0 9-7 16-16 16"},
+  event:{c:"#747474",vb:"0 0 52 52",d:"M46.5 20h-41c-.8 0-1.5.7-1.5 1.5V46a4 4 0 0 0 4 4h36a4 4 0 0 0 4-4V21.5c0-.8-.7-1.5-1.5-1.5M19 42c0 .6-.4 1-1 1h-4c-.6 0-1-.4-1-1v-4c0-.6.4-1 1-1h4c.6 0 1 .4 1 1zm0-10c0 .6-.4 1-1 1h-4c-.6 0-1-.4-1-1v-4c0-.6.4-1 1-1h4c.6 0 1 .4 1 1zm10 10c0 .6-.4 1-1 1h-4c-.6 0-1-.4-1-1v-4c0-.6.4-1 1-1h4c.6 0 1 .4 1 1zm0-10c0 .6-.4 1-1 1h-4c-.6 0-1-.4-1-1v-4c0-.6.4-1 1-1h4c.6 0 1 .4 1 1zm10 10c0 .6-.4 1-1 1h-4c-.6 0-1-.4-1-1v-4c0-.6.4-1 1-1h4c.6 0 1 .4 1 1zm0-10c0 .6-.4 1-1 1h-4c-.6 0-1-.4-1-1v-4c0-.6.4-1 1-1h4c.6 0 1 .4 1 1zm5-25h-5V5a3 3 0 0 0-3-3 3 3 0 0 0-3 3v2H19V5a3 3 0 0 0-3-3 3 3 0 0 0-3 3v2H8a4 4 0 0 0-4 4v2.5c0 .8.7 1.5 1.5 1.5h41c.8 0 1.5-.7 1.5-1.5V11a4 4 0 0 0-4-4"},
+  like:{c:"#747474",vb:"0 0 520 520",d:"M105 210H55c-8 0-15 7-15 15v230c0 8 7 15 15 15h25a40 40 0 0 0 40-40V225c0-8-7-15-15-15m335 10h-60a40 40 0 0 1-40-40V80a40 40 0 0 0-40-40h-25c-8 0-15 7-15 15v60c0 53-37 105-85 105-8 0-15 7-15 15v200c0 8 6 15 14 15 68 3 91 30 162 30 75 0 144-8 144-95V260a40 40 0 0 0-40-40"},
+  comments:{c:"#747474",vb:"0 0 520 520",d:"M478 310c-1-4-1-8 1-12 13-23 21-49 21-77 0-88-76-160-170-160-44 0-84 16-114 42a204 204 0 0 1 184 198c0 25-5 49-14 71l32-14c4-2 8-3 12-1l61 24c6 2 11-3 9-9zM190 141c-94 0-170 72-170 160 0 28 8 54 21 77 2 4 3 8 1 12l-22 61c-2 6 3 11 9 9l61-24c4-1 8-1 12 1 26 15 56 23 88 23 94 0 170-72 170-160 0-87-76-159-170-159"},
+  share:{c:"#747474",vb:"0 0 520 520",d:"M485 300h-30c-8 0-15 7-15 15v110c0 8-7 15-15 15H95c-8 0-15-7-15-15V215c0-8 7-15 15-15h40c8 0 15-7 15-15v-30c0-8-7-15-15-15H60a40 40 0 0 0-40 40v280a40 40 0 0 0 40 40h400a40 40 0 0 0 40-40V315c0-8-7-15-15-15M340 140c-100 0-191 89-199 194-1 8 6 16 15 16h30c8 0 14-6 15-13 7-75 71-137 149-137h16c9 0 13 11 7 17l-55 56c-6 6-6 15 0 21l21 21c6 6 15 6 21 0l136-135c6-6 6-15 0-21L361 24c-6-6-15-6-21 0l-21 21c-6 6-7 15-1 21l56 56c6 6 2 17-7 17z"},
+  close:{c:"#747474",vb:"0 0 520 520",d:"m310 254 130-131c6-6 6-15 0-21l-20-21c-6-6-15-6-21 0L268 212a10 10 0 0 1-14 0L123 80c-6-6-15-6-21 0l-21 21c-6 6-6 15 0 21l131 131c4 4 4 10 0 14L80 399c-6 6-6 15 0 21l21 21c6 6 15 6 21 0l131-131a10 10 0 0 1 14 0l131 131c6 6 15 6 21 0l21-21c6-6 6-15 0-21L310 268a10 10 0 0 1 0-14"},
+};
+function svg(n,size){ const i=ICONS[n]||ICONS.case; size=size||16; return `<svg width="${size}" height="${size}" viewBox="${i.vb}" fill="currentColor" aria-hidden="true"><path d="${i.d}"/></svg>`; }
+function objIcon(n,small){ const i=ICONS[n]||ICONS.case; return `<span class="my-obj-icon${small?' my-obj-icon_s':''}" style="background:${i.c}">${svg(n,small?14:16)}</span>`; }
+const THEME={red:"slds-theme_error",amber:"slds-theme_warning",green:"slds-theme_success",info:"slds-theme_info"};
+function badge(t,type){return `<span class="slds-badge ${THEME[type]||""}">${t}</span>`;}
+function prBadge(p){return badge(p, p==="High"?"red":p==="Medium"?"amber":"info");}
+const esc=s=>String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;");
+
+/* =========================================================================
+   STATE + SHELL
+   ========================================================================= */
+let TABS=[{ id:"home", type:"list", label:SPEC.object.plural, icon:SPEC.object.icon }];
+let ACTIVE="home"; let SORT={col:null,dir:1}; let SELECTED=new Set();
+
+function boot(){
+  document.getElementById("appName").textContent=APP.name;
+  document.getElementById("hdrAvatar").textContent=APP.avatar;
+  document.getElementById("appNav").innerHTML=
+    `<button class="my-navitem is-active">Home</button>`+
+    `<button class="my-navitem" onclick="setActive('home')">${SPEC.object.plural}</button>`;
+  if(NAV_MODE!=="console") document.getElementById("wsTabs").style.display="none";
+  renderUtil(); initLauncher(); renderWS(); renderWork();
+}
+function renderWS(){
+  if(NAV_MODE!=="console") return;
+  document.getElementById("wsTabs").innerHTML=TABS.map(t=>`
+    <button class="my-wstab ${t.id===ACTIVE?"is-active":""}" onclick="setActive('${t.id}')">
+      <span class="ico">${svg(t.icon,13)}</span><span>${esc(t.label)}</span>
+      ${t.id!=="home"?`<span class="x" title="Close" onclick="event.stopPropagation();closeTab('${t.id}')">${svg("close",9)}</span>`:""}
+    </button>`).join("");
+}
+function setActive(id){ ACTIVE=id; renderWS(); renderWork(); }
+function closeTab(id){ TABS=TABS.filter(t=>t.id!==id); if(ACTIVE===id) ACTIVE="home"; renderWS(); renderWork(); }
+function openRecord(row){
+  const id="rec-"+row.id;
+  if(!TABS.some(t=>t.id===id)) TABS.push({id,type:"record",label:row.number,icon:SPEC.object.icon,row});
+  if(NAV_MODE!=="console"){ TABS=TABS.filter(t=>t.id==="home"||t.id===id); }
+  setActive(id);
+}
+function renderWork(){
+  const el=document.getElementById("work"); el.className="my-work my-fade";
+  const tab=TABS.find(t=>t.id===ACTIVE)||TABS[0];
+  if(tab.type==="record") renderRecord(tab.row); else renderList();
+  void el.offsetWidth;
+}
+
+/* =========================================================================
+   STANDARD LIST VIEW
+   ========================================================================= */
+function sortedRows(){
+  const r=SPEC.rows.slice();
+  if(SORT.col){ r.sort((a,b)=>String(a[SORT.col]).localeCompare(String(b[SORT.col]),undefined,{numeric:true})*SORT.dir); }
+  return r;
+}
+function renderList(){
+  const rows=sortedRows();
+  const head=`
+    <div class="slds-page-header slds-page-header_object-home slds-m-bottom_medium">
+      <div class="slds-page-header__row">
+        <div class="slds-page-header__col-title"><div class="slds-media slds-media_center">
+          <div class="slds-media__figure">${objIcon(SPEC.object.icon)}</div>
+          <div class="slds-media__body">
+            <div class="slds-page-header__name"><div class="slds-page-header__name-title"><h1>
+              <span class="slds-text-body_small">${SPEC.object.plural}</span>
+              <button class="my-lv-switch"><span class="slds-page-header__title">${SPEC.listViews[0]}</span>${svg("chevrondown",14)}</button>
+            </h1></div></div>
+            <p class="slds-text-body_small slds-text-color_weak">${rows.length} items · sorted by ${SORT.col?colLabel(SORT.col):"Case Number"} · updated a moment ago</p>
+          </div>
+        </div></div>
+        <div class="slds-page-header__col-actions"><div class="slds-page-header__controls">
+          <div class="slds-button-group" role="group">
+            <button class="slds-button slds-button_neutral">New</button>
+            <button class="slds-button slds-button_neutral">Import</button>
+          </div>
+          <div class="my-lv-controls slds-m-left_x-small">
+            <span class="my-lv-search">${svg("search",14)}<input type="search" placeholder="Search this list…" aria-label="Search this list"/></span>
+            <button class="my-icbtn" title="Refresh">${svg("refresh",16)}</button>
+            <button class="my-icbtn" title="Charts">${svg("metrics",16)}</button>
+            <button class="my-icbtn" title="Filters">${svg("filterList",16)}</button>
+            <button class="my-icbtn" title="List View Settings">${svg("settings",16)}</button>
+          </div>
+        </div></div>
+      </div>
+    </div>`;
+  const ths=SPEC.columns.map(c=>{
+    const sorted=SORT.col===c.key; const arrow=sorted?(SORT.dir>0?"▲":"▼"):"";
+    return `<th class="slds-text-title_caps ${c.sortable?"is-clickable is-sortable":""} ${sorted?"slds-is-sorted":""}" scope="col" ${c.sortable?`onclick="sortBy('${c.key}')"`:""}>
+      <div class="slds-truncate" title="${c.label}">${c.label}<span class="my-sortarrow">${arrow}</span></div></th>`;}).join("");
+  const trs=rows.map(r=>`
+    <tr class="slds-hint-parent my-rowlink">
+      <td class="slds-cell-shrink"><input type="checkbox" class="my-rowchk" data-id="${r.id}" ${SELECTED.has(r.id)?"checked":""} onclick="event.stopPropagation();toggleSel('${r.id}',this.checked)" /></td>
+      ${SPEC.columns.map((c,ci)=>`<td ${ci===1?`onclick="openRecordById('${r.id}')"`:""}><div class="slds-truncate" title="${esc(r[c.key])}">${c.key==="priority"?prBadge(r[c.key]):esc(r[c.key])}</div></td>`).join("")}
+      <td class="slds-cell-shrink"><button class="slds-button slds-button_icon slds-button_icon-border-filled" title="Show actions">${svg("chevrondown",12)}</button></td>
+    </tr>`).join("");
+  document.getElementById("work").innerHTML=head+`
+    <div class="slds-card"><table class="slds-table slds-table_bordered slds-table_col-bordered slds-table_fixed-layout slds-table_resizable-cols">
+      <thead><tr class="slds-line-height_reset">
+        <th class="slds-cell-shrink" scope="col"><input type="checkbox" onclick="toggleSelAll(this.checked)" aria-label="Select all"/></th>
+        ${ths}<th class="slds-cell-shrink" scope="col"></th>
+      </tr></thead>
+      <tbody>${trs}</tbody>
+    </table>
+    <div class="my-lv-foot">${rows.length} items${SELECTED.size?` · ${SELECTED.size} selected`:""} · sorted by ${SORT.col?colLabel(SORT.col):"Case Number"}</div></div>`;
+}
+function colLabel(k){ return (SPEC.columns.find(c=>c.key===k)||{}).label||k; }
+function sortBy(k){ if(SORT.col===k) SORT.dir*=-1; else {SORT.col=k;SORT.dir=1;} renderList(); }
+function toggleSel(id,on){ on?SELECTED.add(id):SELECTED.delete(id); renderList(); }
+function toggleSelAll(on){ SELECTED=new Set(on?SPEC.rows.map(r=>r.id):[]); renderList(); }
+function openRecordById(id){ openRecord(SPEC.rows.find(r=>r.id===id)); }
+
+/* =========================================================================
+   STANDARD RECORD HOME (highlights + Details/Related + Activity/Chatter)
+   ========================================================================= */
+function renderRecord(row){
+  const rec=recordFor(row);
+  const highlights=`
+    <div class="slds-page-header slds-m-bottom_medium">
+      <div class="slds-page-header__row slds-grid_align-spread">
+        <div class="slds-media slds-media_center slds-has-flexi-truncate"><div class="slds-media__figure">${objIcon(SPEC.object.icon)}</div>
+          <div class="slds-media__body"><p class="slds-text-body_small slds-text-color_weak">${rec.meta}</p>
+          <h1 class="slds-page-header__title slds-truncate" title="${esc(rec.name)}">${esc(rec.name)}</h1></div></div>
+        <div class="slds-no-flex"><div class="slds-button-group" role="group">
+          ${rec.actions.map((a,i)=>`<button class="slds-button ${i===0?"slds-button_brand":"slds-button_neutral"}">${a}</button>`).join("")}
+        </div></div>
+      </div>
+      <ul class="slds-page-header__detail-row slds-grid slds-wrap">
+        ${rec.highlights.map(h=>`<li class="slds-page-header__detail-block slds-p-right_x-large"><div class="slds-text-title_caps slds-text-color_weak">${h[0]}</div><div class="slds-truncate">${h[0]==="Priority"?prBadge(h[1]):esc(h[1])}</div></li>`).join("")}
+      </ul>
+    </div>`;
+  const path=rec.path?renderPath(rec.path,rec.pathCurrent):"";
+  const main=highlights+path+tabset("rec",[
+    {label:"Details", html:renderDetails(rec)},
+    {label:"Related", html:renderRelated(rec)},
+  ]);
+  const side=`<div class="my-side">`+tabset("side",[
+    {label:"Activity", html:renderActivity(rec)},
+    {label:"Chatter",  html:renderChatter(rec)},
+  ],true)+`</div>`;
+  const cls=RECORD_LAYOUT==="3-region"?"my-rec layout-3":"my-rec";
+  const left=RECORD_LAYOUT==="3-region"?`<div>${rec.related.map(rl=>relatedCard(rl,true)).join("")}</div>`:"";
+  document.getElementById("work").innerHTML=`<div class="${cls}">${left}<div>${main}</div>${side}</div>`;
+  wireTabs(document.getElementById("work")); wireActivity(); wireChatter();
+}
+function renderPath(stages,current){
+  const ci=Math.max(0,stages.indexOf(current));
+  return `<div class="my-path"><div class="slds-path"><div class="slds-grid slds-path__track"><div class="slds-grid slds-has-flexi-truncate">
+    <ul class="slds-path__nav" role="listbox">
+    ${stages.map((s,i)=>`<li class="slds-path__item ${i<ci?"slds-is-complete":i===ci?"slds-is-current slds-is-active":"slds-is-incomplete"}" role="presentation">
+      <a class="slds-path__link" href="javascript:void(0)" role="option"><span class="slds-path__stage">${i<ci?svg("close",0):""}</span><span class="slds-path__title">${s}</span></a></li>`).join("")}
+    </ul></div></div></div></div>`;
+}
+function renderDetails(rec){
+  return rec.detailSections.map(sec=>`
+    <div class="my-detail-sec">
+      <h3 class="slds-text-title_caps slds-text-color_weak slds-m-bottom_small">${sec.title}</h3>
+      <div class="my-detail-grid">
+        ${sec.fields.map(f=>`<div class="my-field slds-form-element slds-form-element_stacked slds-form-element_readonly">
+          <span class="slds-form-element__label">${f[0]}</span>
+          <div class="slds-form-element__control"><div class="slds-form-element__static">${f[0]==="Priority"?prBadge(f[1]):esc(f[1])}</div></div></div>`).join("")}
+      </div>
+    </div>`).join("");
+}
+function renderRelated(rec){ return rec.related.map(rl=>relatedCard(rl,false)).join(""); }
+function relatedCard(rl,compact){
   return `<article class="slds-card slds-m-bottom_medium">
-    <div class="slds-card__header slds-grid">
-      <header class="slds-media slds-media_center slds-has-flexi-truncate">
-        <div class="slds-media__figure">${objIcon(iconName)}</div>
-        <div class="slds-media__body"><h2 class="slds-card__header-title">${title}</h2>
-          ${sub?`<p class="slds-text-body_small slds-text-color_weak">${sub}</p>`:""}</div>
-      </header>${right?`<div class="slds-no-flex">${right}</div>`:""}
+    <div class="slds-card__header slds-grid"><header class="slds-media slds-media_center slds-has-flexi-truncate">
+      <div class="slds-media__figure">${objIcon(rl.icon,true)}</div>
+      <div class="slds-media__body"><h2 class="slds-card__header-title">${rl.title} (${rl.rows.length})</h2></div></header>
+      <div class="slds-no-flex"><button class="slds-button slds-button_neutral slds-button_small">New</button></div></div>
+    <table class="slds-table slds-table_bordered slds-table_cell-buffer">
+      <thead><tr class="slds-line-height_reset">${rl.columns.map(c=>`<th class="slds-text-title_caps" scope="col"><div class="slds-truncate">${c}</div></th>`).join("")}</tr></thead>
+      <tbody>${rl.rows.map(r=>`<tr class="slds-hint-parent">${r.map((c,i)=>`<td><div class="slds-truncate" title="${esc(c)}">${i===0?`<a href="javascript:void(0)">${esc(c)}</a>`:esc(c)}</div></td>`).join("")}</tr>`).join("")}</tbody>
+    </table>
+    <footer class="slds-card__footer"><a href="javascript:void(0)">View All</a></footer></article>`;
+}
+
+/* ----- Activity timeline ----- */
+function renderActivity(rec){
+  const comp=`<div class="slds-p-around_small" style="border-bottom:1px solid var(--my-line)">
+    <div class="slds-button-group" role="group">
+      ${[["call","Log a Call"],["task","New Task"],["event","New Event"],["email","Email"]].map(a=>`<button class="slds-button slds-button_neutral slds-button_small">${a[1]}</button>`).join("")}
+    </div></div>`;
+  const items=rec.activities.map((a,i)=>{
+    const col=ACT_COLOR[a.type]||"#747474";
+    return `<li><div class="slds-timeline__item_expandable my-tl-item" data-i="${i}">
+      <span class="my-tl-conn"></span>
+      <div class="slds-media"><div class="slds-media__figure">
+        <span class="my-tl-icon" style="background:${col}">${svg(a.type,14)}</span></div>
+      <div class="slds-media__body" style="min-width:0">
+        <div class="slds-grid slds-grid_align-spread my-tl-head" style="cursor:pointer;gap:.4rem">
+          <span class="slds-grid slds-grid_vertical-align-center" style="gap:.4rem;min-width:0">
+            <span class="slds-truncate my-tl-title" style="font-weight:600;font-size:.82rem">${esc(a.title)}</span>
+            <span class="my-tl-caret" style="color:#747474;display:inline-grid">${svg("chevronright",11)}</span>
+          </span>
+          <span class="slds-text-body_small slds-text-color_weak" style="flex:none">${a.when}</span>
+        </div>
+        <p class="slds-text-body_small slds-text-color_weak" style="margin:.1rem 0 0">${a.type} · ${esc(a.who)}</p>
+        <div class="my-tl-details" hidden><p class="slds-text-body_small slds-m-top_x-small">${esc(a.details)}</p></div>
+      </div></div></div></li>`;}).join("");
+  return comp+`<div class="slds-p-around_small"><ul class="slds-timeline my-tl">${items}</ul></div>`;
+}
+function wireActivity(){
+  document.querySelectorAll(".my-tl-head").forEach(h=>h.onclick=function(){
+    const li=this.closest(".my-tl-item"), d=li.querySelector(".my-tl-details");
+    const open=li.classList.toggle("slds-is-open"); if(d) d.hidden=!open;
+  });
+}
+
+/* ----- Chatter feed ----- */
+let FEED=[];
+function renderChatter(rec){
+  FEED=rec.feed;
+  return `<div class="slds-p-around_small">
+    <div class="my-pub"><textarea id="pubText" placeholder="Share an update…"></textarea>
+      <div class="my-pub-actions">
+        <button class="slds-button slds-button_icon" title="Attach">${svg("share",14)}</button>
+        <button class="slds-button slds-button_icon" title="Mention">${svg("people",14)}</button>
+        <span class="sp"></span>
+        <button class="slds-button slds-button_brand slds-button_small" onclick="postShare()">Share</button>
+      </div></div>
+    <div id="feed">${FEED.map((p,i)=>postHtml(p,i)).join("")}</div>
+  </div>`;
+}
+function postHtml(p,i){
+  return `<div class="my-post" data-i="${i}">
+    <div class="my-post-h"><span class="my-avatar-sm" style="background:${p.color}">${p.init}</span>
+      <div style="min-width:0"><div><strong>${esc(p.author)}</strong> <span class="slds-text-body_small slds-text-color_weak">— ${p.when}</span></div>
+      <div class="slds-text-body_regular">${mentions(p.text)}</div></div></div>
+    <div class="my-post-acts">
+      <button class="my-post-act ${p.liked?"is-on":""}" onclick="likePost(${i})">${svg("like",13)} <span>${p.likes?p.likes+" ":""}Like</span></button>
+      <button class="my-post-act" onclick="toggleComment(${i})">${svg("comments",13)} Comment</button>
+      <button class="my-post-act">${svg("share",13)} Share</button>
     </div>
-    <div class="slds-card__body slds-card__body_inner">${body}</div></article>`;
+    <div class="my-post-cs">${(p.comments||[]).map(c=>`<div class="my-comment"><span class="my-avatar-sm" style="width:1.5rem;height:1.5rem;font-size:.6rem;background:${c.color}">${c.init}</span><div><strong class="slds-text-body_small">${esc(c.author)}</strong><div class="slds-text-body_small">${mentions(c.text)}</div></div></div>`).join("")}</div>
+    <div class="my-cbox" data-i="${i}" hidden><input placeholder="Write a comment…" onkeydown="if(event.key==='Enter')addComment(${i},this.value)"/></div>`;
 }
-function pageHeader(iconName,meta,title,right){
-  return `<div class="slds-page-header slds-m-bottom_medium"><div class="slds-page-header__row slds-grid_align-spread">
-    <div class="slds-media slds-media_center slds-has-flexi-truncate"><div class="slds-media__figure">${objIcon(iconName)}</div>
-      <div class="slds-media__body"><p class="slds-text-body_small slds-text-color_weak">${meta}</p>
-      <h1 class="slds-page-header__title slds-truncate" title="${title}">${title}</h1></div></div>
-    ${right?`<div class="slds-no-flex">${right}</div>`:""}</div></div>`;
-}
-function afPanel(heading,bulletsHtml,people){
-  return `<div class="slds-media slds-media_center slds-m-bottom_medium">
-    <div class="slds-media__figure"><span class="my-af-orb">${svg("ai",18)}</span></div>
-    <div class="slds-media__body"><div class="my-af-label">Agentforce</div><div class="slds-text-heading_small">${heading}</div></div></div>
-    <div class="my-af-card"><ul>${bulletsHtml}</ul></div>
-    ${people?`<p class="slds-text-title_caps slds-text-color_weak slds-m-bottom_x-small">People</p>${people}`:""}`;
-}
-
-function navItem(ico,label,sub,o){ o=o||{};
-  return `<li class="slds-nav-vertical__item ${o.active?"slds-is-active":""}">
-    <a href="javascript:void(0)" class="slds-nav-vertical__action" ${o.active?'aria-current="page"':""}>
-      <span class="slds-grid slds-grid_vertical-align-center" style="gap:.5rem">${svg(ico,15)}
-      <span class="slds-truncate">${label}${sub?`<span class="slds-text-body_small slds-text-color_weak" style="display:block">${sub}</span>`:""}</span></span>
-      ${o.badge?`<span class="slds-badge slds-badge_inverse slds-col_bump-left">${o.badge}</span>`:""}</a></li>`;
-}
-function navSection(title,items){ return `<div class="slds-nav-vertical__section"><h3 class="slds-nav-vertical__title">${title}</h3><ul>${items.join("")}</ul></div>`; }
-function rail(sections){ return `<nav class="slds-nav-vertical slds-p-vertical_small" aria-label="Navigation">${sections.join("")}</nav>`; }
+function mentions(t){ return esc(t).replace(/@([A-Z][a-z]+ [A-Z][a-z]+)/g,'<span class="slds-text-link" style="color:var(--slds-g-color-accent-1,#0176d3)">@$1</span>'); }
+function wireChatter(){/* handlers are inline for the feed; nothing extra */}
+function likePost(i){ const p=FEED[i]; p.liked=!p.liked; p.likes=(p.likes||0)+(p.liked?1:-1); refreshFeed(); }
+function toggleComment(i){ const b=document.querySelector(`.my-cbox[data-i="${i}"]`); if(b){b.hidden=!b.hidden; if(!b.hidden) b.querySelector("input").focus();} }
+function addComment(i,val){ if(!val.trim())return; FEED[i].comments=FEED[i].comments||[]; FEED[i].comments.push({author:"You",init:"YOU".slice(0,2),color:"#5867e8",text:val}); refreshFeed(); }
+function postShare(){ const t=document.getElementById("pubText"); if(!t.value.trim())return; FEED.unshift({author:"You",init:"Y",color:"#5867e8",when:"just now",text:t.value,likes:0,liked:false,comments:[]}); t.value=""; refreshFeed(); }
+function refreshFeed(){ const f=document.getElementById("feed"); if(f) f.innerHTML=FEED.map((p,i)=>postHtml(p,i)).join(""); }
 
 /* =========================================================================
-   SHELL / VIEW ENGINE  (usually no need to edit below)
+   Tabset (SLDS) + wiring
    ========================================================================= */
-let active = TABS[0].id;
-function renderTabs(){
-  document.getElementById("appName").textContent = APP_NAME;
-  document.getElementById("orgCtx").innerHTML = ORG_CTX;
-  document.getElementById("hdrAvatar").textContent = AVATAR;
-  document.getElementById("tabList").innerHTML = TABS.map(t=>`
-    <button class="my-tab ${t.id===active?"is-active":""}" data-tab="${t.id}" role="tab" aria-selected="${t.id===active}" title="${t.label}">
-      <span>${t.short}</span>${t.future?'<span class="my-fut">FUTURE</span>':""}</button>`).join("");
-  document.querySelectorAll("#tabList .my-tab").forEach(b=>b.onclick=()=>switchTab(b.dataset.tab));
+let TABSEQ=0;
+function tabset(prefix,tabs,scoped){
+  const gid=prefix+(++TABSEQ);
+  const nav=tabs.map((t,i)=>`<li class="slds-tabs_default__item ${i===0?"slds-is-active":""}" role="presentation">
+    <a class="slds-tabs_default__link" href="javascript:void(0)" role="tab" aria-selected="${i===0}" aria-controls="${gid}-${i}" id="${gid}-${i}__t">${t.label}</a></li>`).join("");
+  const panels=tabs.map((t,i)=>`<div id="${gid}-${i}" class="slds-tabs_default__content ${i===0?"slds-show":"slds-hide"}" role="tabpanel" aria-labelledby="${gid}-${i}__t">${t.html}</div>`).join("");
+  return `<div class="slds-tabs_default"><ul class="slds-tabs_default__nav" role="tablist">${nav}</ul>${panels}</div>`;
 }
-function switchTab(id){ active=id; renderTabs(); (VIEWS[id]||function(){})(); }
-function setRail(h){ document.getElementById("rail").innerHTML=h; }
-function setMain(h){ const el=document.getElementById("main"); el.className="my-main-inner my-fade"; el.innerHTML=h; void el.offsetWidth; }
-function setRight(h){ document.getElementById("rightp").innerHTML=h; }
+function wireTabs(root){
+  root.querySelectorAll(".slds-tabs_default").forEach(ts=>{
+    const links=[...ts.querySelectorAll(":scope > .slds-tabs_default__nav > .slds-tabs_default__item")];
+    links.forEach(li=>{ const a=li.querySelector(".slds-tabs_default__link");
+      a.onclick=()=>{ links.forEach(x=>x.classList.remove("slds-is-active"));
+        li.classList.add("slds-is-active");
+        const id=a.getAttribute("aria-controls");
+        [...ts.children].forEach(c=>{ if(c.classList&&c.classList.contains("slds-tabs_default__content")){
+          c.classList.toggle("slds-show",c.id===id); c.classList.toggle("slds-hide",c.id!==id);} });
+      };
+    });
+  });
+}
 
 /* =========================================================================
-   VIEWS — one function per tab. Replace with your screens.
+   Utility bar + app launcher
    ========================================================================= */
-function viewRecord(){
-  setRail(rail([
-    navSection("Navigation",[ navItem("home","Home"), navItem("case","Cases","",{active:true}), navItem("people","Contacts") ]),
-    navSection("Recent",[ navItem("case","00012345","Acme — priority",{active:true}), navItem("case","00012301","Globex") ]),
-  ]));
-  setMain(
-    pageHeader("case","Case • Open","00012345", badge("Escalated","red"))
-    + card("case","Details","Example record fields",
-        `<dl class="slds-grid slds-wrap"><dt class="slds-size_1-of-2 slds-text-title_caps slds-text-color_weak">Subject</dt><dd class="slds-size_1-of-2">Widget not working</dd>
-         <dt class="slds-size_1-of-2 slds-text-title_caps slds-text-color_weak slds-m-top_x-small">Priority</dt><dd class="slds-size_1-of-2 slds-m-top_x-small">High</dd>
-         <dt class="slds-size_1-of-2 slds-text-title_caps slds-text-color_weak slds-m-top_x-small">Contact</dt><dd class="slds-size_1-of-2 slds-m-top_x-small">Jordan Lee</dd></dl>`)
-    + card("email","Related — Emails","Related list example",
-        `<table class="slds-table slds-table_bordered slds-table_cell-buffer">
-           <thead><tr class="slds-line-height_reset"><th scope="col"><div class="slds-truncate slds-text-title_caps">Subject</div></th><th scope="col"><div class="slds-truncate slds-text-title_caps">Date</div></th></tr></thead>
-           <tbody><tr class="slds-hint-parent"><td>Re: Widget issue</td><td>Today</td></tr><tr class="slds-hint-parent"><td>Case opened</td><td>Yesterday</td></tr></tbody></table>`));
-  setRight(afPanel("Catch me up",
-    `<li>Case opened yesterday; one reply pending.</li><li>Customer is a high-value account.</li>`,
-    `<div class="my-person"><span class="my-avatar">JL</span><span><strong>Jordan Lee</strong><br><span class="slds-text-body_small slds-text-color_weak">Contact</span></span></div>`));
+let UTIL_OPEN=null;
+function renderUtil(){
+  document.getElementById("utilbar").innerHTML=
+    UTILITIES.map(u=>`<button class="my-utilbtn" data-u="${u.id}" onclick="toggleUtil('${u.id}')">${svg(u.icon,14)} ${u.label}</button>`).join("")
+    +`<span class="my-util-disc">Illustrative demo — not a live system · fictitious data</span>`;
 }
-function viewList(){
-  setRail(rail([ navSection("Navigation",[ navItem("home","Home"), navItem("list","All Cases","",{active:true}), navItem("metrics","Reports") ]) ]));
-  const rows = [["00012345","Widget not working","High","Open"],["00012301","Login help","Medium","Open"],["00012299","Refund request","Low","Closed"]];
-  setMain(
-    pageHeader("list","Cases • List View","All Open Cases", `<button class="slds-button slds-button_brand">New</button>`)
-    + card("case","Cases","3 items",
-      `<table class="slds-table slds-table_bordered slds-table_cell-buffer">
-        <thead><tr class="slds-line-height_reset">
-          <th scope="col"><div class="slds-truncate slds-text-title_caps">Case #</div></th>
-          <th scope="col"><div class="slds-truncate slds-text-title_caps">Subject</div></th>
-          <th scope="col"><div class="slds-truncate slds-text-title_caps">Priority</div></th>
-          <th scope="col"><div class="slds-truncate slds-text-title_caps">Status</div></th></tr></thead>
-        <tbody>${rows.map(r=>`<tr class="slds-hint-parent my-click"><td>${r[0]}</td><td>${r[1]}</td><td>${badge(r[2], r[2]==="High"?"red":r[2]==="Medium"?"amber":"info")}</td><td>${r[3]}</td></tr>`).join("")}</tbody></table>`));
-  setRight(`<p class="slds-text-title_caps slds-text-color_weak slds-m-bottom_x-small">Summary</p>
-    <div class="my-tiles"><div class="my-tile"><div class="slds-text-title_caps slds-text-color_weak">Open</div><div class="slds-text-heading_large">2</div></div>
-    <div class="my-tile"><div class="slds-text-title_caps slds-text-color_weak">Closed</div><div class="slds-text-heading_large">1</div></div></div>`);
+function toggleUtil(id){
+  const p=document.getElementById("utilpanel"); const u=UTILITIES.find(x=>x.id===id);
+  document.querySelectorAll(".my-utilbtn").forEach(b=>b.classList.toggle("is-open",b.dataset.u===id&&UTIL_OPEN!==id));
+  if(UTIL_OPEN===id){ p.classList.remove("is-open"); UTIL_OPEN=null; return; }
+  UTIL_OPEN=id;
+  const btn=document.querySelector(`.my-utilbtn[data-u="${id}"]`);
+  p.style.left=(btn.getBoundingClientRect().left)+"px";
+  p.innerHTML=`<h3>${svg(u.icon,14)} ${u.label}</h3><div class="bd">${u.body}</div>`;
+  p.classList.add("is-open");
 }
-
-const VIEWS = { record:viewRecord, list:viewList /*, future:viewFuture */ };
-
-/* ----- app launcher ----- */
-const LAUNCH=[["case","Cases"],["people","Contacts"],["metrics","Reports"],["dayview","Calendar"],["email","Email"],["list","Lists"]];
+const LAUNCH=[["case","Cases"],["people","Contacts"],["metrics","Reports"],["email","Email"],["clock","History"],["ai","Agentforce"]];
 function initLauncher(){
-  document.getElementById("lgrid").innerHTML = LAUNCH.map(a=>`<div class="my-lapp"><div class="my-lai" style="background:${ICONS[a[0]].c}">${svg(a[0],20)}</div><div class="slds-text-body_small" style="font-weight:600">${a[1]}</div></div>`).join("");
+  document.getElementById("lgrid").innerHTML=LAUNCH.map(a=>`<div class="my-lapp"><div class="my-lai" style="background:${ICONS[a[0]].c}">${svg(a[0],20)}</div><div class="slds-text-body_small" style="font-weight:600">${a[1]}</div></div>`).join("");
   const ov=document.getElementById("overlay"), lc=document.getElementById("launcher");
-  document.getElementById("waffle").onclick=()=>{ ov.classList.add("is-open"); lc.classList.add("is-open"); };
-  ov.onclick=()=>{ ov.classList.remove("is-open"); lc.classList.remove("is-open"); };
+  const open=()=>{ov.classList.add("is-open");lc.classList.add("is-open");};
+  document.getElementById("waffle").onclick=open; document.getElementById("waffleTop").onclick=open;
+  ov.onclick=()=>{ov.classList.remove("is-open");lc.classList.remove("is-open");};
 }
 
-renderTabs(); initLauncher(); (VIEWS[active]||function(){})();
+boot();
 </script>
 </body>
 </html>

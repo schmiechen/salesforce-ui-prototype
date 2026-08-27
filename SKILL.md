@@ -99,15 +99,20 @@ regions. Add a tab = add a `TABS` entry + a `view*()` function. That's the whole
 ## Workflow
 
 1. **Scaffold.** Copy `assets/shell-template.html` into the target project as
-   `index.html` (or the user's chosen name). It already contains the genuine header/nav,
-   the view engine, genuine inlined icons, and two example views.
-2. **Configure** the top of the `<script>`: `APP_NAME`, `ORG_CTX`, `AVATAR`, and the
-   `TABS` array.
-3. **Build the views.** For each tab write a `view*()` function. Use **real blueprints** —
-   consult `design-systems-slds-apply` (`scripts/search-blueprints.cjs`, the
-   `assets/blueprints/*.yaml`) for exact markup of cards, page-headers, data-tables,
-   badges, buttons, timelines, etc. Reuse the template helpers (`card()`, `objIcon()`,
-   `badge()`, `navItem()`, `navSection()`, `rail()`, `afPanel()`, bar chart).
+   `index.html` (or the user's chosen name). It ships a **standard Lightning** shell:
+   console nav (workspace tabs + utility bar), a standard **list view**, and **record home**
+   (highlights + Details/Related tabs + Activity/Chatter sidebar), with genuine inlined
+   icons and a `NAV_MODE` toggle.
+2. **Configure** the top of the `<script>`: `NAV_MODE` (console|standard), `RECORD_LAYOUT`
+   (2-region|3-region), `APP`, `UTILITIES`, and the **`SPEC`** (object, columns, rows,
+   detail sections, related lists, activities, feed). This is spec-driven — replace the
+   sample Case content with the project's object/fields.
+3. **Extend with standard patterns.** Add more objects/screens by reusing the recipes —
+   list view, record home, related lists, Chatter, Activity Timeline, path, console vs
+   standard nav (see the Pattern picker). Pull exact markup from `design-systems-slds-apply`
+   (`scripts/search-blueprints.cjs`, `assets/blueprints/*.yaml`). Reuse the template helpers
+   (`objIcon()`, `badge()`, `tabset()`/`wireTabs()`, `relatedCard()`, `renderActivity()`,
+   `renderChatter()`, `svg()`). Only build custom (`my-*` + hooks) when no standard fits.
 4. **Bundle the SLDS CSS** to make it offline & self-contained:
    ```
    bash <skill>/scripts/bundle.sh index.html index.html
@@ -142,7 +147,7 @@ regions. Add a tab = add a `TABS` entry + a `view*()` function. That's the whole
 
 | Path | What it is |
 |------|-----------|
-| `assets/shell-template.html` | Ready-to-copy starter: genuine header/nav, view engine, inlined icons, 2 example views. Contains the `/*__SLDS2_COSMOS_CSS__*/` marker for bundling. |
+| `assets/shell-template.html` | Ready-to-copy **standard-Lightning** starter: console shell (workspace tabs + utility bar), standard list view + record home (Details/Related + Activity/Chatter), `NAV_MODE` + `SPEC` config, genuine inlined icons. Contains the `/*__SLDS2_COSMOS_CSS__*/` marker for bundling. |
 | `scripts/bundle.sh` | Downloads the SLDS 2 Cosmos CSS and inlines it at the marker → offline single file. |
 | `scripts/verify.sh` | Checks used `slds-*` classes exist in the bundle + tag balance + offline. |
 | `references/icons.md` | Genuine SLDS logo + utility icon catalog (inline SVGs) and how to fetch more. |

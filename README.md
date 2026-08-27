@@ -47,10 +47,11 @@ SKILL=~/.claude/skills/salesforce-ui-prototype
 # 1. Scaffold into your project
 cp "$SKILL/assets/shell-template.html" ./index.html
 
-# 2. Edit index.html:
-#    - CONFIG block: APP_NAME, ORG_CTX, AVATAR
-#    - TABS array (one entry per top tab)
-#    - write one view*() function per tab (use setRail/setMain/setRight)
+# 2. Edit the config at the top of the <script> in index.html:
+#    - NAV_MODE ("console" | "standard"), RECORD_LAYOUT ("2-region" | "3-region")
+#    - APP + UTILITIES
+#    - SPEC — object, columns, rows, detail sections, related lists, activities, feed
+#    (spec-driven: replace the sample Case content with your project's object/fields)
 
 # 3. Inline the SLDS 2 stylesheet -> offline single file
 bash "$SKILL/scripts/bundle.sh" index.html index.html
@@ -66,7 +67,7 @@ bash "$SKILL/scripts/verify.sh" index.html
 | Path | Purpose |
 |------|---------|
 | `SKILL.md` | The method + golden rules (read this first). |
-| `assets/shell-template.html` | Ready-to-copy starter: genuine header/nav, view engine, inlined icons, 2 example views. Has the `/*__SLDS2_COSMOS_CSS__*/` marker for bundling. |
+| `assets/shell-template.html` | Ready-to-copy **standard-Lightning** starter: console shell, standard list view + record home (Details/Related + Activity/Chatter), `NAV_MODE` + `SPEC` config, genuine inlined icons. Has the `/*__SLDS2_COSMOS_CSS__*/` marker for bundling. |
 | `scripts/bundle.sh` | Downloads the SLDS 2 Cosmos CSS and inlines it at the marker. |
 | `scripts/verify.sh` | Checks used `slds-*` classes exist + tag balance + offline + no freehand icons + no banned copy ("Copilot"/"Future") + blue-on-blue risk + a data-sanity reminder. |
 | `references/icons.md` | Genuine SLDS logo + utility icon catalog and how to fetch more. |
