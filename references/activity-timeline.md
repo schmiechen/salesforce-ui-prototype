@@ -1,69 +1,42 @@
-# Recipe: SLDS Activity Timeline (tasks / activities)
+# Recipe: Activity Timeline (record sidebar)
 
-Renders like a real Salesforce record's **Activity Timeline**: a type-colored vertical
-connector, an icon per row, a title with an optional completion checkbox, a date on the
-right, and an expand/collapse chevron that reveals details.
+The standard Lightning **Activity Timeline** in a record's right sidebar. Match the real
+component closely — it's a common tell when it's off.
 
-## Blueprint classes (all in the Cosmos bundle)
-- List: `slds-timeline` (a `<ul>`).
-- Item: `slds-timeline__item_expandable` **+** a type variant that colors the connector:
-  - `slds-timeline__item_task` → **green** connector
-  - `slds-timeline__item_call` → teal · `slds-timeline__item_email` → gray · `slds-timeline__item_event` → purple
-- The connector line is drawn by `.slds-timeline__item_expandable::before` (color set by
-  the type variant). Icon: `slds-icon_container slds-timeline__icon`. Right-side meta:
-  `slds-timeline__actions` / `slds-timeline__date`. Layout uses `slds-media` +
-  `slds-media__figure` / `slds-media__body`.
+> **Spec-driven:** activities (type, title, date, who, group, details) come from the spec.
 
-## Key gotcha — don't draw your own connector
-SLDS already draws the vertical line via `::before`. **Do not add a second connector**
-(that causes a double line). If your adapted layout puts the icon at a different x than
-SLDS expects (its default is `inset-inline-start: 2.235rem`, assuming a leading chevron),
-just realign SLDS's line to your icon center instead of adding one:
-```css
-.my-tl2 .slds-timeline__item_expandable::before{ inset-inline-start:.68rem; margin-inline-start:0; }
-```
-Give the icon `position:relative; z-index:1` so it sits on top of the line. Match the icon
-color to the type (task = `#4bc076`) so icon and line read as one system.
+## Anatomy (top → bottom)
+1. **Composer** — a row of **icon pill buttons**, one per activity type: Email (gray),
+   Call (teal), Event (purple), Task (green). Each pill = a **colored circle** with the
+   type glyph + a small dropdown caret. (Not text buttons.)
+2. **Filters line** — right-aligned "Filters: All time · All activities · All types" + a
+   settings gear; below it "Refresh · Expand All · View All" links.
+3. **Grouped items** — group headers (e.g. **Upcoming & Overdue**, then **This Month** /
+   a month·year), each a light gray bar with a collapse caret.
+4. **Timeline items** — see below.
+
+## Item structure
+`[expand chevron ›] [circular type icon] [body]`, with a **type-colored connector line**
+running down the icon column to the next item.
+- Icon: a **circle** (border-radius 50%), colored by **type** — task `#4bc076`, call
+  `#48c3cc`, email `#939393`, event `#cb65ff` — with the genuine SLDS glyph (`task`,
+  `call`, `email`, `event`) inlined `fill=currentColor`.
+- Body top row: a **blue link title** + the **date** (right) + a round **action caret**.
+- Body sub: a short descriptive line ("You logged a call", "You have an upcoming event").
+- **Expand** (chevron on the left, or clicking the title) reveals a details region.
 
 ## Icons (offline)
-No sprite offline — inline a genuine SLDS utility SVG (`task`, `check`, `call`, `email`,
-`event`) with `fill="currentColor"`, `viewBox="0 0 520 520"`, inside the
-`slds-icon_container slds-timeline__icon` square (see references/icons.md for fetching).
+Inline genuine SLDS utility SVGs (`task`, `call`, `email`, `event`, `chevronright`,
+`chevrondown`, `settings`) — `fill=currentColor`, `viewBox 0 0 520 520` (event is 52).
+See `references/icons.md`.
 
-## Interactions (vanilla JS)
-- **Expand/collapse:** toggle `slds-is-open` on the item; show/hide the details region;
-  rotate the caret.
-- **Complete (task):** on checkbox change, add an `is-done` class → strike the title,
-  swap the icon to `check`, tint it green, and flip the status badge to *Completed*. Use
-  `onclick="event.stopPropagation()"` on the checkbox so completing doesn't also expand.
+## Gotchas
+- **Circular icons, not squares** — a rounded-square icon reads as "not Salesforce."
+- **One connector.** Draw a single line in the icon column (a flex-grow `<span>` below the
+  circle, colored by type). Do **not** also enable SLDS's `slds-timeline__item_*::before`
+  connector at the same time, or you get a double line.
+- Titles are **blue links**; dates are muted and right-aligned.
 
-## Right-rail vs main
-The full timeline wants width. In a ~340px right rail, use a compact adaptation (icon +
-truncated title + date/assignee subtitle + expandable details) as done in the child-welfare
-demo's `prepTasks()`. In the main column you can use the fuller SLDS markup (chevron
-trigger on the left, inline actions on the right).
-
-## Minimal item markup
-```html
-<ul class="slds-timeline">
-  <li><div class="slds-timeline__item_expandable slds-timeline__item_task">
-    <span class="slds-assistive-text">Task</span>
-    <div class="slds-media">
-      <div class="slds-media__figure">
-        <span class="slds-icon_container slds-timeline__icon" style="background:#4bc076;position:relative;z-index:1">…task svg…</span>
-      </div>
-      <div class="slds-media__body">
-        <div class="slds-grid slds-grid_align-spread"> <!-- click to expand -->
-          <span class="slds-grid slds-grid_vertical-align-center">
-            <input type="checkbox" onclick="event.stopPropagation()" />
-            <span class="slds-truncate">Complete substance-use assessment</span>
-          </span>
-          <span class="slds-badge">New</span>
-        </div>
-        <p class="slds-text-body_small slds-text-color_weak">Due in 5 days · Maria Delgado · High</p>
-        <div hidden> <!-- details --> …description… Related to CW-2026-04817 …</div>
-      </div>
-    </div>
-  </div></li>
-</ul>
-```
+## Interactivity (no data mutation)
+Expand/collapse per item; composer/filter/links are visual. Working reference:
+`renderActivity()` / `wireActivity()` in the shell template.
