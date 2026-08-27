@@ -209,6 +209,7 @@ then refine — don't run a long interview.
 | `references/navigation.md` | Recipe: **console vs standard** nav (`NAV_MODE`), workspace tabs, split view, utility bar (Omni-Channel/Phone/History), and `slds-path`. |
 | `references/outcome-panel.md` | Recipe: per-screen **Agentforce outcome panel** ("why it matters") in the right rail + optional illustrative tiles; keeps the demo outcome-first. |
 | `references/talk-track-template.md` | Do/Say click-path talk-track template to hand the presenter after building. |
+| `examples/` | Worked prototypes (each with its PROMPT + NOTES). `examples/travel-expense/` = a full standard-Lightning app from a one-paragraph brief. See `examples/README.md`. |
 
 ## Notes / gotchas
 

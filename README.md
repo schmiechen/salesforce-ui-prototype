@@ -89,6 +89,7 @@ bash "$SKILL/scripts/verify.sh" index.html
 | `references/agentforce.md` | Recipe: the Agentforce panel + the Generate → stream → Edit → Save-to-record agent flow. |
 | `references/outcome-panel.md` | Recipe: per-screen **Agentforce outcome rail** ("why it matters") — docked right, outcome lines + optional illustrative tiles; keeps the demo impact-first. |
 | `references/talk-track-template.md` | Do/Say click-path talk-track template to hand a presenter after building. |
+| `examples/` | Worked prototypes with their PROMPT + NOTES — e.g. `examples/travel-expense/`, a full standard-Lightning app built from a one-paragraph brief. See `examples/README.md`. |
 
 ## Rules (non-negotiable)
 
