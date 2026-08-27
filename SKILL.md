@@ -64,6 +64,15 @@ to confirm a class/hook/icon exists — do not guess SLDS class names.
     screen (+ optional illustrative KPI tiles) — so the demo stays **outcome-first, not
     feature-first**. `OUTCOME_STYLE` defaults to `agentforce`. See
     `references/outcome-panel.md`.
+12. **Build incrementally — never emit the whole file in one output, and keep the CSS on
+    disk.** Scaffold by **copying** the template (`cp`, in the shell) — never paste or
+    `Write` its contents. Then swap `NAV_MODE`/`APP`/`SPEC` and add screens with small,
+    **targeted `Edit`s**, one screen at a time. Stay **unbundled while editing** (the
+    `/*__SLDS2_COSMOS_CSS__*/` marker keeps the working file small); **bundle last, once**,
+    via `bundle.sh` — the ~1 MB SLDS CSS is inlined **on disk** by the script and must never
+    enter your context. **Never `Read` or `Write` a bundled file** (~1 MB) — `grep` specific
+    lines to inspect. A single mega-`Write` of the whole prototype on top of the ~1 MB CSS
+    is what trips API errors.
 
 ## Pattern picker (use the standard blueprint first)
 
@@ -104,21 +113,27 @@ regions. Add a tab = add a `TABS` entry + a `view*()` function. That's the whole
 
 ## How to drive this skill (execution model)
 
-Loop: **Brief → Scope → Scaffold → Iterate → Finalize.** Get something clickable fast,
-then refine — don't run a long interview.
+Loop: **Brief → Scope → Plan → Scaffold → Iterate → Finalize.** Get something clickable
+fast, then refine — don't run a long interview.
 
 1. **Brief.** Take whatever context the user gives (a one-liner or a full prompt) and
    extract it into the `SPEC`/config. The **agent maintains the SPEC inside the HTML** —
    the user reviews in the browser, not by editing a spec file.
 2. **Scope — ask ONLY architecture-defining unknowns.** Batch **≤4** multiple-choice
    questions (AskUserQuestion) for things that change structure; **default everything
-   else** (see the Question bank). Then restate the scope before building.
-3. **Scaffold — breadth first.** Set the config and build **all screens at rough fidelity
+   else** (see the Question bank).
+3. **Plan — always present a short plan and get a quick confirm BEFORE building.** Restate
+   it in a few lines: the screens + the pattern for each, data/personas, the per-screen
+   outcomes, and the "wow" moments — and note you'll **build incrementally** (copy template
+   → targeted edits → bundle last, per golden rule 12). This is a checkpoint, not an
+   interview; keep it tight. In Claude Code, plan mode + `ExitPlanMode` is the natural fit.
+   Don't scaffold until the plan is acknowledged.
+4. **Scaffold — breadth first.** Set the config and build **all screens at rough fidelity
    first** so the whole app is clickable end-to-end (every tab renders plausible
    placeholder content), rather than perfecting one screen while others 404.
-4. **Iterate — polish screen-by-screen.** Then deepen each screen: **build → open in the
+5. **Iterate — polish screen-by-screen.** Then deepen each screen: **build → open in the
    browser → refine**. Keep the SPEC in the file in sync as you go.
-5. **Finalize.** Run `verify.sh` + a data-sanity pass, confirm offline, offer a talk track,
+6. **Finalize.** Run `verify.sh` + a data-sanity pass, confirm offline, offer a talk track,
    optional commit.
 
 ### Scoping checklist (a complete SPEC)
@@ -147,7 +162,8 @@ then refine — don't run a long interview.
 ## Workflow
 
 1. **Scaffold.** Copy `assets/shell-template.html` into the target project as
-   `index.html` (or the user's chosen name). It ships a **standard Lightning** shell:
+   `index.html` (or the user's chosen name) with **`cp` in the shell — never paste or
+   `Write` its contents** (see golden rule 12). It ships a **standard Lightning** shell:
    console nav (workspace tabs + utility bar), a standard **list view**, and **record home**
    (highlights + Details/Related tabs + Activity/Chatter sidebar), with genuine inlined
    icons and a `NAV_MODE` toggle.
@@ -162,13 +178,15 @@ then refine — don't run a long interview.
    (`scripts/search-blueprints.cjs`, `assets/blueprints/*.yaml`). Reuse the template helpers
    (`objIcon()`, `badge()`, `tabset()`/`wireTabs()`, `relatedCard()`, `renderActivity()`,
    `renderChatter()`, `svg()`). Only build custom (`my-*` + hooks) when no standard fits.
-4. **Bundle the SLDS CSS** to make it offline & self-contained:
+4. **Bundle the SLDS CSS — last, once** — to make it offline & self-contained:
    ```
    bash <skill>/scripts/bundle.sh index.html index.html
    ```
    This downloads the SLDS 2 Cosmos stylesheet and inlines it at the
-   `/*__SLDS2_COSMOS_CSS__*/` marker. (Run it whenever you (re)create the file from the
-   template; editing an already-bundled file is fine and doesn't require re-running.)
+   `/*__SLDS2_COSMOS_CSS__*/` marker **on disk** — the ~1 MB CSS never enters your context.
+   Do all editing on the small, unbundled template first; bundle at the end. After
+   bundling, **don't `Read`/`Write` the whole file** (~1 MB) — `grep` specific lines to
+   inspect and keep using targeted `Edit`s.
 5. **Verify** (see below), then open the file in a browser to eyeball it.
 6. **Offer a talk track.** After the prototype works, offer the presenter a Do/Say
    click-path script using `references/talk-track-template.md`.
@@ -224,6 +242,12 @@ then refine — don't run a long interview.
   from the `@salesforce-ux/design-system` npm package (mirrored on jsDelivr).
 - Keep the header navy per the exact spec unless the user asks for the white
   modern-console header; if white, recolor utility glyphs from `#fff` to `#5c5c5c`.
+- **API errors on large builds = one mega-output + CSS in context.** If the response stops
+  arriving / errors mid-build, the cause is almost always emitting the whole prototype in a
+  single `Write` (or having `Read` a bundled ~1 MB file into context). Follow golden rule
+  12: `cp` the template, make small targeted `Edit`s, keep it unbundled while editing, bundle
+  last via the script, and never `Read`/`Write` the bundled file. This keeps every tool
+  output small and the ~1 MB CSS on disk.
 - **Full-bleed work area.** Lightning stretches content edge-to-edge; the shell's
   `.my-work` is `flex:1 1 auto` (no cap) on purpose. Don't add a `max-width` to the work
   region or its inner wrapper — it leaves dead space on the right and the two-column
