@@ -58,6 +58,12 @@ print(f"'future state' / FUTURE badge: {future}", "OK" if future==0 else "-> pre
 bob = len(re.findall(r'background[^;]*accent-container-1', non_css) + re.findall(r'\.my-[^{]*\{[^}]*background[^;]*accent-container-1', css))
 print(f"accent-container-1 as background (blue-on-blue risk): {bob}", "OK" if bob==0 else "-> use a light tint like #eaf5fe")
 
+# full-bleed work area: a fixed max-width on the work region leaves dead space on the
+# right and stops the outcome rail from reaching the edge (see SKILL notes).
+capped = re.findall(r'(\.my-work|\.my-inner|#work)\b[^{]*\{[^}]*max-width\s*:\s*\d+\s*px', css)
+print(f"capped work region (max-width px on .my-work/.my-inner/#work): {len(capped)}",
+      "OK" if not capped else "-> remove the cap; the work area should be full-bleed (max-width:none)")
+
 print("Reminder: eyeball fixture data — ages match activities, totals/percentages add up, "
       "dates plausible; identity resolution = same person across systems, siblings/parents are relationships.")
 PY
