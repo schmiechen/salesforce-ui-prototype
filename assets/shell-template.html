@@ -63,6 +63,13 @@ html,body{height:100%;margin:0;}
 .my-rec.layout-3{grid-template-columns:16rem 1fr 22rem;}
 @media(max-width:1100px){.my-rec,.my-rec.layout-3{grid-template-columns:1fr;}}
 .my-side{background:#fff;border:1px solid var(--my-line);border-radius:4px;}
+/* outcome rail (Agentforce "why it matters") */
+.my-with-rail{display:grid;grid-template-columns:1fr 20rem;gap:1rem;align-items:start;} @media(max-width:1100px){.my-with-rail{grid-template-columns:1fr;}}
+.my-af-head{display:flex;align-items:center;gap:.6rem;margin-bottom:.6rem;}
+.my-af-orb{width:2rem;height:2rem;border-radius:.5rem;flex:none;display:grid;place-items:center;color:#fff;background:linear-gradient(135deg,#0176d3,#5867e8,#9050e9);} .my-af-orb svg{width:1.1rem;height:1.1rem;fill:#fff;}
+.my-af-label{font-size:.625rem;letter-spacing:.06em;text-transform:uppercase;font-weight:700;color:#5867e8;}
+.my-af-card{background:linear-gradient(180deg,#fbfaff,#f2f0fe);border:1px solid #e4e1f7;border-radius:8px;padding:1rem;} .my-af-card ul{margin:0;padding-left:1.1rem;} .my-af-card li{margin-bottom:.45rem;}
+.my-tiles{display:grid;grid-template-columns:1fr 1fr;gap:.6rem;margin-top:.75rem;} .my-tile{background:#fff;border:1px solid var(--my-line);border-radius:4px;padding:.6rem;} .my-tile .k{font-size:.6rem;text-transform:uppercase;letter-spacing:.4px;color:#747474;} .my-tile .v{font-size:1.25rem;font-weight:800;}
 
 /* ----- object/utility icon square ----- */
 .my-obj-icon{display:inline-grid;place-items:center;width:2rem;height:2rem;color:#fff;flex:none;border-radius:4px;}
@@ -202,6 +209,7 @@ tr.my-rowlink:hover{background:var(--slds-g-color-surface-container-1,#f7fbff);}
    ========================================================================= */
 const NAV_MODE = "console";        // "console" | "standard"
 const RECORD_LAYOUT = "2-region";  // "2-region" | "3-region"
+const OUTCOME_STYLE = "agentforce";// "agentforce" | "neutral" — every screen states its outcome
 const APP = { name:"Service Console", org:"Acme Corp · Sandbox", avatar:"AB" };
 const UTILITIES = [
   { id:"omni",    label:"Omni-Channel", icon:"omni_channel", body:"Status: <b>Available</b> · 0 work items assigned. Capacity 5." },
@@ -216,6 +224,11 @@ const UTILITIES = [
 const SPEC = {
   object:{ name:"Case", plural:"Cases", icon:"case" },
   listViews:[ "All Open Cases", "My Cases", "Recently Viewed" ],
+  // Outcome panel for the list view (every screen states its "why it matters").
+  outcome:{ title:"Why It Matters",
+    points:["One prioritized queue means faster first response and fewer dropped handoffs.",
+            "Sorting by status and priority keeps SLAs from quietly slipping."],
+    tiles:[["First Response","↓ faster"],["SLA Attainment","Illustrative"]] },
   columns:[
     { key:"number",  label:"Case Number",     sortable:true, link:true },
     { key:"subject", label:"Subject",         sortable:true, link:true },
@@ -235,6 +248,10 @@ const SPEC = {
 // Build a record's detail from a list row (map your real fields here).
 function recordFor(row){ return {
   name: row.number+" — "+row.subject, meta:"Case",
+  outcome:{ title:"Case Impact",
+    points:["A full 360° of the case — details, related records, and activity — lets the agent resolve it in one touch.",
+            "Logged activity + Chatter keep everyone aligned without status meetings."],
+    tiles:[["One-Touch Resolution","↑"]] },
   highlights:[["Status",row.status],["Priority",row.priority],["Account",row.account],["Contact",row.contact],["Owner","Alex Bailey"]],
   path:["New","Working","Escalated","Closed"], pathCurrent:row.status,
   actions:["Edit","Change Owner","Close Case"],
@@ -288,6 +305,14 @@ const ICONS = {
 };
 function svg(n,size){ const i=ICONS[n]||ICONS.case; size=size||16; return `<svg width="${size}" height="${size}" viewBox="${i.vb}" fill="currentColor" aria-hidden="true"><path d="${i.d}"/></svg>`; }
 function objIcon(n,small){ const i=ICONS[n]||ICONS.case; return `<span class="my-obj-icon${small?' my-obj-icon_s':''}" style="background:${i.c}">${svg(n,small?14:16)}</span>`; }
+// Per-screen outcome panel ("why it matters"). OUTCOME_STYLE: agentforce | neutral.
+function outcomeRail(o){ if(!o) return "";
+  const tiles=(o.tiles&&o.tiles.length)?`<p class="slds-text-title_caps slds-text-color_weak slds-m-top_small slds-m-bottom_x-small">Directional / Illustrative</p><div class="my-tiles">${o.tiles.map(t=>`<div class="my-tile"><div class="k">${t[0]}</div><div class="v">${t[1]}</div></div>`).join("")}</div>`:"";
+  const head=OUTCOME_STYLE==="agentforce"
+    ? `<div class="my-af-head"><span class="my-af-orb">${svg("ai",18)}</span><div><div class="my-af-label">Agentforce</div><div class="slds-text-heading_small">${o.title||"Why It Matters"}</div></div></div>`
+    : `<p class="slds-text-title_caps slds-text-color_weak slds-m-bottom_x-small">${o.title||"Outcome"}</p>`;
+  return head+`<div class="my-af-card"><ul>${(o.points||[]).map(p=>`<li>${p}</li>`).join("")}</ul></div>`+tiles;
+}
 const THEME={red:"slds-theme_error",amber:"slds-theme_warning",green:"slds-theme_success",info:"slds-theme_info"};
 function badge(t,type){return `<span class="slds-badge ${THEME[type]||""}">${t}</span>`;}
 function prBadge(p){return badge(p, p==="High"?"red":p==="Medium"?"amber":"info");}
@@ -383,14 +408,15 @@ function renderList(){
       <td class="slds-cell-shrink"><button class="slds-button slds-button_icon slds-button_icon-border-filled" title="Show actions">${svg("chevrondown",12)}</button></td>
     </tr>`).join("");
   document.getElementById("work").innerHTML=head+`
-    <div class="slds-card"><div class="my-tablewrap"><table class="slds-table slds-table_bordered slds-table_col-bordered slds-table_cell-buffer">
+    <div class="my-with-rail"><div><div class="slds-card"><div class="my-tablewrap"><table class="slds-table slds-table_bordered slds-table_col-bordered slds-table_cell-buffer">
       <thead><tr class="slds-line-height_reset">
         <th class="slds-cell-shrink" scope="col"><input type="checkbox" onclick="toggleSelAll(this.checked)" aria-label="Select all"/></th>
         ${ths}<th class="slds-cell-shrink" scope="col"></th>
       </tr></thead>
       <tbody>${trs}</tbody>
     </table></div>
-    <div class="my-lv-foot">${rows.length} items${SELECTED.size?` · ${SELECTED.size} selected`:""} · sorted by ${SORT.col?colLabel(SORT.col):"Case Number"}</div></div>`;
+    <div class="my-lv-foot">${rows.length} items${SELECTED.size?` · ${SELECTED.size} selected`:""} · sorted by ${SORT.col?colLabel(SORT.col):"Case Number"}</div></div></div>
+    <div>${outcomeRail(SPEC.outcome)}</div></div>`;
 }
 function colLabel(k){ return (SPEC.columns.find(c=>c.key===k)||{}).label||k; }
 function sortBy(k){ if(SORT.col===k) SORT.dir*=-1; else {SORT.col=k;SORT.dir=1;} renderList(); }
@@ -422,7 +448,8 @@ function renderRecord(row){
     {label:"Details", html:renderDetails(rec)},
     {label:"Related", html:renderRelated(rec)},
   ]);
-  const side=`<div class="my-side">`+tabset("side",[
+  const side=(rec.outcome?`<div class="slds-m-bottom_medium">${outcomeRail(rec.outcome)}</div>`:"")
+    +`<div class="my-side">`+tabset("side",[
     {label:"Activity", html:renderActivity(rec)},
     {label:"Chatter",  html:renderChatter(rec)},
   ],true)+`</div>`;

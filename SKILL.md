@@ -59,6 +59,11 @@ to confirm a class/hook/icon exists — do not guess SLDS class names.
     when no standard pattern fits. Prototypes should read as *configured Salesforce*, not
     bespoke UI. The shell defaults to **console** navigation (`NAV_MODE`), with standard
     as a documented toggle.
+11. **Every screen states its outcome.** Give each screen a persistent **Agentforce
+    outcome panel** in the right rail — a 2–3 line "why it matters" payoff for *that*
+    screen (+ optional illustrative KPI tiles) — so the demo stays **outcome-first, not
+    feature-first**. `OUTCOME_STYLE` defaults to `agentforce`. See
+    `references/outcome-panel.md`.
 
 ## Pattern picker (use the standard blueprint first)
 
@@ -72,6 +77,7 @@ to confirm a class/hook/icon exists — do not guess SLDS class names.
 | Record lifecycle | Path (`slds-path`) under highlights | `references/navigation.md` |
 | Relationship / hierarchy | ARC graph in a modal | `references/modals-and-graphs.md` |
 | AI assist | Agentforce panel / generate-save | `references/agentforce.md` |
+| Outcome / "why it matters" (every screen) | Agentforce outcome panel (right rail) | `references/outcome-panel.md` |
 
 Content is **spec-driven** — the object, fields, columns, related lists, tabs, and
 utilities come from the project spec; the recipes are the frame you map that content into.
@@ -122,6 +128,8 @@ then refine — don't run a long interview.
   path stages, actions.
 - **Data:** personas + sample records (internally consistent), how domain-accurate to be.
 - **Interactions:** which "wow" moments (animation, modal/ARC graph, save-to-record, generate).
+- **Outcome per screen:** the mission/value payoff (2–3 lines) for the Agentforce outcome
+  rail + optional illustrative tiles (see `references/outcome-panel.md`).
 - **Extras:** talk track? commit target?
 
 ### Question bank (ask only what you can't infer; each has a default)
@@ -132,6 +140,7 @@ then refine — don't run a long interview.
 | Pattern for each screen? | if ambiguous | list view → record home |
 | Data domain & realism? | if the brief lacks it | neutral, spec-driven placeholders |
 | Any "wow" interactions? | if a moment is implied | none unless asked |
+| Outcome / "why it matters" per screen? | draft from the brief; ask only if a screen's payoff is unclear | drafted → shown for confirm |
 | Record layout 2- or 3-region? | rarely | 2-region |
 | Talk track? | at finalize | offer it |
 
@@ -198,6 +207,7 @@ then refine — don't run a long interview.
 | `references/record-home.md` | Recipe: standard **record home** (highlights + Details/Related tabs + Activity/Chatter right sidebar; 2- or 3-region). |
 | `references/chatter-feed.md` | Recipe: full **Chatter** feed (publisher + posts + comments + like/mention). |
 | `references/navigation.md` | Recipe: **console vs standard** nav (`NAV_MODE`), workspace tabs, split view, utility bar (Omni-Channel/Phone/History), and `slds-path`. |
+| `references/outcome-panel.md` | Recipe: per-screen **Agentforce outcome panel** ("why it matters") in the right rail + optional illustrative tiles; keeps the demo outcome-first. |
 | `references/talk-track-template.md` | Do/Say click-path talk-track template to hand the presenter after building. |
 
 ## Notes / gotchas
