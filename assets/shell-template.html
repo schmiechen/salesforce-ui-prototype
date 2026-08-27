@@ -347,11 +347,14 @@ function renderList(){
         <div class="slds-page-header__col-title"><div class="slds-media slds-media_center">
           <div class="slds-media__figure">${objIcon(SPEC.object.icon)}</div>
           <div class="slds-media__body">
-            <div class="slds-page-header__name"><div class="slds-page-header__name-title"><h1>
-              <span class="slds-text-body_small">${SPEC.object.plural}</span>
-              <button class="my-lv-switch"><span class="slds-page-header__title">${SPEC.listViews[0]}</span>${svg("chevrondown",14)}</button>
-            </h1></div></div>
-            <p class="slds-text-body_small slds-text-color_weak">${rows.length} items · sorted by ${SORT.col?colLabel(SORT.col):"Case Number"} · updated a moment ago</p>
+            <p class="slds-text-body_small slds-line-height_reset" style="color:#747474">${SPEC.object.plural}</p>
+            <div class="slds-page-header__name">
+              <div class="slds-page-header__name-title"><h1><span class="slds-page-header__title slds-truncate" title="${SPEC.listViews[0]}">${SPEC.listViews[0]}</span></h1></div>
+              <div class="slds-page-header__name-switcher slds-dropdown-trigger slds-dropdown-trigger_click">
+                <button class="slds-button slds-button_icon slds-button_icon-small" title="Select a List View" aria-haspopup="true"><svg class="slds-button__icon" viewBox="${ICONS.chevrondown.vb}" fill="currentColor" aria-hidden="true"><path d="${ICONS.chevrondown.d}"/></svg><span class="slds-assistive-text">Select a List View</span></button>
+              </div>
+            </div>
+            <p class="slds-page-header__meta-text">${rows.length} items · sorted by ${SORT.col?colLabel(SORT.col):"Case Number"} · updated a moment ago</p>
           </div>
         </div></div>
         <div class="slds-page-header__col-actions"><div class="slds-page-header__controls">

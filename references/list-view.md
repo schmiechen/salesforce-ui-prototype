@@ -7,10 +7,25 @@ Lightning list view: a controls header + a selectable, sortable data table + a f
 > the project spec. Map them into the frame below.
 
 ## Header (object home)
-Use `slds-page-header slds-page-header_object-home`:
-- **Left:** object icon + a **list-view switcher** — the list name with a caret that opens
-  an `slds-dropdown` (`slds-listbox`) of saved list views; a "N items • sorted by X •
-  updated ago" meta line.
+Use `slds-page-header slds-page-header_object-home`. **Structure the title area correctly**
+— stack it, don't jam the object name and list name inline (a common mistake that makes
+them collide):
+```html
+<div class="slds-media__body">
+  <p class="slds-line-height_reset">Object Name</p>                <!-- small eyebrow, on top -->
+  <div class="slds-page-header__name">
+    <div class="slds-page-header__name-title">
+      <h1><span class="slds-page-header__title slds-truncate" title="…">List View Name</span></h1>
+    </div>
+    <div class="slds-page-header__name-switcher slds-dropdown-trigger slds-dropdown-trigger_click">
+      <button class="slds-button slds-button_icon slds-button_icon-small">▾</button>   <!-- list switcher -->
+    </div>
+  </div>
+  <p class="slds-page-header__meta-text">N items · sorted by X · updated a moment ago</p>
+</div>
+```
+So: **object eyebrow → list-name `__title` + `__name-switcher` caret → `__meta-text`**,
+each on its own line.
 - **Right:** action buttons (New, Import, …) as a `slds-button-group`, then **list
   controls** as `slds-button_icon-border-filled` icons: Search this list, Refresh, Charts,
   Filters, and a list-settings gear.
