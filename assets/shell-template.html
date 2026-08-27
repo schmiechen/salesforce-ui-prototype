@@ -419,7 +419,7 @@ function renderRecord(row){
       </ul>
     </div>`;
   const path=rec.path?renderPath(rec.path,rec.pathCurrent):"";
-  const main=highlights+path+tabset("rec",[
+  const mainTabs=tabset("rec",[
     {label:"Details", html:renderDetails(rec)},
     {label:"Related", html:renderRelated(rec)},
   ]);
@@ -429,7 +429,8 @@ function renderRecord(row){
   ],true)+`</div>`;
   const cls=RECORD_LAYOUT==="3-region"?"my-rec layout-3":"my-rec";
   const left=RECORD_LAYOUT==="3-region"?`<div>${rec.related.map(rl=>relatedCard(rl,true)).join("")}</div>`:"";
-  document.getElementById("work").innerHTML=`<div class="${cls}">${left}<div>${main}</div>${side}</div>`;
+  // Highlights + path span the full record width; the columns sit below them.
+  document.getElementById("work").innerHTML=`${highlights}${path}<div class="${cls}">${left}<div>${mainTabs}</div>${side}</div>`;
   wireTabs(document.getElementById("work")); wireActivity(); wireChatter();
 }
 function renderPath(stages,current){
