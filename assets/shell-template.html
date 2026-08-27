@@ -95,12 +95,12 @@ tr.my-rowlink:hover{background:var(--slds-g-color-surface-container-1,#f7fbff);}
 
 /* ----- path (full-width interlocking chevrons in a white card) ----- */
 .my-path-card{display:flex;align-items:center;gap:.75rem;background:#fff;border:1px solid var(--my-line);border-radius:.5rem;box-shadow:var(--slds-g-shadow-1,0 1px 2px rgba(0,0,0,.08));padding:.4rem;margin-bottom:var(--slds-g-spacing-4,16px);}
-.my-path2{display:flex;flex:1 1 auto;min-width:0;}
+.my-path2{display:flex;flex:1 1 auto;min-width:0;gap:3px;}
 .my-path2 .seg{flex:1 1 0;min-width:0;height:2rem;display:flex;align-items:center;justify-content:center;gap:.35rem;font-size:.8rem;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
-  background:var(--slds-g-color-surface-container-2,#ecebea);color:#514f4d;margin-left:-12px;padding:0 8px 0 20px;
-  clip-path:polygon(0 0, calc(100% - 12px) 0, 100% 50%, calc(100% - 12px) 100%, 0 100%, 12px 50%);}
-.my-path2 .seg:first-child{margin-left:0;padding-left:12px;border-radius:4px 0 0 4px;clip-path:polygon(0 0, calc(100% - 12px) 0, 100% 50%, calc(100% - 12px) 100%, 0 100%);}
-.my-path2 .seg:last-child{border-radius:0 4px 4px 0;padding-right:12px;clip-path:polygon(0 0, 100% 0, 100% 100%, 0 100%, 12px 50%);}
+  background:var(--slds-g-color-surface-container-2,#ecebea);color:#514f4d;padding:0 10px;
+  clip-path:polygon(0 0, calc(100% - 13px) 0, 100% 50%, calc(100% - 13px) 100%, 0 100%, 13px 50%);}
+.my-path2 .seg:first-child{border-radius:4px 0 0 4px;clip-path:polygon(0 0, calc(100% - 13px) 0, 100% 50%, calc(100% - 13px) 100%, 0 100%);}
+.my-path2 .seg:last-child{border-radius:0 4px 4px 0;clip-path:polygon(0 0, 100% 0, 100% 100%, 0 100%, 13px 50%);}
 .my-path2 .seg.done{background:#b7e6c6;color:#0a5a2a;}
 .my-path2 .seg.current{background:#032d60;color:#fff;}
 .my-path2 .my-check{font-weight:800;}
