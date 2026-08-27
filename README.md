@@ -7,6 +7,12 @@ prototypes. No Salesforce org, no server, no build step. Opens with a double-cli
 Built on genuine **SLDS 2 ("Cosmos")** CSS + real `slds-*` blueprints + genuine SLDS
 logo/icon assets (never freehand).
 
+**These prototypes are designed to explain the *impact* of each feature — not just show
+the UI.** Every screen carries a persistent Agentforce "why it matters" rail that states,
+in 2–3 lines, the outcome that screen delivers (with optional illustrative KPI tiles). The
+demo stays outcome-first, so the audience sees *what changes for them*, not just where the
+buttons are.
+
 ## What you can build
 A multi-tab Lightning app in one file, with a persistent shell (global header + app-nav
 tabs + left rail + right panel) and a small JS view engine that swaps the workspace per
@@ -24,6 +30,9 @@ tab. Recipes are included for the common pieces:
   hierarchies. (`references/modals-and-graphs.md`)
 - **Agentforce** — the AF panel + a Generate → stream → Edit → Save-to-record flow.
   (`references/agentforce.md`)
+- **Per-screen outcome rail** — a docked Agentforce "why it matters" panel on every screen
+  (outcome lines + optional illustrative tiles) so the demo explains feature *impact*.
+  (`references/outcome-panel.md`)
 - **Activity Timeline** — tasks/activities with expand + complete.
   (`references/activity-timeline.md`)
 - **Dashboards** — dependency-free CSS bar charts / heatmaps that re-render on action.
@@ -78,6 +87,7 @@ bash "$SKILL/scripts/verify.sh" index.html
 | `references/navigation.md` | Recipe: console vs standard nav (`NAV_MODE`), workspace tabs, split view, utility bar, `slds-path`. |
 | `references/modals-and-graphs.md` | Recipe: SLDS modals + ARC-style relationship graphs (root → grouped cards + Show-Fields toggle + zoom). |
 | `references/agentforce.md` | Recipe: the Agentforce panel + the Generate → stream → Edit → Save-to-record agent flow. |
+| `references/outcome-panel.md` | Recipe: per-screen **Agentforce outcome rail** ("why it matters") — docked right, outcome lines + optional illustrative tiles; keeps the demo impact-first. |
 | `references/talk-track-template.md` | Do/Say click-path talk-track template to hand a presenter after building. |
 
 ## Rules (non-negotiable)
@@ -99,6 +109,8 @@ bash "$SKILL/scripts/verify.sh" index.html
 9. **Present as "now"** — avoid "Future" / "future state" labels unless explicitly asked.
 10. **Prefer standard Lightning patterns** (list views, record home, related lists, Chatter,
     Activity Timeline; console or standard nav) over custom components — content is spec-driven.
+11. **Every screen states its outcome** — a docked Agentforce "why it matters" rail on each
+    screen keeps the demo impact-first, not feature-first (see `references/outcome-panel.md`).
 
 Requires network access **once** (to download the SLDS CSS during `bundle.sh`); the
 resulting file is fully offline. For blueprint/hook/icon lookups, use the companion skill
