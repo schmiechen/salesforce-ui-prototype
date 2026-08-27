@@ -47,9 +47,12 @@ The panel should read as *"someone opened an Agentforce agent"*: **all** main co
 right column with a **left-border separator** (`.my-rail`), **top-aligned** (`align-items:start`).
 
 - **Top-level screens (list/home/dashboard):** wrap the whole view in `.my-with-rail`
-  (`grid-template-columns:1fr 21rem`). Put the **page header *inside* the left column** — not
-  full-width above the grid — so the agent panel top-aligns with the header, not the table.
-  Right column = `<div class="my-rail">${outcomeRail(SPEC.outcome)}</div>`.
+  (`grid-template-columns:1fr 21rem`). Put **everything** — page header, KPI tiles, charts,
+  tables — *inside* the left column, and the agent panel in the right. **Do not render the
+  header or KPI tiles full-width above the grid** — that pushes the rail down so it no longer
+  starts at the top-right. Wrong: `header + kpis + <div class="my-with-rail">…`. Right:
+  `<div class="my-with-rail"><div>${header}${kpis}${charts}…</div><div class="my-rail">${outcomeRail(o)}</div></div>`.
+  On a dashboard the KPI tiles simply get a bit narrower in the left column — that's expected.
 - **Record pages:** highlights + path stay full-width; below them a `1fr 22rem` grid. The
   right column is the agent panel — outcome on top, Activity/Chatter below it.
   **Gotcha:** the right column must be a **single wrapper `<div>`**. If outcome and the
