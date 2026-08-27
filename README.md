@@ -1,5 +1,11 @@
 # salesforce-ui-prototype
 
+> ⚠️ **Unofficial.** This is **not** an official Salesforce repository, product, or skill,
+> and is **not affiliated with, sponsored by, or endorsed by Salesforce, Inc.** It's an
+> independent, community-built tool for producing *illustrative mockups*. "Salesforce,"
+> "Lightning," "SLDS," and related marks are trademarks of Salesforce, Inc. Prototypes it
+> generates are not Salesforce products and are not for production use.
+
 Build a **single, self-contained, offline HTML file** that looks and behaves like a real
 Salesforce **Lightning Experience** app — for demos, mockups, and click-through
 prototypes. No Salesforce org, no server, no build step. Opens with a double-click.
