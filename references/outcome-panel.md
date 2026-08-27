@@ -10,7 +10,10 @@ sidebar** on record pages (above Activity/Chatter). It's not optional — if a s
 outcome isn't obvious, draft one and confirm with the user (see Execution model).
 
 ## Structure
-- **Agentforce header:** a gradient orb + tiny `AGENTFORCE` eyebrow + a short title. Use a
+- **Agentforce header:** a gradient orb holding the **same Agentforce (einstein/Astro)
+  icon used in the global header** — `svg("einstein")`, not the generic `ai` glyph — so the
+  panel reads as "clicked the Agentforce icon → got an impact agent." Plus a tiny
+  `AGENTFORCE` eyebrow + a short title. Use a
   screen-specific title ("Case Impact", "Why It Matters", "Supervisor Nudge") — not a
   generic label repeated everywhere.
 - **Message:** 2–3 short outcome lines — the mission result of using this screen ("a lapsed
