@@ -107,20 +107,14 @@ tr.my-rowlink:hover{background:var(--slds-g-color-surface-container-1,#f7fbff);}
 .my-icbtn-sm{width:1.75rem;height:1.75rem;border:1px solid var(--slds-g-color-border-2,#c9c9c9);border-radius:50%;background:#fff;display:grid;place-items:center;color:#747474;cursor:pointer;} .my-icbtn-sm svg{fill:currentColor;}
 .my-act-links{text-align:right;font-size:.78rem;margin:.15rem .75rem .25rem;} .my-act-links a{color:var(--slds-g-color-accent-1,#0176d3);}
 .my-act-group{background:var(--slds-g-color-surface-container-1,#f3f3f3);border-radius:4px;padding:.3rem .6rem;font-weight:600;font-size:.82rem;margin:.5rem .75rem .3rem;display:flex;align-items:center;gap:.4rem;color:#514f4d;} .my-act-group svg{fill:#747474;}
-.my-tl{padding:0 .75rem .5rem;}
-.my-tl-item{display:grid;grid-template-columns:1rem 1.75rem 1fr;gap:.4rem;align-items:start;}
-.my-tl-exp{border:0;background:0;color:#747474;cursor:pointer;padding:.35rem 0 0;display:grid;place-items:center;} .my-tl-exp svg{fill:currentColor;transition:transform .2s;}
-.my-tl-item.slds-is-open .my-tl-exp svg{transform:rotate(90deg);}
-.my-tl-ico-col{display:flex;flex-direction:column;align-items:center;align-self:stretch;}
-.my-tl-icon{width:1.75rem;height:1.75rem;border-radius:50%;display:grid;place-items:center;color:#fff;flex:none;} .my-tl-icon svg{width:.95rem;height:.95rem;fill:currentColor;}
-.my-tl-conn{width:2px;flex:1;min-height:.5rem;margin-top:2px;}
-.my-tl-item:last-child .my-tl-conn{display:none;}
-.my-tl-body{min-width:0;padding-bottom:1rem;}
-.my-tl-top{display:flex;align-items:center;gap:.5rem;}
-.my-tl-title{color:var(--slds-g-color-accent-1,#0176d3);font-weight:600;cursor:pointer;flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;} .my-tl-title:hover{text-decoration:underline;}
-.my-tl-date{color:#747474;font-size:.78rem;white-space:nowrap;flex:none;}
-.my-tl-act{border:1px solid var(--slds-g-color-border-2,#c9c9c9);background:#fff;border-radius:50%;width:1.4rem;height:1.4rem;display:grid;place-items:center;color:#747474;cursor:pointer;flex:none;} .my-tl-act svg{fill:currentColor;}
-.my-tl-sub{color:#747474;font-size:.8rem;}
+/* genuine slds-timeline — small glue only */
+.my-tl-wrap{padding:0 .5rem .5rem;}
+.slds-timeline{list-style:none;margin:0;padding:0;}
+.slds-timeline__trigger{cursor:pointer;}
+.slds-timeline__icon .slds-icon{fill:#fff;}
+.slds-timeline__details-action-icon svg{width:12px;height:12px;fill:#747474;transition:transform .2s;}
+.slds-timeline__item_expandable.slds-is-open .slds-timeline__details-action-icon svg{transform:rotate(90deg);}
+.slds-timeline__date{white-space:nowrap;color:var(--slds-g-color-on-surface-2,#747474);}
 
 /* ----- chatter feed ----- */
 .my-pub{border:1px solid var(--slds-g-color-border-2,#c9c9c9);border-radius:6px;padding:.5rem;margin-bottom:1rem;}
@@ -496,25 +490,47 @@ function renderActivity(rec){
     <span class="my-act-pill" title="New ${t[0]}"><span class="my-act-circle" style="background:${t[1]}">${svg(t[0],14)}</span><button class="my-act-caret" aria-label="More">${svg("chevrondown",12)}</button></span>`).join("")}</div>`;
   const filters=`<div class="slds-p-horizontal_small"><div class="my-act-filters"><span>Filters: All time · All activities · All types</span><button class="my-icbtn-sm" title="Timeline Settings">${svg("settings",14)}</button></div></div>
     <div class="my-act-links"><a href="javascript:void(0)">Refresh</a> · <a href="javascript:void(0)">Expand All</a> · <a href="javascript:void(0)">View All</a></div>`;
+  const STD={task:"task",event:"event",call:"log-a-call",email:"email"};
+  const glyph=n=>{ const i=ICONS[n]||ICONS.case; return `<svg class="slds-icon slds-icon_small" viewBox="${i.vb}" aria-hidden="true"><path d="${i.d}"/></svg>`; };
   let items="", lastGroup=null;
   rec.activities.forEach((a,i)=>{
-    if(a.group!==lastGroup){ items+=`<div class="my-act-group">${svg("chevrondown",12)} ${a.group}</div>`; lastGroup=a.group; }
-    const col=ACT_COLOR[a.type]||"#747474";
-    items+=`<div class="my-tl-item" data-i="${i}">
-      <button class="my-tl-exp" aria-label="Expand">${svg("chevronright",11)}</button>
-      <div class="my-tl-ico-col"><span class="my-tl-icon" style="background:${col}">${svg(a.type,14)}</span><span class="my-tl-conn" style="background:${col}"></span></div>
-      <div class="my-tl-body">
-        <div class="my-tl-top"><a class="my-tl-title" href="javascript:void(0)">${esc(a.title)}</a><span class="my-tl-date">${a.when}</span><button class="my-tl-act" aria-label="Show actions">${svg("chevrondown",11)}</button></div>
-        <div class="my-tl-sub">${esc(a.sub||(a.type+" · "+a.who))}</div>
-        <div class="my-tl-details" hidden><p class="slds-text-body_small slds-m-top_x-small">${esc(a.details)}</p><p class="slds-text-body_small slds-text-color_weak">${a.type} · ${esc(a.who)}</p></div>
-      </div></div>`;
+    if(a.group!==lastGroup){ items+=`<li class="my-act-group">${svg("chevrondown",12)} ${a.group}</li>`; lastGroup=a.group; }
+    items+=`<li><div class="slds-timeline__item_expandable slds-timeline__item_${a.type}" data-i="${i}">
+      <span class="slds-assistive-text">${a.type}</span>
+      <div class="slds-media">
+        <div class="slds-media__figure">
+          <button class="slds-button slds-button_icon slds-timeline__trigger" title="Toggle details" aria-controls="tl-d-${i}" aria-expanded="false">
+            <span class="slds-button__icon slds-timeline__details-action-icon">${svg("chevronright",12)}</span></button>
+          <span class="slds-icon_container slds-icon-standard-${STD[a.type]||"task"} slds-timeline__icon" title="${a.type}">${glyph(a.type)}</span>
+        </div>
+        <div class="slds-media__body">
+          <div class="slds-grid slds-grid_align-spread slds-timeline__trigger">
+            <div class="slds-grid slds-grid_vertical-align-center slds-truncate_container_75 slds-no-space">
+              <h3 class="slds-truncate" title="${esc(a.title)}"><a href="javascript:void(0)">${esc(a.title)}</a></h3>
+            </div>
+            <div class="slds-timeline__actions slds-timeline__actions_inline">
+              <p class="slds-timeline__date">${a.when}</p>
+              <button class="slds-button slds-button_icon slds-button_icon-border-filled slds-button_icon-x-small" title="More actions">${svg("chevrondown",11)}</button>
+            </div>
+          </div>
+          <p class="slds-m-horizontal_xx-small slds-m-top_xx-small slds-text-color_weak">${esc(a.sub||(a.type+" · "+a.who))}</p>
+          <article id="tl-d-${i}" class="slds-box slds-theme_shade slds-m-top_x-small slds-timeline__item_details slds-hide">
+            <p class="slds-text-body_small">${esc(a.details)}</p>
+            <p class="slds-text-body_small slds-text-color_weak slds-m-top_x-small">${a.type} · ${esc(a.who)}</p>
+          </article>
+        </div>
+      </div></div></li>`;
   });
-  return composer+filters+`<div class="my-tl">${items}</div>`;
+  return composer+filters+`<div class="my-tl-wrap"><ul class="slds-timeline">${items}</ul></div>`;
 }
 function wireActivity(){
-  const toggle=el=>{ const it=el.closest(".my-tl-item"), d=it.querySelector(".my-tl-details"); const open=it.classList.toggle("slds-is-open"); if(d) d.hidden=!open; };
-  document.querySelectorAll(".my-tl-exp").forEach(b=>b.onclick=function(){toggle(this);});
-  document.querySelectorAll(".my-tl-title").forEach(a=>a.onclick=function(e){e.preventDefault();toggle(this);});
+  document.querySelectorAll(".slds-timeline__trigger").forEach(t=>t.onclick=function(e){
+    if(e.target.closest(".slds-timeline__actions")) return;  // don't toggle when clicking the actions menu
+    const it=this.closest(".slds-timeline__item_expandable"); if(!it) return;
+    const open=it.classList.toggle("slds-is-open");
+    const d=it.querySelector(".slds-timeline__item_details"); if(d){ d.classList.toggle("slds-hide",!open); d.classList.toggle("slds-show",open); }
+    it.querySelectorAll(".slds-timeline__trigger[aria-expanded]").forEach(b=>b.setAttribute("aria-expanded",open));
+  });
 }
 
 /* ----- Chatter feed ----- */
