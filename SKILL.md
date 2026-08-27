@@ -96,6 +96,45 @@ nav tabs; clicking a tab calls `switchTab(id)` which calls the matching `view*()
 each view calls `setRail(html)`, `setMain(html)`, `setRight(html)` to swap the three
 regions. Add a tab = add a `TABS` entry + a `view*()` function. That's the whole model.
 
+## How to drive this skill (execution model)
+
+Loop: **Brief → Scope → Scaffold → Iterate → Finalize.** Get something clickable fast,
+then refine — don't run a long interview.
+
+1. **Brief.** Take whatever context the user gives (a one-liner or a full prompt) and
+   extract it into the `SPEC`/config. The **agent maintains the SPEC inside the HTML** —
+   the user reviews in the browser, not by editing a spec file.
+2. **Scope — ask ONLY architecture-defining unknowns.** Batch **≤4** multiple-choice
+   questions (AskUserQuestion) for things that change structure; **default everything
+   else** (see the Question bank). Then restate the scope before building.
+3. **Scaffold — breadth first.** Set the config and build **all screens at rough fidelity
+   first** so the whole app is clickable end-to-end (every tab renders plausible
+   placeholder content), rather than perfecting one screen while others 404.
+4. **Iterate — polish screen-by-screen.** Then deepen each screen: **build → open in the
+   browser → refine**. Keep the SPEC in the file in sync as you go.
+5. **Finalize.** Run `verify.sh` + a data-sanity pass, confirm offline, offer a talk track,
+   optional commit.
+
+### Scoping checklist (a complete SPEC)
+- **App:** name, org/context, audience/purpose, `NAV_MODE`, `RECORD_LAYOUT`, utilities.
+- **Screens/tabs:** the list; per screen → pattern (list view / record home / dashboard /
+  custom), object, key columns & fields, related lists, right sidebar (Activity/Chatter),
+  path stages, actions.
+- **Data:** personas + sample records (internally consistent), how domain-accurate to be.
+- **Interactions:** which "wow" moments (animation, modal/ARC graph, save-to-record, generate).
+- **Extras:** talk track? commit target?
+
+### Question bank (ask only what you can't infer; each has a default)
+| Question | When to ask | Default |
+|---|---|---|
+| Which tabs / use cases, and which is flagship? | almost always (core scope) | — |
+| Nav mode: console or standard? | if unclear | console |
+| Pattern for each screen? | if ambiguous | list view → record home |
+| Data domain & realism? | if the brief lacks it | neutral, spec-driven placeholders |
+| Any "wow" interactions? | if a moment is implied | none unless asked |
+| Record layout 2- or 3-region? | rarely | 2-region |
+| Talk track? | at finalize | offer it |
+
 ## Workflow
 
 1. **Scaffold.** Copy `assets/shell-template.html` into the target project as
@@ -107,9 +146,10 @@ regions. Add a tab = add a `TABS` entry + a `view*()` function. That's the whole
    (2-region|3-region), `APP`, `UTILITIES`, and the **`SPEC`** (object, columns, rows,
    detail sections, related lists, activities, feed). This is spec-driven — replace the
    sample Case content with the project's object/fields.
-3. **Extend with standard patterns.** Add more objects/screens by reusing the recipes —
-   list view, record home, related lists, Chatter, Activity Timeline, path, console vs
-   standard nav (see the Pattern picker). Pull exact markup from `design-systems-slds-apply`
+3. **Extend with standard patterns — breadth first, then polish.** Stand up every tab in
+   the scope at rough fidelity so the app is clickable end-to-end, then deepen each screen.
+   Reuse the recipes — list view, record home, related lists, Chatter, Activity Timeline,
+   path, console vs standard nav (see the Pattern picker). Pull exact markup from `design-systems-slds-apply`
    (`scripts/search-blueprints.cjs`, `assets/blueprints/*.yaml`). Reuse the template helpers
    (`objIcon()`, `badge()`, `tabset()`/`wireTabs()`, `relatedCard()`, `renderActivity()`,
    `renderChatter()`, `svg()`). Only build custom (`my-*` + hooks) when no standard fits.
