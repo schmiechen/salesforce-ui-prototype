@@ -93,8 +93,18 @@ tr.my-rowlink:hover{background:var(--slds-g-color-surface-container-1,#f7fbff);}
 .my-field .slds-form-element__label{color:var(--slds-g-color-on-surface-2,#747474);}
 .my-field .slds-form-element__static{border-bottom:1px dotted transparent;padding:2px 0;}
 
-/* ----- path ----- */
-.my-path{margin-bottom:var(--slds-g-spacing-3,12px);}
+/* ----- path (full-width interlocking chevrons in a white card) ----- */
+.my-path-card{display:flex;align-items:center;gap:.75rem;background:#fff;border:1px solid var(--my-line);border-radius:.5rem;box-shadow:var(--slds-g-shadow-1,0 1px 2px rgba(0,0,0,.08));padding:.4rem;margin-bottom:var(--slds-g-spacing-4,16px);}
+.my-path2{display:flex;flex:1 1 auto;min-width:0;}
+.my-path2 .seg{flex:1 1 0;min-width:0;height:2rem;display:flex;align-items:center;justify-content:center;gap:.35rem;font-size:.8rem;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+  background:var(--slds-g-color-surface-container-2,#ecebea);color:#514f4d;margin-left:-12px;padding:0 8px 0 20px;
+  clip-path:polygon(0 0, calc(100% - 12px) 0, 100% 50%, calc(100% - 12px) 100%, 0 100%, 12px 50%);}
+.my-path2 .seg:first-child{margin-left:0;padding-left:12px;border-radius:4px 0 0 4px;clip-path:polygon(0 0, calc(100% - 12px) 0, 100% 50%, calc(100% - 12px) 100%, 0 100%);}
+.my-path2 .seg:last-child{border-radius:0 4px 4px 0;padding-right:12px;clip-path:polygon(0 0, 100% 0, 100% 100%, 0 100%, 12px 50%);}
+.my-path2 .seg.done{background:#b7e6c6;color:#0a5a2a;}
+.my-path2 .seg.current{background:#032d60;color:#fff;}
+.my-path2 .my-check{font-weight:800;}
+.my-path-btn{flex:none;white-space:nowrap;}
 
 /* ----- activity composer (icon pill buttons) + timeline ----- */
 .my-act-composer{display:flex;gap:.5rem;padding:.6rem .75rem;flex-wrap:wrap;}
@@ -435,11 +445,13 @@ function renderRecord(row){
 }
 function renderPath(stages,current){
   const ci=Math.max(0,stages.indexOf(current));
-  return `<div class="my-path"><div class="slds-path"><div class="slds-grid slds-path__track"><div class="slds-grid slds-has-flexi-truncate">
-    <ul class="slds-path__nav" role="listbox">
-    ${stages.map((s,i)=>`<li class="slds-path__item ${i<ci?"slds-is-complete":i===ci?"slds-is-current slds-is-active":"slds-is-incomplete"}" role="presentation">
-      <a class="slds-path__link" href="javascript:void(0)" role="option"><span class="slds-path__stage">${i<ci?svg("close",0):""}</span><span class="slds-path__title">${s}</span></a></li>`).join("")}
-    </ul></div></div></div></div>`;
+  const segs=stages.map((s,i)=>{
+    const cls=i<ci?"done":i===ci?"current":"";
+    const inner=i<ci?'<span class="my-check">&#10003;</span>':esc(s);
+    return `<div class="seg ${cls}" title="${esc(s)}">${inner}</div>`;
+  }).join("");
+  return `<div class="my-path-card"><div class="my-path2">${segs}</div>
+    <button class="slds-button slds-button_brand my-path-btn">&#10003; Mark Status as Complete</button></div>`;
 }
 function renderDetails(rec){
   return rec.detailSections.map(sec=>`
