@@ -54,6 +54,27 @@ to confirm a class/hook/icon exists — do not guess SLDS class names.
    items, headings, buttons, and body copy.
 9. **Present as "now," not "future."** Avoid "Future" / "future state" badges and labels
    unless the user explicitly asks — the demo represents current capability.
+10. **Prefer standard Lightning patterns over custom components.** For each screen use the
+    real blueprint/recipe (Pattern picker below) and only build custom (`my-*` + hooks)
+    when no standard pattern fits. Prototypes should read as *configured Salesforce*, not
+    bespoke UI. The shell defaults to **console** navigation (`NAV_MODE`), with standard
+    as a documented toggle.
+
+## Pattern picker (use the standard blueprint first)
+
+| Screen / need | Standard pattern | Recipe |
+|---|---|---|
+| List of records | List view (switcher, controls, sortable/selectable table) | `references/list-view.md` |
+| Open a record | Record home (highlights + Details/Related tabs + right sidebar) | `references/record-home.md` |
+| Record sidebar | Activity Timeline + Chatter tab set | `references/activity-timeline.md`, `references/chatter-feed.md` |
+| Related data | Related lists = `slds-card` + `slds-table` (in the Related tab) | `references/record-home.md` |
+| App / multi-record nav | Standard context bar **or** console (workspace tabs, split view, utility bar) | `references/navigation.md` |
+| Record lifecycle | Path (`slds-path`) under highlights | `references/navigation.md` |
+| Relationship / hierarchy | ARC graph in a modal | `references/modals-and-graphs.md` |
+| AI assist | Agentforce panel / generate-save | `references/agentforce.md` |
+
+Content is **spec-driven** — the object, fields, columns, related lists, tabs, and
+utilities come from the project spec; the recipes are the frame you map that content into.
 
 ## The app-shell pattern
 
@@ -128,6 +149,10 @@ regions. Add a tab = add a `TABS` entry + a `view*()` function. That's the whole
 | `references/activity-timeline.md` | Recipe for a Salesforce-style Activity Timeline (tasks/activities): blueprint classes, type-colored connector, the no-double-line gotcha, expand + complete interactions. |
 | `references/modals-and-graphs.md` | Recipe for SLDS modals (host + open/close/backdrop) and relationship graphs (ARC-style root → grouped cards + connector + Show-Fields toggle + zoom). |
 | `references/agentforce.md` | Recipe for Agentforce UI: the AF panel (orb + label + bulleted card) and the Generate → stream → Edit → Save-to-record agent flow. |
+| `references/list-view.md` | Recipe: standard Lightning **list view** (switcher + controls + filters + sortable/selectable data table). |
+| `references/record-home.md` | Recipe: standard **record home** (highlights + Details/Related tabs + Activity/Chatter right sidebar; 2- or 3-region). |
+| `references/chatter-feed.md` | Recipe: full **Chatter** feed (publisher + posts + comments + like/mention). |
+| `references/navigation.md` | Recipe: **console vs standard** nav (`NAV_MODE`), workspace tabs, split view, utility bar (Omni-Channel/Phone/History), and `slds-path`. |
 | `references/talk-track-template.md` | Do/Say click-path talk-track template to hand the presenter after building. |
 
 ## Notes / gotchas

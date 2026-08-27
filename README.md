@@ -12,7 +12,12 @@ A multi-tab Lightning app in one file, with a persistent shell (global header + 
 tabs + left rail + right panel) and a small JS view engine that swaps the workspace per
 tab. Recipes are included for the common pieces:
 
-- **Record consoles** — page-header highlights, LDS cards, data tables, badges, buttons.
+- **Standard list views** — list-view switcher, controls/filters, and a sortable,
+  selectable data table (`references/list-view.md`).
+- **Standard record home** — highlights + **Details / Related** tabs + an **Activity
+  Timeline & Chatter** right sidebar (2- or 3-region) (`references/record-home.md`).
+- **Standard vs console navigation** — context-bar app nav, or a **console** (workspace
+  tabs, split view, utility bar); `NAV_MODE` defaults to console (`references/navigation.md`).
 - **Identity resolution → golden record** — merge/animate disparate source records into
   one unified record (the pattern behind the reference demo).
 - **Relationship graphs (ARC-style)** in **SLDS modals** — households, provider rings,
@@ -66,6 +71,10 @@ bash "$SKILL/scripts/verify.sh" index.html
 | `scripts/verify.sh` | Checks used `slds-*` classes exist + tag balance + offline + no freehand icons + no banned copy ("Copilot"/"Future") + blue-on-blue risk + a data-sanity reminder. |
 | `references/icons.md` | Genuine SLDS logo + utility icon catalog and how to fetch more. |
 | `references/activity-timeline.md` | Recipe: Salesforce Activity Timeline (tasks/activities) — type-colored connector, expand + complete, the no-double-line gotcha. |
+| `references/list-view.md` | Recipe: standard Lightning list view (switcher + controls + filters + sortable/selectable table). |
+| `references/record-home.md` | Recipe: standard record home (highlights + Details/Related tabs + Activity/Chatter sidebar). |
+| `references/chatter-feed.md` | Recipe: full Chatter feed (publisher + posts + comments + like/mention). |
+| `references/navigation.md` | Recipe: console vs standard nav (`NAV_MODE`), workspace tabs, split view, utility bar, `slds-path`. |
 | `references/modals-and-graphs.md` | Recipe: SLDS modals + ARC-style relationship graphs (root → grouped cards + Show-Fields toggle + zoom). |
 | `references/agentforce.md` | Recipe: the Agentforce panel + the Generate → stream → Edit → Save-to-record agent flow. |
 | `references/talk-track-template.md` | Do/Say click-path talk-track template to hand a presenter after building. |
@@ -87,6 +96,8 @@ bash "$SKILL/scripts/verify.sh" index.html
    a/the/of/on/by/to lowercase unless first); descriptive subtext and body copy use sentence case.
 8. **Never say "Copilot"** (a Microsoft term) — use "Agentforce" / "agent" for AI features.
 9. **Present as "now"** — avoid "Future" / "future state" labels unless explicitly asked.
+10. **Prefer standard Lightning patterns** (list views, record home, related lists, Chatter,
+    Activity Timeline; console or standard nav) over custom components — content is spec-driven.
 
 Requires network access **once** (to download the SLDS CSS during `bundle.sh`); the
 resulting file is fully offline. For blueprint/hook/icon lookups, use the companion skill
