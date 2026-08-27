@@ -38,14 +38,15 @@ html,body{height:100%;margin:0;}
 .my-avatar{display:inline-grid;place-items:center;width:24px;height:24px;border-radius:50%;background:#e8734a;color:#fff;font-size:.55rem;font-weight:700;flex:none;}
 
 /* ----- app context bar (navy) : waffle + app name + nav ----- */
-.my-appbar{display:flex;align-items:stretch;height:2.5rem;background:var(--my-navy);color:#fff;padding:0 .25rem;}
-.my-waffle{display:grid;place-items:center;width:2.5rem;flex:none;background:transparent;border:0;cursor:pointer;color:#cfe0f2;}
+.my-appbar{display:flex;align-items:stretch;height:2.5rem;background:#fff;color:#080707;padding:0 .25rem;border-bottom:1px solid var(--my-line);}
+.my-waffle{display:grid;place-items:center;width:2.5rem;flex:none;background:transparent;border:0;cursor:pointer;color:#747474;}
 .my-waffle svg{width:18px;height:18px;fill:currentColor;}
-.my-appname{display:flex;align-items:center;font-weight:700;font-size:.9rem;padding:0 .75rem 0 .25rem;white-space:nowrap;flex:none;}
+.my-waffle:hover{color:#0176d3;}
+.my-appname{display:flex;align-items:center;font-weight:700;font-size:.9rem;padding:0 .75rem 0 .25rem;white-space:nowrap;flex:none;color:#080707;}
 .my-appnav{display:flex;align-items:stretch;}
-.my-navitem{display:flex;align-items:center;padding:0 .9rem;color:#cfe0f2;font-size:.8rem;cursor:pointer;border-bottom:3px solid transparent;background:transparent;border-top:0;border-left:0;border-right:0;font:inherit;}
-.my-navitem:hover{background:rgba(255,255,255,.1);color:#fff;}
-.my-navitem.is-active{color:#fff;border-bottom-color:#fff;font-weight:600;}
+.my-navitem{display:flex;align-items:center;padding:0 .9rem;color:#514f4d;font-size:.8rem;cursor:pointer;border-bottom:3px solid transparent;background:transparent;border-top:0;border-left:0;border-right:0;font:inherit;}
+.my-navitem:hover{background:var(--slds-g-color-surface-container-1,#f3f3f3);color:#0176d3;}
+.my-navitem.is-active{color:#0176d3;border-bottom-color:#0176d3;font-weight:600;}
 
 /* ----- console workspace tabs ----- */
 .my-ws{display:flex;align-items:stretch;height:2.25rem;background:#fff;border-bottom:1px solid var(--my-line);padding:0 .25rem;overflow-x:auto;}
@@ -79,7 +80,9 @@ html,body{height:100%;margin:0;}
 .my-lv-switch{display:inline-flex;align-items:center;gap:.35rem;background:transparent;border:0;font:inherit;cursor:pointer;color:#080707;}
 .my-lv-switch svg{width:14px;height:14px;fill:#747474;}
 table.slds-table th.is-clickable{cursor:pointer;} table.slds-table th .my-sortarrow{color:#747474;font-size:.7rem;margin-left:.25rem;}
-tr.my-rowlink td:nth-child(2){color:var(--slds-g-color-accent-1,#0176d3);font-weight:600;cursor:pointer;}
+.my-tablewrap{overflow-x:auto;}
+.my-lv-link{color:var(--slds-g-color-accent-1,#0176d3);font-weight:600;cursor:pointer;}
+.my-lv-link:hover{text-decoration:underline;}
 tr.my-rowlink:hover{background:var(--slds-g-color-surface-container-1,#f7fbff);}
 .my-lv-foot{padding:.5rem .75rem;font-size:.72rem;color:var(--slds-g-color-on-surface-2,#747474);border-top:1px solid var(--my-line);}
 
@@ -121,10 +124,10 @@ tr.my-rowlink:hover{background:var(--slds-g-color-surface-container-1,#f7fbff);}
 .my-avatar-sm{display:inline-grid;place-items:center;width:2rem;height:2rem;border-radius:50%;color:#fff;font-size:.7rem;font-weight:700;flex:none;}
 
 /* ----- utility bar (custom; SLDS has no docked-utility-bar in this bundle) ----- */
-.my-utilbar{display:flex;align-items:center;height:2rem;background:var(--my-navy);color:#cfe0f2;padding:0 .5rem;gap:.25rem;}
-.my-util-disc{margin-left:auto;font-size:.65rem;color:#9fc3e8;padding-right:.5rem;}
-.my-utilbtn{display:inline-flex;align-items:center;gap:.35rem;height:1.6rem;padding:0 .6rem;background:transparent;border:0;color:#cfe0f2;font:inherit;font-size:.72rem;cursor:pointer;border-radius:3px;}
-.my-utilbtn:hover,.my-utilbtn.is-open{background:rgba(255,255,255,.14);color:#fff;}
+.my-utilbar{display:flex;align-items:center;height:2rem;background:#fff;color:#514f4d;padding:0 .5rem;gap:.25rem;border-top:1px solid var(--my-line);box-shadow:0 -1px 2px rgba(0,0,0,.04);}
+.my-util-disc{margin-left:auto;font-size:.65rem;color:#8c8c8c;padding-right:.5rem;}
+.my-utilbtn{display:inline-flex;align-items:center;gap:.35rem;height:1.6rem;padding:0 .6rem;background:transparent;border:0;color:#514f4d;font:inherit;font-size:.72rem;cursor:pointer;border-radius:3px;}
+.my-utilbtn:hover,.my-utilbtn.is-open{background:var(--slds-g-color-surface-container-1,#f3f3f3);color:#0176d3;}
 .my-utilbtn svg{width:14px;height:14px;fill:currentColor;}
 .my-utilpanel{position:fixed;bottom:2rem;width:340px;background:#fff;border:1px solid var(--my-line);border-radius:6px 6px 0 0;box-shadow:0 -2px 12px rgba(0,0,0,.18);display:none;z-index:60;}
 .my-utilpanel.is-open{display:block;}
@@ -152,7 +155,12 @@ tr.my-rowlink:hover{background:var(--slds-g-color-surface-container-1,#f7fbff);}
       <input type="search" placeholder="Search..." aria-label="Search Salesforce" />
     </div></div>
     <div class="my-hicons">
-      <button class="my-hbtn" id="waffleTop" title="App Launcher" aria-label="App Launcher"><svg viewBox="0 0 52 52"><path d="M13 4H7a3 3 0 0 0-3 3v6a3 3 0 0 0 3 3h6a3 3 0 0 0 3-3V7a3 3 0 0 0-3-3m0 32H7a3 3 0 0 0-3 3v6a3 3 0 0 0 3 3h6a3 3 0 0 0 3-3v-6a3 3 0 0 0-3-3m0-16H7a3 3 0 0 0-3 3v6a3 3 0 0 0 3 3h6a3 3 0 0 0 3-3v-6a3 3 0 0 0-3-3M29 4h-6a3 3 0 0 0-3 3v6a3 3 0 0 0 3 3h6a3 3 0 0 0 3-3V7a3 3 0 0 0-3-3m0 32h-6a3 3 0 0 0-3 3v6a3 3 0 0 0 3 3h6a3 3 0 0 0 3-3v-6a3 3 0 0 0-3-3m0-16h-6a3 3 0 0 0-3 3v6a3 3 0 0 0 3 3h6a3 3 0 0 0 3-3v-6a3 3 0 0 0-3-3M45 4h-6a3 3 0 0 0-3 3v6a3 3 0 0 0 3 3h6a3 3 0 0 0 3-3V7a3 3 0 0 0-3-3m0 32h-6a3 3 0 0 0-3 3v6a3 3 0 0 0 3 3h6a3 3 0 0 0 3-3v-6a3 3 0 0 0-3-3m0-16h-6a3 3 0 0 0-3 3v6a3 3 0 0 0 3 3h6a3 3 0 0 0 3-3v-6a3 3 0 0 0-3-3"/></svg></button>
+      <button class="my-hbtn" title="Agentforce" aria-label="Agentforce"><svg viewBox="0 0 520 520" fill="currentColor" aria-hidden="true"><path d="M314.9 276.2h.2a100 100 0 0 0-21.8 4.1s-9.2 2.9-23.3 4.9c-3.3.5-7.5.5-9.8.5h-1.7c-2.3 0-6.6-.2-9.8-.7a149.5 149.5 0 0 1-23.2-5.5 113 113 0 0 0-21.8-4.4c-44.9-4.6-64.3 12.5-65.4 15.7s3.8 44.8 7.4 51.4a28 28 0 0 0 13.8 12.4c5 2.1 46.1 6.2 59.8 4.3s15.8-6.5 19.5-13.5c2.6-5 9.3-27.6 13-40.9.9-2.6 1-7.8 7.3-8.2 6.3.5 6.4 5.8 7.2 8.4l12.4 41.1c3.5 7.1 5.6 11.7 19.3 13.9 13.6 2.1 54.8-1.2 59.8-3.2s10.4-5.7 14-12.2 9.2-48 8.2-51.2c-1-3.3-20.1-20.7-65.1-16.9"/><path d="M455.2 145.5h.1a226.5 226.5 0 0 0-43.7-42.1 36.2 36.2 0 0 0 29.9-35.6 36.3 36.3 0 1 0-70.6 11.4 258.5 258.5 0 0 0-83.5-23.3 260 260 0 0 0-138.2 23 36.3 36.3 0 1 0-70.7-11.1 36.2 36.2 0 0 0 29.6 35.6C61.5 137.8 29 187.9 21.6 246a201.5 201.5 0 0 0 43.2 151.5c39.4 49.8 100.6 82.5 167.8 89.6q14.1 1.5 27.9 1.5c119.9 0 223.7-81.4 237.9-191.6a201.5 201.5 0 0 0-43.2-151.5m-195 281.1h-.1c-90.2-.1-163.6-60.3-163.6-134.3 0-22.3 6.8-43.7 19.1-62.7a60.6 60.6 0 0 0 5.3 17.1 17 17 0 0 0 22.8 7.8c8.5-4.1 12-14.3 8.1-22.8-2.1-4.5-7.5-19.4 5.6-30.8 12.7 11.5 30.9 25 51.4 31.6 38.2 12.1 67.1 5 68.3 4.7a17.1 17.1 0 0 0 12.1-11.5 17 17 0 0 0-3.4-16.3 185.5 185.5 0 0 1-32.5-48.2c78.2 10.6 93.2 72.9 93.8 75.7a17 17 0 0 0 20.2 13.1c9.3-1.9 15.2-11 13.3-20.3a119 119 0 0 0-19.9-43c38.3 24.6 63.1 62.8 63.1 105.7 0 74-73.4 134.2-163.6 134.2"/></svg></button>
+      <button class="my-hbtn" title="Favorites" aria-label="Favorites"><svg viewBox="0 0 520 520" fill="currentColor" aria-hidden="true"><path d="m274 31 46 150c2 6 8 9 14 9h150c15 0 21 20 9 29l-122 90c-5 4-7 11-5 17l58 154c4 14-11 26-23 17l-131-98c-5-4-12-4-18 0l-132 98c-12 9-28-3-23-17l56-154c2-6 0-13-5-17L26 219c-12-9-5-29 9-29h150c7 0 12-2 14-9l47-151c4-14 24-13 28 1"/></svg></button>
+      <button class="my-hbtn" title="New" aria-label="Global Actions"><svg viewBox="0 0 520 520" fill="currentColor" aria-hidden="true"><path d="M300 290h165c8 0 15-7 15-15v-30c0-8-7-15-15-15H300c-6 0-10-4-10-10V55c0-8-7-15-15-15h-30c-8 0-15 7-15 15v165c0 6-4 10-10 10H55c-8 0-15 7-15 15v30c0 8 7 15 15 15h165c6 0 10 4 10 10v165c0 8 7 15 15 15h30c8 0 15-7 15-15V300c0-6 4-10 10-10"/></svg></button>
+      <button class="my-hbtn" title="Help" aria-label="Help"><svg viewBox="0 0 520 520" fill="currentColor" aria-hidden="true"><path d="M284 380h-50c-8 0-14-6-14-14v-15c0-42 27-80 67-94a80 80 0 0 0-24-155c-22-1-43 7-59 22a70.4 70.4 0 0 0-23 44c-1 6-7 11-15 11h-50c-9 0-16-7-15-16 4-38 21-72 48-99 32-30 73-46 117-45 83 3 151 71 154 154 3 70-40 133-105 157-9 4-15 11-15 20v15c0 9-8 15-16 15m16 105c0 8-7 15-15 15h-50c-8 0-15-7-15-15v-50c0-8 7-15 15-15h50c8 0 15 7 15 15z"/></svg></button>
+      <button class="my-hbtn" title="Setup" aria-label="Setup"><svg viewBox="0 0 520 520" fill="currentColor" aria-hidden="true"><path d="M261 191c-39 0-70 31-70 70s31 70 70 70 70-31 70-70-31-70-70-70m210 133-37-31a195 195 0 0 0 0-68l37-31c12-10 16-28 8-42l-16-28a34 34 0 0 0-40-14l-46 17a168 168 0 0 0-59-34l-8-47c-3-16-17-25-33-25h-32c-16 0-30 9-33 25l-8 46a180 180 0 0 0-60 34l-46-17-11-2c-12 0-23 6-29 16l-16 28c-8 14-5 32 8 42l37 31a195 195 0 0 0 0 68l-37 31a34 34 0 0 0-8 42l16 28a34 34 0 0 0 40 14l46-17c18 16 38 27 59 34l8 48a33 33 0 0 0 33 27h32c16 0 30-12 33-28l8-48a170 170 0 0 0 62-37l43 17 12 2c12 0 23-6 29-16l15-26c9-11 5-29-7-39m-210 47c-61 0-110-49-110-110s49-110 110-110 110 49 110 110-49 110-110 110"/></svg></button>
+      <button class="my-hbtn" title="Notifications" aria-label="Notifications"><svg viewBox="0 0 520 520" fill="currentColor" aria-hidden="true"><path d="M460 330h-5a35 35 0 0 1-35-35V180A160 160 0 0 0 252 20c-86 4-152 78-152 165v111c0 19-16 34-35 34h-5c-22 0-40 19-40 41v15c0 7 7 14 15 14h450c8 0 15-7 15-15v-15a40 40 0 0 0-40-40M309 440h-98a10 10 0 0 0-10 12c5 28 30 48 59 48s54-21 59-48a10 10 0 0 0-10-12"/></svg></button>
       <span class="my-avatar" id="hdrAvatar" title="User" role="img" aria-label="User">AB</span>
     </div>
   </header>
@@ -199,8 +207,8 @@ const SPEC = {
   object:{ name:"Case", plural:"Cases", icon:"case" },
   listViews:[ "All Open Cases", "My Cases", "Recently Viewed" ],
   columns:[
-    { key:"number",  label:"Case Number",     sortable:true },
-    { key:"subject", label:"Subject",         sortable:true },
+    { key:"number",  label:"Case Number",     sortable:true, link:true },
+    { key:"subject", label:"Subject",         sortable:true, link:true },
     { key:"account", label:"Account Name",    sortable:true },
     { key:"priority",label:"Priority",        sortable:true },
     { key:"status",  label:"Status",          sortable:true },
@@ -358,17 +366,17 @@ function renderList(){
   const trs=rows.map(r=>`
     <tr class="slds-hint-parent my-rowlink">
       <td class="slds-cell-shrink"><input type="checkbox" class="my-rowchk" data-id="${r.id}" ${SELECTED.has(r.id)?"checked":""} onclick="event.stopPropagation();toggleSel('${r.id}',this.checked)" /></td>
-      ${SPEC.columns.map((c,ci)=>`<td ${ci===1?`onclick="openRecordById('${r.id}')"`:""}><div class="slds-truncate" title="${esc(r[c.key])}">${c.key==="priority"?prBadge(r[c.key]):esc(r[c.key])}</div></td>`).join("")}
+      ${SPEC.columns.map(c=>{ const v = c.key==="priority" ? prBadge(r[c.key]) : c.link ? `<a class="my-lv-link" onclick="openRecordById('${r.id}')">${esc(r[c.key])}</a>` : esc(r[c.key]); return `<td><div class="slds-truncate" title="${esc(r[c.key])}">${v}</div></td>`; }).join("")}
       <td class="slds-cell-shrink"><button class="slds-button slds-button_icon slds-button_icon-border-filled" title="Show actions">${svg("chevrondown",12)}</button></td>
     </tr>`).join("");
   document.getElementById("work").innerHTML=head+`
-    <div class="slds-card"><table class="slds-table slds-table_bordered slds-table_col-bordered slds-table_fixed-layout slds-table_resizable-cols">
+    <div class="slds-card"><div class="my-tablewrap"><table class="slds-table slds-table_bordered slds-table_col-bordered slds-table_cell-buffer">
       <thead><tr class="slds-line-height_reset">
         <th class="slds-cell-shrink" scope="col"><input type="checkbox" onclick="toggleSelAll(this.checked)" aria-label="Select all"/></th>
         ${ths}<th class="slds-cell-shrink" scope="col"></th>
       </tr></thead>
       <tbody>${trs}</tbody>
-    </table>
+    </table></div>
     <div class="my-lv-foot">${rows.length} items${SELECTED.size?` · ${SELECTED.size} selected`:""} · sorted by ${SORT.col?colLabel(SORT.col):"Case Number"}</div></div>`;
 }
 function colLabel(k){ return (SPEC.columns.find(c=>c.key===k)||{}).label||k; }
@@ -560,7 +568,7 @@ function initLauncher(){
   document.getElementById("lgrid").innerHTML=LAUNCH.map(a=>`<div class="my-lapp"><div class="my-lai" style="background:${ICONS[a[0]].c}">${svg(a[0],20)}</div><div class="slds-text-body_small" style="font-weight:600">${a[1]}</div></div>`).join("");
   const ov=document.getElementById("overlay"), lc=document.getElementById("launcher");
   const open=()=>{ov.classList.add("is-open");lc.classList.add("is-open");};
-  document.getElementById("waffle").onclick=open; document.getElementById("waffleTop").onclick=open;
+  document.getElementById("waffle").onclick=open;
   ov.onclick=()=>{ov.classList.remove("is-open");lc.classList.remove("is-open");};
 }
 
