@@ -223,6 +223,11 @@ then refine — don't run a long interview.
   from the `@salesforce-ux/design-system` npm package (mirrored on jsDelivr).
 - Keep the header navy per the exact spec unless the user asks for the white
   modern-console header; if white, recolor utility glyphs from `#fff` to `#5c5c5c`.
+- **Full-bleed work area.** Lightning stretches content edge-to-edge; the shell's
+  `.my-work` is `flex:1 1 auto` (no cap) on purpose. Don't add a `max-width` to the work
+  region or its inner wrapper — it leaves dead space on the right and the two-column
+  outcome rail won't reach the edge. Individual cards can constrain themselves; the
+  container should not.
 - This produces a **prototype**, not deployable Salesforce metadata. For real LWC/Aura,
   Experience Cloud, or platform work, use the corresponding `platform-*` /
   `experience-*` skills instead.
