@@ -45,5 +45,10 @@ Once saved, render the summary as a card on the record and the created tasks as 
 shared `renderCaseRecord({summary, right})` so multiple tabs (e.g. the Risk record and the
 saved agent view) stay identical.
 
-Working reference: `viewCopilot` / `runCopilot` / `savePrep` / `renderCaseRecord` in the
-child-welfare demo.
+## See also
+- `references/agentforce-chat-popup.md`: the conversational surface (docked chat popup with
+  pinned suggestions, typed answers, and citations).
+- `references/autoplay-walkthrough.md`: scripting a guided tour that drives these interactions.
+
+Working references: `examples/welcome-cards/` (streamed text) and
+`examples/guided-walkthrough/` (chat popup).

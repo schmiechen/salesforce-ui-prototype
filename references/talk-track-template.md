@@ -49,4 +49,5 @@ Say: "Everything you saw sits on <through-line> … <outcome for the mission>."
 ## Reset between runs
 - <what persists> — refresh the browser for a clean run.
 ```
-See `~/Data 360 for CCWIS/TALK-TRACK.md` for a complete worked example.
+The `NOTES.md` files in `examples/` show how assumptions and open decisions are written up; a
+guided walkthrough (`references/autoplay-walkthrough.md`) can replace the live click-through.

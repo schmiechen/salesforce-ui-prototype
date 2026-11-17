@@ -18,9 +18,12 @@ Multi-record workspace, the way a service/agent console behaves:
   `slds-split-view__list-item` + `slds-split-view__toggle-button` — a docked list on the
   left, the record on the right; clicking a list item swaps the record pane.
 - **Docked utility bar** (bottom): utilities open upward as panels. Default items:
-  **Omni-Channel · Phone · History**. Not in the SLDS bundle — build a small custom
-  `my-utilitybar` (bottom bar of buttons) + `my-utility-panel` (pop-up), like the demo's
-  app-launcher pattern.
+  **Omni-Channel · Phone · History**. Not in the SLDS bundle — the shell template ships a
+  small custom `my-utilbar` (bottom bar of buttons) + `my-utilpanel` (pop-up); add or edit
+  entries in `UTILITIES`. An entry can set `render(panel)` for a custom body, and `chat:true`
+  for a wider docked panel — see `references/agentforce-chat-popup.md` for an Agentforce chat.
+- **Long tab lists:** the template tightens tab padding at 1500px and 1350px so right-aligned
+  header content is not pushed off-screen on laptop widths; check at 1280px before presenting.
 - Subtabs (optional): a record tab can host subtabs (e.g. a related record opened within
   the parent's workspace) using a second `slds-tabs_default` strip.
 
