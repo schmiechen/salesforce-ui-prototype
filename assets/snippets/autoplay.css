@@ -1,0 +1,7 @@
+/* autoplay.css: simulated mouse, click ripple and caption bar for autoplay.js */
+.my-apcur{position:fixed;z-index:200;left:55%;top:65%;display:none;pointer-events:none;transition:left .85s cubic-bezier(.4,0,.2,1),top .85s cubic-bezier(.4,0,.2,1);filter:drop-shadow(0 1px 2px rgba(0,0,0,.35));}
+.my-ripple{position:fixed;z-index:199;width:14px;height:14px;margin:-7px 0 0 -7px;border-radius:50%;border:2px solid #0176d3;pointer-events:none;animation:myripple .7s ease-out forwards;}
+@keyframes myripple{from{transform:scale(.4);opacity:.9}to{transform:scale(3.2);opacity:0}}
+.my-apbar{position:fixed;left:50%;bottom:2.6rem;transform:translateX(-50%);z-index:210;display:none;flex-wrap:wrap;align-items:center;gap:.5rem .9rem;max-width:min(60rem,94vw);padding:.55rem 1rem;border-radius:999px;background:var(--slds-g-color-on-surface-2,#16325c);color:#fff;font-size:.85rem;box-shadow:0 4px 16px rgba(0,0,0,.3);}
+.my-apbar .n{font-weight:700;white-space:nowrap;} .my-apbar .t{flex:1 1 18rem;} .my-apbar .h{font-size:.7rem;opacity:.75;white-space:nowrap;}
+@media(prefers-reduced-motion:reduce){.my-apcur{transition:none;} .my-ripple{animation:none;opacity:0;}}

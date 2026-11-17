@@ -1,0 +1,13 @@
+/* chat-popup.css: docked chat popup (pairs with .my-utilpanel from the shell template) */
+.my-utilpanel.is-chat{width:25rem;height:min(35rem,calc(100vh - 7rem));overflow:hidden;flex-direction:column;box-shadow:0 -4px 18px rgba(0,0,0,.2);} .my-utilpanel.is-chat.is-open{display:flex;}
+.my-chat-head{display:flex;align-items:center;gap:.6rem;padding:.6rem .8rem;border-bottom:1px solid var(--my-line,#e5e5e5);background:#f6f4ff;flex:none;} .my-chat-head .ttl{flex:1;min-width:0;} .my-chat-head .sub{font-size:.7rem;color:#706e6b;}
+.my-chat-x{border:0;background:transparent;cursor:pointer;font-size:1.2rem;line-height:1;color:#514f4d;padding:.1rem .4rem;border-radius:4px;} .my-chat-x:hover{background:#e8e6f7;}
+.my-chat-log{display:flex;flex-direction:column;gap:.2rem;flex:1;min-height:0;padding:.7rem .8rem;overflow-y:auto;background:#fff;}
+.my-chat-q{background:#e8eefc;border-radius:12px 12px 2px 12px;padding:.5rem .8rem;margin:.5rem 0 .2rem auto;max-width:85%;width:fit-content;font-size:.85rem;}
+.my-chat-a{background:#fff;border:1px solid #e4e1f7;border-radius:12px 12px 12px 2px;padding:.6rem .85rem;max-width:94%;font-size:.85rem;line-height:1.45;margin-bottom:.2rem;} .my-chat-hello{background:#f6f4ff;}
+.my-chat-cite{display:inline-grid;place-items:center;min-width:1.15rem;height:1.15rem;border-radius:50%;background:#e8eefc;color:#0b5cab;font-size:.65rem;font-weight:700;margin-left:.2rem;text-decoration:none;} .my-chat-cite:hover{background:#d3e0fb;}
+.my-chat-foot{flex:none;border-top:1px solid var(--my-line,#e5e5e5);padding:.5rem .8rem .7rem;background:#fff;}
+.my-chat-lbl{font-size:.65rem;letter-spacing:.04em;text-transform:uppercase;color:#706e6b;margin-bottom:.3rem;}
+.my-chat-chips{display:flex;flex-direction:column;align-items:flex-start;gap:.3rem;margin-bottom:.5rem;}
+.my-chat-chip{font:inherit;font-size:.75rem;text-align:left;background:#fff;border:1px solid #c9c9c9;border-radius:999px;padding:.3rem .7rem;cursor:pointer;color:#0b5cab;} .my-chat-chip:hover{background:#eef4ff;border-color:#0176d3;}
+.my-chat-note{margin-top:.35rem;font-size:.65rem;color:#706e6b;}
