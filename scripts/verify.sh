@@ -3,6 +3,7 @@
 #  1. every slds-* class used in markup/JS exists in the bundled stylesheet
 #  2. <style>/<script> tags are balanced
 #  3. no live network references (offline check)
+#  4. <!DOCTYPE html> present; no relative file references (single-file promise)
 #
 # Usage: verify.sh <file.html>
 set -euo pipefail
@@ -47,6 +48,15 @@ print(f"live network refs in markup: {len(net)}", "OK (offline)" if not net else
 print("Salesforce cloud logo (viewBox 4000 2800):", "present" if "4000 2800" in html else "MISSING")
 freehand = len(re.findall(r'viewBox="0 0 24 24"', html))
 print(f"freehand-style 24x24 icons: {freehand}", "(should be 0)" if freehand else "OK")
+
+# document mode + single-file integrity (SKILL rule 3)
+doctype = re.search(r'<!doctype\s+html', html[:300], re.I) is not None
+print("<!DOCTYPE html>:", "present" if doctype else "MISSING -> pages without it render in quirks mode (add it as line 1)")
+# (?<![\w-]) skips data-src= / aria-href= style attributes; values with ${...} are runtime-built, so skipped
+rel = [m for m in re.findall(r'(?<![\w-])(?:src|href)\s*=\s*["\']([^"\']+)["\']', non_css)
+       if '${' not in m and not re.match(r'(data:|https?:|javascript:|mailto:|#)', m.strip(), re.I)]
+print(f"relative file references (src/href): {len(rel)}",
+      "OK (single file)" if not rel else "-> embed as a data: URI or remove: " + rel[0][:80])
 
 # banned copy (SKILL rules 8-9). Lookbehind skips internal identifiers like viewCopilot.
 copilot = len(re.findall(r'(?<![A-Za-z])Copilot', non_css))
