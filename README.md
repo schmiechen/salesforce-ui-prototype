@@ -36,6 +36,14 @@ tab. Recipes are included for the common pieces:
   hierarchies. (`references/modals-and-graphs.md`)
 - **Agentforce** — the AF panel + a Generate → stream → Edit → Save-to-record flow.
   (`references/agentforce.md`)
+- **Guided auto-play walkthrough** — caption bar, simulated mouse, real clicks and typing, and
+  deterministic step back/forward. (`references/autoplay-walkthrough.md`)
+- **Agentforce chat popup** — a docked utility-bar chat with pinned suggestions, typed-out answers,
+  and citations that link to source records. (`references/agentforce-chat-popup.md`)
+- **Data 360 (Data Cloud) field mapper** — a source-to-Data-Model mapping canvas with animated wires,
+  click-to-map, search, and save. (`references/data-360-field-mapper.md`)
+- **Slide-style results pages** — staged build-in with a pinned headline banner.
+  (`references/outcome-panel.md`)
 - **Per-screen outcome rail** — a docked Agentforce "why it matters" panel on every screen
   (outcome lines + optional illustrative tiles) so the demo explains feature *impact*.
   (`references/outcome-panel.md`)
@@ -62,19 +70,22 @@ SKILL=~/.claude/skills/salesforce-ui-prototype
 # 1. Scaffold into your project
 cp "$SKILL/assets/shell-template.html" ./index.html
 
-# 2. Edit the config at the top of the <script> in index.html:
+# 2. Edit the config at the top of the <script> in index.html (keep this unbundled file as your source):
 #    - NAV_MODE ("console" | "standard"), RECORD_LAYOUT ("2-region" | "3-region")
 #    - APP + UTILITIES
 #    - SPEC — object, columns, rows, detail sections, related lists, activities, feed
 #    (spec-driven: replace the sample Case content with your project's object/fields)
 
-# 3. Inline the SLDS 2 stylesheet -> offline single file
-bash "$SKILL/scripts/bundle.sh" index.html index.html
+# 3. Inline the SLDS 2 stylesheet -> offline single file (bundle to a separate file; keep the source)
+bash "$SKILL/scripts/bundle.sh" index.html index.bundled.html
 
-# 4. Verify (classes exist, tag balance, offline, no freehand icons)
-bash "$SKILL/scripts/verify.sh" index.html
+# 4. Verify (classes exist, tag balance, offline, DOCTYPE, no freehand icons / relative files)
+bash "$SKILL/scripts/verify.sh" index.bundled.html
 
-# 5. open index.html   (macOS)
+# 5. Optional: headless smoke test (fails on any uncaught error; skips if Chrome is not installed)
+bash "$SKILL/scripts/smoke.sh" index.bundled.html
+
+# 6. open index.bundled.html   (macOS)
 ```
 
 ## Contents
@@ -84,7 +95,8 @@ bash "$SKILL/scripts/verify.sh" index.html
 | `SKILL.md` | The method + golden rules (read this first). |
 | `assets/shell-template.html` | Ready-to-copy **standard-Lightning** starter: console shell, standard list view + record home (Details/Related + Activity/Chatter), `NAV_MODE` + `SPEC` config, genuine inlined icons. Has the `/*__SLDS2_COSMOS_CSS__*/` marker for bundling. |
 | `scripts/bundle.sh` | Downloads the SLDS 2 Cosmos CSS and inlines it at the marker. |
-| `scripts/verify.sh` | Checks used `slds-*` classes exist + tag balance + offline + no freehand icons + no banned copy ("Copilot"/"Future") + blue-on-blue risk + a data-sanity reminder. |
+| `scripts/verify.sh` | Checks used `slds-*` classes exist + tag balance + offline + DOCTYPE + no relative file refs + no freehand icons + no banned copy ("Copilot"/"Future") + blue-on-blue risk + a data-sanity reminder. |
+| `scripts/smoke.sh` | Headless Chrome smoke test on a temp copy: fails on uncaught errors, runs an optional async test script, can screenshot the settled end state. |
 | `references/icons.md` | Genuine SLDS logo + utility icon catalog and how to fetch more. |
 | `references/activity-timeline.md` | Recipe: Salesforce Activity Timeline (tasks/activities) — type-colored connector, expand + complete, the no-double-line gotcha. |
 | `references/list-view.md` | Recipe: standard Lightning list view (switcher + controls + filters + sortable/selectable table). |
@@ -93,15 +105,20 @@ bash "$SKILL/scripts/verify.sh" index.html
 | `references/navigation.md` | Recipe: console vs standard nav (`NAV_MODE`), workspace tabs, split view, utility bar, `slds-path`. |
 | `references/modals-and-graphs.md` | Recipe: SLDS modals + ARC-style relationship graphs (root → grouped cards + Show-Fields toggle + zoom). |
 | `references/agentforce.md` | Recipe: the Agentforce panel + the Generate → stream → Edit → Save-to-record agent flow. |
-| `references/outcome-panel.md` | Recipe: per-screen **Agentforce outcome rail** ("why it matters") — docked right, outcome lines + optional illustrative tiles; keeps the demo impact-first. |
+| `references/outcome-panel.md` | Recipe: per-screen **Agentforce outcome rail** ("why it matters") — docked right, outcome lines + optional illustrative tiles; keeps the demo impact-first. Also covers slide-style pages (staged build + pinned banner). |
+| `references/agentforce-chat-popup.md` | Recipe: Agentforce chat popup docked on the utility bar. |
+| `references/autoplay-walkthrough.md` | Recipe: guided auto-play walkthrough engine. |
+| `references/data-360-field-mapper.md` | Recipe: Data 360 (Data Cloud) field-mapping canvas. |
+| `references/testing-and-iteration.md` | Recipe: source vs bundle, version backups, `verify.sh` + `smoke.sh`, writing a smoke test. |
+| `assets/snippets/` | Tested building blocks (`autoplay`, `chat-popup`, `field-mapper`; `.js` + `.css` each). |
 | `references/talk-track-template.md` | Do/Say click-path talk-track template to hand a presenter after building. |
-| `examples/` | Worked prototypes with their PROMPT + NOTES — e.g. `examples/travel-expense/`, a full standard-Lightning app built from a one-paragraph brief. See `examples/README.md`. |
+| `examples/` | Worked prototypes with their PROMPT + NOTES — `examples/travel-expense/` (a full standard-Lightning app from a one-paragraph brief), `examples/welcome-cards/`, and `examples/guided-walkthrough/` (auto-play tour, chat popup, Data 360 mapper, slides, with a smoke test). See `examples/README.md`. |
 
 ## Rules (non-negotiable)
 
 1. Real SLDS 2 blueprints — not a hand-rolled lookalike.
 2. Logo and icons are **asset-based, never freehand** (see `references/icons.md`).
-3. Single file, fully offline (everything inline; no CDN links, no external images).
+3. Single file, fully offline (everything inline; no CDN links; images embedded as `data:` URIs, never relative paths).
 4. Custom CSS uses a `my-*` prefix + `var(--slds-g-*, fallback)` hooks; never override `.slds-*`.
 5. Global header exact spec: 50px, centered ~600px search, 32×32 icon buttons /
    20×20 glyphs / 4px gaps, 24px avatar 16px from edge. Defaults to a **white**
@@ -118,6 +135,8 @@ bash "$SKILL/scripts/verify.sh" index.html
     Activity Timeline; console or standard nav) over custom components — content is spec-driven.
 11. **Every screen states its outcome** — a docked Agentforce "why it matters" rail on each
     screen keeps the demo impact-first, not feature-first (see `references/outcome-panel.md`).
+12. **Build incrementally** — copy the template with `cp`, make small targeted edits while
+    unbundled, bundle last and once, and never read or write the ~1 MB bundled file (see `SKILL.md`).
 
 Requires network access **once** (to download the SLDS CSS during `bundle.sh`); the
 resulting file is fully offline. For blueprint/hook/icon lookups, use the companion skill

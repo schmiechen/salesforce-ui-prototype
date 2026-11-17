@@ -1,8 +1,8 @@
 ---
 name: salesforce-ui-prototype
-description: "Rapidly prototype realistic Salesforce Lightning (SLDS 2) interfaces as a single, self-contained, offline HTML file — for sales demos, mockups, and clickable prototypes with no Salesforce org and no build step. Use when asked to mock up / prototype / fake / stand up a Salesforce or Lightning UI, console, app, record page, dashboard, or 'SLDS screen', or to build a click-through Salesforce demo. Triggers: 'prototype a Salesforce screen', 'mock up a Lightning app', 'fake Salesforce UI', 'Lightning console demo', 'clickable Salesforce prototype', 'make it look like Salesforce'. Do NOT use for production LWC/Aura components deployed to an org (use experience-lwc-generate / platform-* skills) or for real Data Cloud/Agentforce work."
+description: "Rapidly prototype realistic Salesforce Lightning (SLDS 2) interfaces as a single, self-contained, offline HTML file — for sales demos, mockups, and clickable prototypes with no Salesforce org and no build step. Use when asked to mock up / prototype / fake / stand up a Salesforce or Lightning UI, console, app, record page, dashboard, or 'SLDS screen', or to build a click-through Salesforce demo. Triggers: 'prototype a Salesforce screen', 'mock up a Lightning app', 'fake Salesforce UI', 'Lightning console demo', 'clickable Salesforce prototype', 'make it look like Salesforce', 'guided walkthrough / auto-play demo', 'Agentforce chat popup', 'Data 360 field mapping'. Do NOT use for production LWC/Aura components deployed to an org (use experience-lwc-generate / platform-* skills) or for real Data Cloud/Agentforce work."
 metadata:
-  version: "1.0"
+  version: "1.1"
 ---
 
 # Salesforce UI Prototype (SLDS 2, single-file, offline)
@@ -32,7 +32,8 @@ to confirm a class/hook/icon exists — do not guess SLDS class names.
      catalogued in `references/icons.md`. If you need one that isn't there, fetch it from
      that path; if you can't fetch it, ask the user for the exact icon name(s).
 3. **Single file, offline.** Everything inline (`<style>` + `<script>`). No CDN `<link>`,
-   no Google Fonts link (SLDS supplies the font stack), no external image assets.
+   no Google Fonts link (SLDS supplies the font stack). Images, if any, are embedded as
+   `data:` URIs — never a relative file path or a URL (`verify.sh` flags both).
 4. **Namespacing.** Custom classes use a `my-*` prefix; never override `.slds-*`. For
    custom values use `var(--slds-g-*, fallback)` styling hooks with a literal fallback so
    it renders even if a token is absent (SLDS 2 uses numbered `--slds-g-spacing-1..4` =
@@ -86,6 +87,10 @@ to confirm a class/hook/icon exists — do not guess SLDS class names.
 | Record lifecycle | Path (`slds-path`) under highlights | `references/navigation.md` |
 | Relationship / hierarchy | ARC graph in a modal | `references/modals-and-graphs.md` |
 | AI assist | Agentforce panel / generate-save | `references/agentforce.md` |
+| Conversational agent | Docked chat popup on the utility bar (pinned suggestions, typed answers, citations) | `references/agentforce-chat-popup.md` |
+| Self-running / presenter-driven tour | Auto-play walkthrough (caption bar, simulated mouse, step back/forward) | `references/autoplay-walkthrough.md` |
+| Data 360 source-to-model mapping | Field-mapping canvas (DLO to Data Model entities, wires, click-to-map) | `references/data-360-field-mapper.md` |
+| Results / summary as slides | Staged build + pinned headline banner | `references/outcome-panel.md` (Slide-style pages) |
 | Outcome / "why it matters" (every screen) | Agentforce outcome panel (right rail) | `references/outcome-panel.md` |
 
 Content is **spec-driven** — the object, fields, columns, related lists, tabs, and
@@ -180,14 +185,18 @@ fast, then refine — don't run a long interview.
    `renderChatter()`, `svg()`). Only build custom (`my-*` + hooks) when no standard fits.
 4. **Bundle the SLDS CSS — last, once** — to make it offline & self-contained:
    ```
-   bash <skill>/scripts/bundle.sh index.html index.html
+   bash <skill>/scripts/bundle.sh index.src.html index.html
    ```
+   Keep the unbundled working copy (`index.src.html`) as the source of truth and bundle into a
+   separate `index.html`, so further edits never mean editing a ~1 MB file and a rebuild can
+   always be compared with the bundle (see `references/testing-and-iteration.md`).
    This downloads the SLDS 2 Cosmos stylesheet and inlines it at the
    `/*__SLDS2_COSMOS_CSS__*/` marker **on disk** — the ~1 MB CSS never enters your context.
    Do all editing on the small, unbundled template first; bundle at the end. After
    bundling, **don't `Read`/`Write` the whole file** (~1 MB) — `grep` specific lines to
    inspect and keep using targeted `Edit`s.
-5. **Verify** (see below), then open the file in a browser to eyeball it.
+5. **Verify** (see below), then open the file in a browser to eyeball it. For anything with
+   animation or a walkthrough, run `scripts/smoke.sh` too.
 6. **Offer a talk track.** After the prototype works, offer the presenter a Do/Say
    click-path script using `references/talk-track-template.md`.
 
@@ -200,7 +209,12 @@ fast, then refine — don't run a long interview.
   (viewBoxes `0 0 4000 2800` for the cloud, `0 0 520 520` / `0 0 52 52` for icons) — no
   invented `0 0 24 24` stroke icons.
 - **Offline:** `grep -n 'https\?://' index.html` should return **nothing** except
-  comments — no live `<link>`/`<img>`/`<script src>` to the network.
+  comments — no live `<link>`/`<img>`/`<script src>` to the network. `verify.sh` also flags a
+  missing `<!DOCTYPE html>` (quirks mode) and relative `src`/`href` file references.
+- **Runs without errors:** `bash <skill>/scripts/smoke.sh index.html [test.js]` loads the page
+  in headless Chrome on a temp copy, fails on any uncaught error, and runs an optional test
+  (replay every auto-play step, check animations on a timeline). It skips cleanly if Chrome is
+  not installed. See `references/testing-and-iteration.md`.
 - **Data logic (sanity-check the fixtures):** ages match activities (a 4-year-old has no
   K-12 school record); totals/percentages actually add up (e.g. worker loads sum to the
   "total open"); dates are plausible and consistent; names/IDs are stable across screens.
@@ -216,7 +230,8 @@ fast, then refine — don't run a long interview.
 |------|-----------|
 | `assets/shell-template.html` | Ready-to-copy **standard-Lightning** starter: console shell (workspace tabs + utility bar), standard list view + record home (Details/Related + Activity/Chatter), `NAV_MODE` + `SPEC` config, genuine inlined icons. Contains the `/*__SLDS2_COSMOS_CSS__*/` marker for bundling. |
 | `scripts/bundle.sh` | Downloads the SLDS 2 Cosmos CSS and inlines it at the marker → offline single file. |
-| `scripts/verify.sh` | Checks used `slds-*` classes exist in the bundle + tag balance + offline. |
+| `scripts/verify.sh` | Checks used `slds-*` classes exist in the bundle + tag balance + offline + DOCTYPE + no relative file refs + banned copy. |
+| `scripts/smoke.sh` | Headless Chrome smoke test on a temp copy: fails on uncaught errors, runs an optional async test script, optional screenshot of the settled end state. |
 | `references/icons.md` | Genuine SLDS logo + utility icon catalog (inline SVGs) and how to fetch more. |
 | `references/activity-timeline.md` | Recipe for a Salesforce-style Activity Timeline (tasks/activities): blueprint classes, type-colored connector, the no-double-line gotcha, expand + complete interactions. |
 | `references/modals-and-graphs.md` | Recipe for SLDS modals (host + open/close/backdrop) and relationship graphs (ARC-style root → grouped cards + connector + Show-Fields toggle + zoom). |
@@ -225,9 +240,14 @@ fast, then refine — don't run a long interview.
 | `references/record-home.md` | Recipe: standard **record home** (highlights + Details/Related tabs + Activity/Chatter right sidebar; 2- or 3-region). |
 | `references/chatter-feed.md` | Recipe: full **Chatter** feed (publisher + posts + comments + like/mention). |
 | `references/navigation.md` | Recipe: **console vs standard** nav (`NAV_MODE`), workspace tabs, split view, utility bar (Omni-Channel/Phone/History), and `slds-path`. |
-| `references/outcome-panel.md` | Recipe: per-screen **Agentforce outcome panel** ("why it matters") in the right rail + optional illustrative tiles; keeps the demo outcome-first. |
+| `references/outcome-panel.md` | Recipe: per-screen **Agentforce outcome panel** ("why it matters") in the right rail + optional illustrative tiles; keeps the demo outcome-first. Also: slide-style pages (staged build + pinned banner). |
+| `references/agentforce-chat-popup.md` | Recipe: Agentforce **chat popup** docked on the utility bar (pinned suggestions, typewriter answers, citations). Code in `assets/snippets/`. |
+| `references/autoplay-walkthrough.md` | Recipe: **guided auto-play walkthrough** engine (caption bar, simulated mouse, deterministic step back/forward). Code in `assets/snippets/`. |
+| `references/data-360-field-mapper.md` | Recipe: **Data 360 (Data Cloud) field mapper** (DLO to Data Model entities, wires, click-to-map, search, save). Code in `assets/snippets/`. |
+| `references/testing-and-iteration.md` | Source vs bundle, version backups, `verify.sh` + `smoke.sh`, writing a smoke test, virtual-time notes. |
+| `assets/snippets/` | Tested building blocks: `autoplay`, `chat-popup`, `field-mapper` (each `.js` + `.css`). See its README. |
 | `references/talk-track-template.md` | Do/Say click-path talk-track template to hand the presenter after building. |
-| `examples/` | Worked prototypes (each with its PROMPT + NOTES). `examples/travel-expense/` = a full standard-Lightning app from a one-paragraph brief. See `examples/README.md`. |
+| `examples/` | Worked prototypes (each with its PROMPT + NOTES). `examples/travel-expense/` = a full standard-Lightning app from a one-paragraph brief; `examples/guided-walkthrough/` = auto-play tour with chat popup, Data 360 mapper and slides (with a smoke test). See `examples/README.md`. |
 
 ## Notes / gotchas
 
@@ -253,6 +273,15 @@ fast, then refine — don't run a long interview.
   region or its inner wrapper — it leaves dead space on the right and the two-column
   outcome rail won't reach the edge. Individual cards can constrain themselves; the
   container should not.
+- **Equal-height card rows.** A flex/grid row of cards whose items inherit `align-items:center`
+  renders uneven boxes. Use `align-items:stretch` (and top-align the text) when boxes should match.
+- **Every animation needs an instant path.** Gate typewriters, staged builds and wire draw-ins on
+  `animOK()` (false during walkthrough replay and with `prefers-reduced-motion`), clear their timers on
+  every re-render, and guard timer callbacks with `el.isConnected`.
+- **Long tab lists** push right-aligned header content off-screen on laptops; the template tightens
+  tabs at 1500px / 1350px. Check 1280px before presenting.
+- **Never treat a browser "Save as" copy as the source** (no DOCTYPE, reformatted markup, stylesheet
+  inlined). Keep `index.src.html` and rebuild.
 - This produces a **prototype**, not deployable Salesforce metadata. For real LWC/Aura,
   Experience Cloud, or platform work, use the corresponding `platform-*` /
   `experience-*` skills instead.
