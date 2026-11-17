@@ -49,6 +49,10 @@ html,body{height:100%;margin:0;}
 .my-navitem{display:flex;align-items:center;padding:0 .9rem;color:#514f4d;font-size:.8rem;cursor:pointer;border-bottom:3px solid transparent;background:transparent;border-top:0;border-left:0;border-right:0;font:inherit;}
 .my-navitem:hover{background:var(--slds-g-color-surface-container-1,#f3f3f3);color:#0176d3;}
 .my-navitem.is-active{color:#0176d3;border-bottom-color:#0176d3;font-weight:600;}
+.my-navitem{white-space:nowrap;flex:none;}
+/* long tab lists: tighten on laptop widths so right-aligned header content is not pushed off-screen */
+@media(max-width:1500px){.my-navitem{padding:0 .6rem;}}
+@media(max-width:1360px){.my-navitem{padding:0 .4rem;font-size:.75rem;}}
 
 /* ----- console workspace tabs ----- */
 .my-ws{display:flex;align-items:stretch;height:2.25rem;background:#fff;border-bottom:1px solid var(--my-line);padding:0 .25rem;overflow-x:auto;}
@@ -163,7 +167,11 @@ tr.my-rowlink:hover{background:var(--slds-g-color-surface-container-1,#f7fbff);}
 .my-lai{width:2.25rem;height:2.25rem;border-radius:.5rem;margin:0 auto .35rem;display:grid;place-items:center;color:#fff;} .my-lai svg{width:1.25rem;height:1.25rem;fill:currentColor;}
 
 .my-fade{animation:myfade .3s ease;} @keyframes myfade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
-@media(prefers-reduced-motion:reduce){.my-fade,.my-tl-caret{animation:none;transition:none;}}
+@media(prefers-reduced-motion:reduce){.my-fade,.my-tl-caret,.my-cursor,.my-dots i,.my-build{animation:none;transition:none;}}
+/* ----- motion primitives (shared by typewriter text, chat popup, auto-play, staged builds) ----- */
+.my-cursor{display:inline-block;width:2px;height:1em;margin-left:1px;vertical-align:text-bottom;background:currentColor;animation:mycur 1s steps(1) infinite;} @keyframes mycur{50%{opacity:0}}
+.my-dots{display:inline-flex;gap:4px;align-items:center;height:1.1em;} .my-dots i{width:6px;height:6px;border-radius:50%;background:var(--slds-g-color-on-surface-2,#757575);opacity:.5;animation:mydot 1.2s infinite ease-in-out;} .my-dots i:nth-child(2){animation-delay:.15s} .my-dots i:nth-child(3){animation-delay:.3s} @keyframes mydot{0%,60%,100%{transform:none;opacity:.4}30%{transform:translateY(-4px);opacity:1}}
+.my-build{opacity:0;transform:translateY(16px);transition:opacity .5s ease,transform .5s ease;} .my-build.is-in{opacity:1;transform:none;}
 </style>
 </head>
 <body>
@@ -324,6 +332,10 @@ const THEME={red:"slds-theme_error",amber:"slds-theme_warning",green:"slds-theme
 function badge(t,type){return `<span class="slds-badge ${THEME[type]||""}">${t}</span>`;}
 function prBadge(p){return badge(p, p==="High"?"red":p==="Medium"?"amber":"info");}
 const esc=s=>String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;");
+/* Motion gate: false while a walkthrough replays instantly, or when the user prefers reduced motion.
+   Every animation (typewriter, staged builds, wire draw-in) should check animOK() and fall back to the final state. */
+let REPLAYING=false;
+const animOK=()=>!REPLAYING&&!(window.matchMedia&&matchMedia("(prefers-reduced-motion: reduce)").matches);
 
 /* =========================================================================
    STATE + SHELL
@@ -647,12 +659,17 @@ function renderUtil(){
 function toggleUtil(id){
   const p=document.getElementById("utilpanel"); const u=UTILITIES.find(x=>x.id===id);
   document.querySelectorAll(".my-utilbtn").forEach(b=>b.classList.toggle("is-open",b.dataset.u===id&&UTIL_OPEN!==id));
-  if(UTIL_OPEN===id){ p.classList.remove("is-open"); UTIL_OPEN=null; return; }
+  if(UTIL_OPEN===id) return closeUtil();
   UTIL_OPEN=id;
   const btn=document.querySelector(`.my-utilbtn[data-u="${id}"]`);
   p.style.left=(btn.getBoundingClientRect().left)+"px";
-  p.innerHTML=`<h3>${svg(u.icon,14)} ${u.label}</h3><div class="bd">${u.body}</div>`;
+  p.classList.toggle("is-chat",!!u.chat);   // u.chat:true -> wider docked chat popup (see references/agentforce-chat-popup.md)
+  if(u.render) u.render(p); else p.innerHTML=`<h3>${svg(u.icon,14)} ${u.label}</h3><div class="bd">${u.body}</div>`;
   p.classList.add("is-open");
+}
+function closeUtil(){
+  const p=document.getElementById("utilpanel"); p.classList.remove("is-open","is-chat"); UTIL_OPEN=null;
+  document.querySelectorAll(".my-utilbtn").forEach(b=>b.classList.remove("is-open"));
 }
 const LAUNCH=[["case","Cases"],["people","Contacts"],["metrics","Reports"],["email","Email"],["clock","History"],["ai","Agentforce"]];
 function initLauncher(){
