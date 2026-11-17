@@ -67,3 +67,19 @@ drafts** for a quick confirm. Keep each to 2–3 lines; make them specific to th
 
 Styling reuses the Agentforce panel CSS (`my-af-orb`, `my-af-label`, `my-af-card`) — see
 `references/agentforce.md`.
+
+## Slide-style pages (staged build + pinned headline)
+Some screens read better as click-through slides than as a scrolling record page, e.g. a results
+summary at the end of a demo. Keep the Agentforce rail, and:
+- **One render function, a `SLIDE` variable.** `Next` / `Back` buttons set it and re-render; reset it to
+  slide 1 whenever the user re-enters the screen. Place Next at the bottom right of the content.
+- **Staged build:** render each item with `class="my-build"` (hidden: `opacity:0; translateY(16px)`), then add
+  `.is-in` one at a time on timers (e.g. 300 / 1000 / 1700 / 2600 ms). `my-build` and `animOK()` come from the shell
+  template; when `animOK()` is false add `.is-in` to everything at once. Guard each timer with `el.isConnected`,
+  and clear the timers at the start of every render.
+- **Pinned headline:** repeat the key result at the top of the next slide as a banner with
+  `position:sticky; top:0; z-index:5` (and a subtle shadow) so it stays visible while the details scroll.
+- Slides are not a standard Lightning pattern (SKILL rule 10): use them for presentation-style outcomes,
+  not for record work.
+
+Working reference: `examples/guided-walkthrough/` (Results screen).

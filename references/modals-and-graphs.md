@@ -53,9 +53,10 @@ Custom classes (all `my-*`; use SLDS hooks with fallbacks):
 
 Data shape: `{ root, groups:[{label, icon, members:[{name, role, fields:[[k,v],…], subject?}]}] }`.
 A single `arcCard(m)` renderer works for every group (household members, providers,
-shared identifiers, etc.). See `openARC` (household) and `openInvestigation` (provider
-ring) in the child-welfare demo for a full working example, including the exposure tiles
-and footer actions (Assign / Place Hold that swap to a "✓ done" state).
+shared identifiers, etc.). Footer actions can swap to a "✓ done" state once clicked.
+
+For SVG connectors and wires (field mapping, source-to-target links), see
+`references/data-360-field-mapper.md`: it draws bezier wires between element ports.
 
 ## Gotchas
 - The modal/graph markup is re-created on each render — **(re)wire handlers after render**,
